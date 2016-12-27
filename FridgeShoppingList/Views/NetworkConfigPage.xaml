@@ -13,6 +13,7 @@
     xmlns:ctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:models="using:FridgeShoppingList.Models"
     xmlns:ctlVms="using:FridgeShoppingList.ViewModels.ControlViewModel"
+    xmlns:wifi="using:Windows.Devices.WiFi"
     mc:Ignorable="d">
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

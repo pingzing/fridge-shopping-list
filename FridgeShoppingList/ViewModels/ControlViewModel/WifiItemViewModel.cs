@@ -4,6 +4,7 @@ using FridgeShoppingList.Services.SettingsServices;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModel
         private readonly SettingsService _settingsService;
         private readonly INetworkService _networkService;
 
-        private string _bssid;
+        public string Bssid { get; private set; }
         private WiFiAvailableNetwork _backingNetwork;
 
         private string _networkName;
@@ -65,8 +66,8 @@ namespace FridgeShoppingList.ViewModels.ControlViewModel
             get { return _isAutoConnect; }
             set
             {
-                Set(ref _isAutoConnect, value);
-                _settingsService.SsidToAutoConnect = _settingsService.SsidToAutoConnect.Add(NetworkName, value);
+                Set(ref _isAutoConnect, value);                                
+                _settingsService.SsidToAutoConnect = _settingsService.SsidToAutoConnect.SetItem(NetworkName, value);
             }
         }
 
@@ -102,7 +103,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModel
                 var currentNetwork = _networkService.GetCurrentWifiNetwork();
                 bool thisIsNotCurrentNetwork = currentNetwork == null
                     || currentNetwork.Ssid != NetworkName
-                    || currentNetwork.Bssid != _bssid;
+                    || currentNetwork.Bssid != Bssid;
                 bool requiresPassword = !_networkService.IsNetworkOpen(_backingNetwork);
                 return IsSelected && thisIsNotCurrentNetwork && requiresPassword;
             }
@@ -122,7 +123,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModel
             var currentNetwork = _networkService.GetCurrentWifiNetwork();       
             if(currentNetwork == null 
                 || currentNetwork.Ssid != NetworkName 
-                || currentNetwork.Bssid != _bssid)
+                || currentNetwork.Bssid != Bssid)
             {
                 //connect
                 if (String.IsNullOrWhiteSpace(password))
@@ -143,7 +144,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModel
             }            
 
             var updatedBackingNetwork = (await _networkService.GetAvailableWifiNetworks())
-                    .Where(x => x.Bssid == _bssid && x.Ssid == NetworkName)
+                    .Where(x => x.Bssid == Bssid && x.Ssid == NetworkName)
                     .FirstOrDefault();
             UpdateValues(updatedBackingNetwork);
             IsProcessing = false;
@@ -160,7 +161,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModel
         private void UpdateValues(WiFiAvailableNetwork network)
         {
             _backingNetwork = network;
-            _bssid = network.Bssid;
+            Bssid = network.Bssid;
             NetworkName = network.Ssid;
             NetworkGlyph = network.SignalBars == 4 ? FontIcons.WifiFourBars
                 : network.SignalBars == 3 ? FontIcons.WifiThreeBars

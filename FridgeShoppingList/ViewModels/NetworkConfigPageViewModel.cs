@@ -3,6 +3,7 @@ using FridgeShoppingList.Services;
 using FridgeShoppingList.Services.SettingsServices;
 using FridgeShoppingList.ViewModels.ControlViewModel;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Toolkit.Uwp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,10 +17,9 @@ using Windows.UI.Xaml.Navigation;
 namespace FridgeShoppingList.ViewModels
 {
     public class NetworkConfigPageViewModel : ViewModelBaseEx
-    {
-        private readonly INetworkService _networkService;
+    {        
         private readonly SettingsService _settingsService;
-        private DispatcherTimer _networkSearchTimer = new DispatcherTimer();
+        private readonly INetworkService _networkService;
 
         private string _currentNetworkName;
         public string CurrentNetworkName
@@ -54,23 +54,21 @@ namespace FridgeShoppingList.ViewModels
         {
             get { return _isLookingForNetworks; }
             set { Set(ref _isLookingForNetworks, value); }
-        }
+        }        
 
-        private ObservableCollection<WifiItemViewModel> _wifiNetowrks;
+        private ObservableCollection<WifiItemViewModel> _wifiNetworks = new ObservableCollection<WifiItemViewModel>();
         public ObservableCollection<WifiItemViewModel> WifiNetworks
         {
-            get { return _wifiNetowrks; }
-            set { Set(ref _wifiNetowrks, value); }
-        }
+            get { return _wifiNetworks; }
+            set { Set(ref _wifiNetworks, value); }
+        }        
 
         public RelayCommand<bool> WifiToggled => new RelayCommand<bool>(ToggleWifi);        
 
         public NetworkConfigPageViewModel(INetworkService networkService, SettingsService settings)
         {
             _networkService = networkService;
-            _settingsService = settings;
-            _networkSearchTimer.Interval = TimeSpan.FromSeconds(30);
-            _networkSearchTimer.Tick += NetworkSearchTimer_Tick;
+            _settingsService = settings;            
         }        
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -86,31 +84,26 @@ namespace FridgeShoppingList.ViewModels
             }
 
             _networkService.WifiRadioStateChanged += WifiRadioStateChanged;
-            
-            IsWifiEnabled = await _networkService.IsWifiRadioOn();                        
-            _networkSearchTimer.Start();
-            NetworkSearchTimer_Tick(null, null);             
-        }
+            _networkService.AvailableNetworksChanged += AvailableNetworksChanged;            
+
+            IsWifiEnabled = await _networkService.IsWifiRadioOn();
+            WifiNetworks = new ObservableCollection<WifiItemViewModel>( 
+                (await _networkService.GetAvailableWifiNetworks())
+                .Select(x => new WifiItemViewModel(x, _networkService, _settingsService))
+            );
+        }        
 
         public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
-        {
-            _networkSearchTimer.Stop();
+        {            
             _networkService.WifiRadioStateChanged -= WifiRadioStateChanged;
-            return Task.CompletedTask;
-        }
-
-        private async void NetworkSearchTimer_Tick(object sender, object e)
-        {
-            if (IsWifiEnabled)
+            _networkService.AvailableNetworksChanged -= AvailableNetworksChanged;
+            
+            foreach(var network in WifiNetworks)
             {
-                IsLookingForNetworks = true;
-                WifiNetworks = new ObservableCollection<WifiItemViewModel>(
-                    (await _networkService.GetAvailableWifiNetworks())
-                    .OrderByDescending(x => x.SignalBars)
-                    .Select(x => new WifiItemViewModel(x, _networkService, _settingsService)));
-                IsLookingForNetworks = false;
+                network.IsSelected = false;
             }
-        }
+            return Task.CompletedTask;
+        }       
 
         private void ToggleWifi(bool newState)
         {
@@ -130,6 +123,31 @@ namespace FridgeShoppingList.ViewModels
             if (IsWifiEnabled != newIsOn)
             {
                 IsWifiEnabled = newIsOn;
+            }
+        }
+
+        private async void AvailableNetworksChanged(NetworkService sender, AvailableNetworksChangedArgs args)
+        {
+            if(args.AddedNetworks != null)
+            {
+                foreach(var added in args.AddedNetworks)
+                {
+                    await DispatcherHelper.ExecuteOnUIThreadAsync(
+                        () => WifiNetworks.Add(new WifiItemViewModel(added, _networkService, _settingsService)));
+                }
+            }
+
+            if(args.RemovedNetworks != null)
+            {
+                foreach(var removed in args.RemovedNetworks)
+                {
+                    var toRemove = WifiNetworks.Where(x => x.Bssid == removed.Bssid).FirstOrDefault();
+                    if (toRemove != null)
+                    {
+                        await DispatcherHelper.ExecuteOnUIThreadAsync(
+                            () => WifiNetworks.Remove(toRemove));                        
+                    }
+                }
             }
         }
     }

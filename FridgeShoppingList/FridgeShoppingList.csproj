@@ -98,6 +98,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\SignalBarsToIconConverter.cs" />
+    <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DummyElement.cs" />
     <Compile Include="Models\FontIcons.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

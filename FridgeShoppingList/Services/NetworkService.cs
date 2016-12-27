@@ -1,8 +1,13 @@
-﻿using System;
+﻿using FridgeShoppingList.Helpers;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Template10.Common;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Radios;
 using Windows.Devices.WiFi;
@@ -14,7 +19,7 @@ using Windows.Security.Credentials;
 namespace FridgeShoppingList.Services
 {
     public interface INetworkService
-    {
+    {        
         Task<bool> ConnectToNetwork(WiFiAvailableNetwork network, bool autoConnect);
         Task<bool> ConnectToNetworkWithPassword(WiFiAvailableNetwork network, bool autoConnect, PasswordCredential password);
         void DisconnectNetwork(WiFiAvailableNetwork network);
@@ -31,6 +36,7 @@ namespace FridgeShoppingList.Services
         Task EnableWifiRadio();
         Task DisableWifiRadio();
         event TypedEventHandler<Radio, object> WifiRadioStateChanged;
+        event TypedEventHandler<NetworkService, AvailableNetworksChangedArgs> AvailableNetworksChanged;
     }
 
     public class NetworkInfo
@@ -49,12 +55,14 @@ namespace FridgeShoppingList.Services
         private readonly static uint WirelessInterfaceIanaType = 71;
         private static WiFiAccessStatus? AccessStatus;
         private Dictionary<String, WiFiAdapter> _wiFiAdapters = new Dictionary<string, WiFiAdapter>();
+        private Dictionary<WiFiAdapter, List<WiFiAvailableNetwork>> _availableNetworks = new Dictionary<WiFiAdapter, List<WiFiAvailableNetwork>>();
         private DeviceWatcher _wiFiAdaptersWatcher;
         private Dictionary<WiFiAvailableNetwork, WiFiAdapter> _networkNameToInfo;
         private ManualResetEvent _enumAdaptersCompleted = new ManualResetEvent(false);
         private Radio _wifiRadio;
 
         public event TypedEventHandler<Radio, object> WifiRadioStateChanged;
+        public event TypedEventHandler<NetworkService, AvailableNetworksChangedArgs> AvailableNetworksChanged;             
 
         public NetworkService()
         {
@@ -63,7 +71,7 @@ namespace FridgeShoppingList.Services
             _wiFiAdaptersWatcher.Added += AdaptersAdded;
             _wiFiAdaptersWatcher.Removed += AdaptersRemoved;
             _wiFiAdaptersWatcher.Start();
-            InitializeWifiRadio();
+            InitializeWifiRadio();            
         }
 
         private async Task<bool> InitializeWifiRadio()
@@ -95,13 +103,14 @@ namespace FridgeShoppingList.Services
 
         private void AdaptersRemoved(DeviceWatcher sender, DeviceInformationUpdate args)
         {
+            _wiFiAdapters[args.Id].AvailableNetworksChanged -= AdapterNetworksChanged;
             _wiFiAdapters.Remove(args.Id);
-        }
+        }        
 
         private void AdaptersAdded(DeviceWatcher sender, DeviceInformation args)
         {
-            _wiFiAdapters.Add(args.Id, null);
-        }
+            _wiFiAdapters.Add(args.Id, null);            
+        }        
 
         private async void AdaptersEnumCompleted(DeviceWatcher sender, object args)
         {
@@ -112,6 +121,7 @@ namespace FridgeShoppingList.Services
                 try
                 {
                     _wiFiAdapters[id] = await WiFiAdapter.FromIdAsync(id);
+                    _wiFiAdapters[id].AvailableNetworksChanged += AdapterNetworksChanged;
                 }
                 catch (Exception)
                 {
@@ -119,6 +129,36 @@ namespace FridgeShoppingList.Services
                 }
             }
             _enumAdaptersCompleted.Set();
+        }
+
+        private void AdapterNetworksChanged(WiFiAdapter sender, object args)
+        {            
+            if (!_availableNetworks.ContainsKey(sender))
+            {
+                //blindly add it, woooo
+                var newNetworks = sender.NetworkReport.AvailableNetworks;
+                _availableNetworks.Add(sender, newNetworks.ToList());
+                System.Diagnostics.Debug.WriteLine($"{newNetworks.Count} networks added");
+                this.AvailableNetworksChanged?.Invoke(this, new AvailableNetworksChangedArgs(newNetworks, null));
+            }
+            else
+            {
+                //remove stale networks
+                var staleNetworks = _availableNetworks[sender].Except(sender.NetworkReport.AvailableNetworks, new WiFiAvailableNetworkComparer()).ToList();
+                foreach(var staleNetwork in staleNetworks)
+                {
+                    _availableNetworks[sender].Remove(staleNetwork);
+                }
+
+                //Add new networks
+                var newNetworks = sender.NetworkReport.AvailableNetworks.Except(_availableNetworks[sender], new WiFiAvailableNetworkComparer()).ToList();
+                foreach(var newNetwork in newNetworks)
+                {
+                    _availableNetworks[sender].Add(newNetwork);
+                }
+                System.Diagnostics.Debug.WriteLine($"{newNetworks.Count} networks added, {staleNetworks.Count} networks removed");
+                this.AvailableNetworksChanged?.Invoke(this, new AvailableNetworksChangedArgs(newNetworks.ToList(), staleNetworks));
+            }
         }
 
         public string GetDirectConnectionName()
@@ -188,7 +228,7 @@ namespace FridgeShoppingList.Services
                 if (adapter.Value == null)
                 {
                     // New Adapter plugged-in which requires Initialization
-                    fInit = true;
+                    fInit = true;                                        
                 }
             }
 
@@ -233,7 +273,7 @@ namespace FridgeShoppingList.Services
             if ((await TestAccess()) == false)
             {
                 return false;
-            }
+            }            
 
             _networkNameToInfo = new Dictionary<WiFiAvailableNetwork, WiFiAdapter>();
             List<WiFiAdapter> WiFiAdaptersList = new List<WiFiAdapter>(_wiFiAdapters.Values);
@@ -243,8 +283,8 @@ namespace FridgeShoppingList.Services
                 {
                     return false;
                 }
-
-                await adapter.ScanAsync();
+                
+                await adapter.ScanAsync();                
 
                 if (adapter.NetworkReport == null)
                 {
@@ -482,6 +522,18 @@ namespace FridgeShoppingList.Services
                 return;
             }
             await _wifiRadio.SetStateAsync(RadioState.On);
+        }        
+    }
+
+    public class AvailableNetworksChangedArgs
+    {
+        public IReadOnlyList<WiFiAvailableNetwork> AddedNetworks { get; }
+        public IReadOnlyList<WiFiAvailableNetwork> RemovedNetworks { get; }
+
+        public AvailableNetworksChangedArgs(IReadOnlyList<WiFiAvailableNetwork> added, IReadOnlyList<WiFiAvailableNetwork> removed)
+        {
+            AddedNetworks = added;
+            RemovedNetworks = removed;
         }
     }
 }
