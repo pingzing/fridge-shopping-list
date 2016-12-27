@@ -9,6 +9,9 @@ namespace FridgeShoppingList.Views
 {
     public sealed partial class MainPage : Page
     {
+        private MainPageViewModel _viewModel;
+        public MainPageViewModel ViewModel => _viewModel ?? (_viewModel = (MainPageViewModel)DataContext);
+
         public MainPage()
         {
             InitializeComponent();

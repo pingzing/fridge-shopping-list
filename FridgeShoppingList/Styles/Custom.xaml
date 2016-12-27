@@ -5,92 +5,190 @@
     <x:Double x:Key="NarrowMinWidth">0</x:Double>
     <x:Double x:Key="NormalMinWidth">521</x:Double>
     <x:Double x:Key="WideMinWidth">1200</x:Double>
+    
+    <Color x:Key="SystemAccentColor">#FF27B5BA</Color>
 
-    <Color x:Key="CustomColor">SteelBlue</Color>
-    <Color x:Key="ContrastColor">White</Color>
-    <Color x:Key="SystemAccentColor">SteelBlue</Color>
+    <Color x:Key="ShutdownBorderColor">#333333</Color>
+    <SolidColorBrush x:Key="ShutdownBorderBrush" Color="{StaticResource ShutdownBorderColor}"/>
+    <SolidColorBrush x:Key="ExtendedSplashBackgroundBrush" Color="{ThemeResource ExtendedSplashBackgroundColor}"/>
+    <SolidColorBrush x:Key="ExtendedSplashForegroundBrush" Color="{ThemeResource ExtendedSplashForegroundColor}"/>
+
+    <Style TargetType="controls:PageHeader">
+        <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource SystemBaseHighColor}" />
+    </Style>
+
+    <Style TargetType="controls:HamburgerMenu">
+        <Setter Property="AccentColor" Value="{ThemeResource SystemAccentColor}" />
+        <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
+        <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
+        <Setter Property="VisualStateWideMinWidth" Value="{StaticResource WideMinWidth}" />
+    </Style>
+
+    <Style x:Key="WifiListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="TabNavigation" Value="Local"/>
+        <Setter Property="IsHoldingEnabled" Value="True"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+        <Setter Property="Padding" Value="12,0,14,0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="MinWidth" Value="{ThemeResource ListViewItemMinWidth}"/>
+        <Setter Property="MinHeight" Value="{ThemeResource ListViewItemMinHeight}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <ListViewItemPresenter CheckBrush="{ThemeResource SystemControlBackgroundBaseMediumHighBrush}" ContentMargin="{TemplateBinding Padding}" CheckMode="Inline" ContentTransitions="{TemplateBinding ContentTransitions}" CheckBoxBrush="{ThemeResource SystemControlBackgroundBaseMediumHighBrush}" DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}" DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}" DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}" DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" PointerOverForeground="{ThemeResource ListViewItemSelectedForegroundThemeBrush}" PressedBackground="{ThemeResource SystemControlForegroundListMediumBrush}" PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}" PointerOverBackground="{ThemeResource SystemControlForegroundListLowBrush}" ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" SelectedPressedBackground="{ThemeResource SystemControlHighlightAltListAccentHighBrush}" SelectionCheckMarkVisualEnabled="True" SelectedForeground="{ThemeResource ListViewItemSelectedForegroundThemeBrush}" SelectedPointerOverBackground="{ThemeResource SystemControlHighlightAltListAccentLowBrush}" SelectedBackground="{ThemeResource SystemControlHighlightAltListAccentLowBrush}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ShutdownListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="TabNavigation" Value="Local"/>
+        <Setter Property="IsHoldingEnabled" Value="True"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <ListViewItemPresenter ContentTransitions="{TemplateBinding ContentTransitions}" 
+                                           DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}" 
+                                           DragOpacity="0.2"
+                                           DragBackground="{StaticResource ListViewItemDragBackgroundThemeBrush}" 
+                                           DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}" 
+                                           FocusBorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}" 
+                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                           Padding="{TemplateBinding Padding}" 
+                                           PointerOverBackgroundMargin="1" 
+                                           PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}" 
+                                           PointerOverBackground="{ThemeResource SystemControlBackgroundAccentBrush}" 
+                                           ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" 
+                                           SelectedPointerOverBorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}" 
+                                           SelectionCheckMarkVisualEnabled="False" 
+                                           SelectedForeground="{ThemeResource ListViewItemSelectedForegroundThemeBrush}" 
+                                           SelectedPointerOverBackground="{ThemeResource SystemControlBackgroundAccentBrush}" 
+                                           SelectedBorderThickness="{ThemeResource ListViewItemCompactSelectedBorderThemeThickness}" 
+                                           SelectedBackground="{ThemeResource SystemControlBackgroundAccentBrush}" 
+                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ShutdownMenuFlyoutItemStyle" TargetType="MenuFlyoutItem">
+        <Setter Property="Background" Value="{ThemeResource MenuFlyoutItemBackground}"/>
+        <Setter Property="Foreground" Value="{ThemeResource MenuFlyoutItemForeground}"/>
+        <Setter Property="Padding" Value="{ThemeResource MenuFlyoutItemThemePadding}"/>
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="UseSystemFocusVisuals" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuFlyoutItem">
+                    <Grid x:Name="LayoutRoot" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="TextBlock"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="LayoutRoot">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MenuFlyoutItemBackgroundPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="TextBlock">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MenuFlyoutItemForegroundPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="TextBlock"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="LayoutRoot">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MenuFlyoutItemBackgroundPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="TextBlock">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MenuFlyoutItemForegroundPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerDownThemeAnimation Storyboard.TargetName="TextBlock"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="LayoutRoot">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MenuFlyoutItemBackgroundDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="TextBlock">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MenuFlyoutItemForegroundDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckPlaceholderStates">
+                                <VisualState x:Name="NoPlaceholder"/>
+                                <VisualState x:Name="CheckPlaceholder">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TextBlock">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MenuFlyoutItemPlaceholderThemeThickness}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="PaddingSizeStates">
+                                <VisualState x:Name="DefaultPadding"/>
+                                <VisualState x:Name="NarrowPadding">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Padding" Storyboard.TargetName="LayoutRoot">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MenuFlyoutItemThemePaddingNarrow}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <TextBlock x:Name="TextBlock" 
+                                   Foreground="{TemplateBinding Foreground}" 
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"                                   
+                                   Margin="20 5 20 5"
+                                   Text="{TemplateBinding Text}" 
+                                   TextTrimming="Clip" 
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="EmptyCollectionHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Foreground" Value="Gray"/>
+    </Style>
 
     <ResourceDictionary.ThemeDictionaries>
 
         <ResourceDictionary x:Key="Light">
-
-            <SolidColorBrush x:Key="CustomColorBrush" Color="{StaticResource CustomColor}" />
-            <SolidColorBrush x:Key="ContrastColorBrush" Color="{StaticResource ContrastColor}" />
-            <SolidColorBrush x:Key="ExtendedSplashBackground" Color="{StaticResource CustomColor}" />
-            <SolidColorBrush x:Key="ExtendedSplashForeground" Color="{StaticResource ContrastColor}" />
-
-            <Style TargetType="controls:HamburgerMenu">
-                <Setter Property="AccentColor" Value="{StaticResource CustomColor}" />
-                <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
-                <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
-                <Setter Property="VisualStateWideMinWidth" Value="{StaticResource WideMinWidth}" />
-            </Style>
-
-            <Style TargetType="controls:PageHeader">
-                <Setter Property="Background" Value="{ThemeResource CustomColorBrush}" />
-                <Setter Property="Foreground" Value="{ThemeResource ContrastColorBrush}" />
-            </Style>
-
-            <Style TargetType="controls:Resizer">
-                <Setter Property="GrabberBrush" Value="{ThemeResource CustomColorBrush}" />
-                <Setter Property="GrabberVisibility" Value="Visible" />
-            </Style>
-
+            <Color x:Key="ExtendedSplashBackgroundColor">White</Color>
+            <Color x:Key="ExtendedSplashForegroundColor">Black</Color>
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Default">
-
-            <SolidColorBrush x:Key="CustomColorBrush" Color="{StaticResource CustomColor}" />
-            <SolidColorBrush x:Key="ContrastColorBrush" Color="{StaticResource ContrastColor}" />
-            <SolidColorBrush x:Key="ExtendedSplashBackground" Color="{StaticResource CustomColor}" />
-            <SolidColorBrush x:Key="ExtendedSplashForeground" Color="{StaticResource ContrastColor}" />
-
-            <Style TargetType="controls:HamburgerMenu">
-
-                <!--
-
-                Windows 10 2015 (1511) Hamburger Menu Style
-                Simply replace AccentColor with the follow setters.
-
-                <Setter Property="HamburgerBackground" Value="{StaticResource CustomColorBrush}" />
-                <Setter Property="HamburgerForeground" Value="White" />
-                <Setter Property="NavAreaBackground" Value="#FF2C2C2C" />
-                <Setter Property="NavButtonForeground" Value="White" />
-                <Setter Property="NavButtonBackground" Value="Transparent" />
-                <Setter Property="NavButtonHoverForeground" Value="White" />
-                <Setter Property="NavButtonHoverBackground" Value="#FF585858" />
-                <Setter Property="NavButtonPressedForeground" Value="White" />
-                <Setter Property="NavButtonPressedBackground" Value="#FF848484" />
-                <Setter Property="NavButtonCheckedForeground" Value="White" />
-                <Setter Property="NavButtonCheckedBackground" Value="#FF2A4E6C" />
-                <Setter Property="NavButtonCheckedIndicatorBrush" Value="Transparent" />
-
-                -->
-
-                <Setter Property="AccentColor" Value="{StaticResource CustomColor}" />
-                <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
-                <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
-                <Setter Property="VisualStateWideMinWidth" Value="{StaticResource WideMinWidth}" />
-            </Style>
-
-            <Style TargetType="controls:PageHeader">
-                <Setter Property="Background" Value="{ThemeResource CustomColorBrush}" />
-                <Setter Property="Foreground" Value="{ThemeResource ContrastColorBrush}" />
-                <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
-                <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
-            </Style>
-
-            <Style TargetType="controls:Resizer">
-                <Setter Property="GrabberBrush" Value="{ThemeResource CustomColorBrush}" />
-                <Setter Property="GrabberVisibility" Value="Visible" />
-            </Style>
-
+            <Color x:Key="ExtendedSplashBackgroundColor">Black</Color>
+            <Color x:Key="ExtendedSplashForegroundColor">White</Color>
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="HighContrast">
 
-            <SolidColorBrush x:Key="ExtendedSplashBackground" Color="Black" />
-            <SolidColorBrush x:Key="ExtendedSplashForeground" Color="White" />
+            <Color x:Key="ExtendedSplashBackgroundColor">Black</Color>
+            <Color x:Key="ExtendedSplashForegroundColor">White</Color>
 
             <Style TargetType="controls:HamburgerMenu">
                 <Setter Property="PaneBorderThickness" Value="0" />
@@ -100,16 +198,16 @@
                 <Setter Property="NavAreaBackground" Value="{ThemeResource SystemColorWindowColor}" />
                 <Setter Property="HamburgerForeground" Value="{ThemeResource SystemColorWindowColor}" />
                 <Setter Property="HamburgerBackground" Value="{ThemeResource SystemColorWindowTextColor}" />
-                <Setter Property="VisualStateNarrowMinWidth" Value="{ThemeResource NarrowMinWidth}" />
-                <Setter Property="VisualStateNormalMinWidth" Value="{ThemeResource NormalMinWidth}" />
-                <Setter Property="VisualStateWideMinWidth" Value="{ThemeResource WideMinWidth}" />
+                <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
+                <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
+                <Setter Property="VisualStateWideMinWidth" Value="{StaticResource WideMinWidth}" />
             </Style>
 
             <Style TargetType="controls:PageHeader">
                 <Setter Property="Background" Value="{ThemeResource SystemColorWindowColor}" />
                 <Setter Property="Foreground" Value="{ThemeResource SystemColorWindowTextColor}" />
-                <Setter Property="VisualStateNarrowMinWidth" Value="{ThemeResource NarrowMinWidth}" />
-                <Setter Property="VisualStateNormalMinWidth" Value="{ThemeResource NormalMinWidth}" />
+                <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
+                <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
             </Style>
 
         </ResourceDictionary>

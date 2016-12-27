@@ -1,3 +1,5 @@
+using FridgeShoppingList.ViewModels;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -8,17 +10,23 @@ namespace FridgeShoppingList.Views
     {
         Template10.Services.SerializationService.ISerializationService _SerializationService;
 
+        private SettingsPageViewModel _viewModel;
+        public SettingsPageViewModel ViewModel => _viewModel ?? (_viewModel = (SettingsPageViewModel)DataContext);
+
         public SettingsPage()
-        {
+        {            
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
-            _SerializationService = Template10.Services.SerializationService.SerializationService.Json;
+            _SerializationService = Template10.Services.SerializationService.SerializationService.Json;            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
+        {                        
+        }
+
+        private void WifiButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            var index = int.Parse(_SerializationService.Deserialize(e.Parameter?.ToString()).ToString());
-            MyPivot.SelectedIndex = index;
+            (DataContext as SettingsPageViewModel)?.OpenNetworkConfigCommand?.Execute(null);
         }
     }
 }

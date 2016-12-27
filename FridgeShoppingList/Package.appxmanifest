@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" 
+         xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" 
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10"
+         IgnorableNamespaces="uap mp iot">
   <Identity
     Name="235282ab-5836-41ba-ae47-5c6edd0dcada"
     Publisher = "CN=nmca"
@@ -28,5 +32,8 @@
   <Capabilities>
     <Capability Name="internetClient" />
     <uap:Capability Name="userAccountInformation" />
+    <iot:Capability Name="systemManagement"/>
+    <DeviceCapability Name="wifiControl" />
+    <DeviceCapability Name="radios"/>
   </Capabilities>
 </Package>

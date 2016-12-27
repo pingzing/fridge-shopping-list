@@ -1,7 +1,10 @@
 <common:BootStrapper x:Class="FridgeShoppingList.App"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                     xmlns:common="using:Template10.Common">
+                     xmlns:common="using:Template10.Common"
+                     xmlns:models="using:FridgeShoppingList.Models"
+                     xmlns:ctConv="using:Microsoft.Toolkit.Uwp.UI.Converters"
+                     xmlns:conv="using:FridgeShoppingList.Converters">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -9,7 +12,14 @@
                 <ResourceDictionary Source="Styles\Custom.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!--  custom resources go here  -->
+            <models:FontIcons x:Key="FontIcons"/>
+
+            <!--Converters-->
+            <conv:SignalBarsToIconConverter x:Key="SignalBarsToIconConverter"/>
+
+            <ctConv:BoolToObjectConverter x:Key="BoolToVisibilityInvertedConverter" TrueValue="Collapsed" FalseValue="Visible"/>
+            <ctConv:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter"/>
+            <ctConv:EmptyCollectionToObjectConverter x:Key="CollectionVisibilityInvertedConverter" EmptyValue="Visible" NotEmptyValue="Collapsed"/>
 
         </ResourceDictionary>
     </Application.Resources>

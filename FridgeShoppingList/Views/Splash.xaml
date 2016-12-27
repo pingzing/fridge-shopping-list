@@ -9,7 +9,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
 
-    <Grid Background="{StaticResource ExtendedSplashBackground}">
+    <Grid Background="{ThemeResource ExtendedSplashBackgroundBrush}">
 
         <Canvas x:Name="rootCanvas"
                 HorizontalAlignment="Stretch"
@@ -27,7 +27,7 @@
                       Height="50"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center"
-                      Foreground="{StaticResource ExtendedSplashForeground}"
+                      Foreground="{ThemeResource ExtendedSplashForegroundBrush}"
                       IsActive="True"
                       RenderTransformOrigin="0.5,0.5">
             <ProgressRing.RenderTransform>

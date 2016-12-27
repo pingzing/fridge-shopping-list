@@ -5,27 +5,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.ObjectModel;
+using FridgeShoppingList.Models;
 
 namespace FridgeShoppingList.ViewModels
-{
-    public class MainPageViewModel : ViewModelBase
+{   
+    public class MainPageViewModel : ViewModelBaseEx
     {
         public MainPageViewModel()
-        {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+        {            
+            ShoppingLists = new ObservableCollection<DummyElement>
             {
-                Value = "Designtime value";
-            }
-        }
+                new DummyElement {Element = "Item 1" },
+                new DummyElement {Element = "Item 2" },
+                new DummyElement {Element = "Item 3" },
+            };
+        }        
 
-        string _Value = "Gas";
-        public string Value { get { return _Value; } set { Set(ref _Value, value); } }
+        private ObservableCollection<DummyElement> _shoppingLists = new ObservableCollection<DummyElement>();
+        public ObservableCollection<DummyElement> ShoppingLists
+        {
+            get { return _shoppingLists; }
+            set { Set(ref _shoppingLists, value); }
+        }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
             if (suspensionState.Any())
             {
-                Value = suspensionState[nameof(Value)]?.ToString();
+                //restore values from suspensionState dict
             }
             await Task.CompletedTask;
         }
@@ -34,7 +42,7 @@ namespace FridgeShoppingList.ViewModels
         {
             if (suspending)
             {
-                suspensionState[nameof(Value)] = Value;
+                //store values for later restoration in suspensionState dict
             }
             await Task.CompletedTask;
         }
@@ -43,10 +51,7 @@ namespace FridgeShoppingList.ViewModels
         {
             args.Cancel = false;
             await Task.CompletedTask;
-        }
-
-        public void GotoDetailsPage() =>
-            NavigationService.Navigate(typeof(Views.DetailPage), Value);
+        }        
 
         public void GotoSettings() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 0);

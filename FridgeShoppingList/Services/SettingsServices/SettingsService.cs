@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using Template10.Common;
 using Template10.Utils;
 using Windows.UI.Xaml;
@@ -12,20 +14,6 @@ namespace FridgeShoppingList.Services.SettingsServices
         private SettingsService()
         {
             _helper = new Template10.Services.SettingsService.SettingsHelper();
-        }
-
-        public bool UseShellBackButton
-        {
-            get { return _helper.Read<bool>(nameof(UseShellBackButton), true); }
-            set
-            {
-                _helper.Write(nameof(UseShellBackButton), value);
-                BootStrapper.Current.NavigationService.GetDispatcherWrapper().Dispatch(() =>
-                {
-                    BootStrapper.Current.ShowShellBackButton = value;
-                    BootStrapper.Current.UpdateShellBackButton();
-                });
-            }
         }
 
         public ApplicationTheme AppTheme
@@ -54,24 +42,10 @@ namespace FridgeShoppingList.Services.SettingsServices
             }
         }
 
-        public bool ShowHamburgerButton
+        public ImmutableDictionary<string, bool> SsidToAutoConnect
         {
-            get { return _helper.Read<bool>(nameof(ShowHamburgerButton), true); }
-            set
-            {
-                _helper.Write(nameof(ShowHamburgerButton), value);
-                Views.Shell.HamburgerMenu.HamburgerButtonVisibility = value ? Visibility.Visible : Visibility.Collapsed;
-            }
-        }
-
-        public bool IsFullScreen
-        {
-            get { return _helper.Read<bool>(nameof(IsFullScreen), false); }
-            set
-            {
-                _helper.Write(nameof(IsFullScreen), value);
-                Views.Shell.HamburgerMenu.IsFullScreen = value;
-            }
+            get { return _helper.Read(nameof(SsidToAutoConnect), ImmutableDictionary<string, bool>.Empty); }
+            set { _helper.Write(nameof(SsidToAutoConnect), value); }
         }
     }
 }

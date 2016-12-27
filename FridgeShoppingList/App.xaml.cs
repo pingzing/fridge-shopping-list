@@ -4,10 +4,13 @@ using FridgeShoppingList.Services.SettingsServices;
 using Windows.ApplicationModel.Activation;
 using Template10.Controls;
 using Template10.Common;
-using System;
-using System.Linq;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Controls;
+using Template10.Services.NavigationService;
+using FridgeShoppingList.Views;
+using GalaSoft.MvvmLight.Ioc;
+using FridgeShoppingList.ViewModels;
+using FridgeShoppingList.Services;
 
 namespace FridgeShoppingList
 {
@@ -17,10 +20,13 @@ namespace FridgeShoppingList
     [Bindable]
     sealed partial class App : BootStrapper
     {
+        public ServiceRegistrar Registrar { get; set; }
+
         public App()
         {
             InitializeComponent();
             SplashFactory = (e) => new Views.Splash(e);
+            Registrar = new ServiceRegistrar();
 
             #region app settings
 
@@ -28,7 +34,7 @@ namespace FridgeShoppingList
             var settings = SettingsService.Instance;
             RequestedTheme = settings.AppTheme;
             CacheMaxDuration = settings.CacheMaxDuration;
-            ShowShellBackButton = settings.UseShellBackButton;
+            ShowShellBackButton = false;            
             AutoSuspendAllFrames = true;
             AutoRestoreAfterTerminated = true;
             AutoExtendExecutionSession = true;
@@ -51,6 +57,27 @@ namespace FridgeShoppingList
         {
             // TODO: add your long-running task here
             await NavigationService.NavigateAsync(typeof(Views.MainPage));
+        }
+
+        //Handles resolution for pages' ViewModels.
+        public override INavigable ResolveForPage(Page page, NavigationService navigationService)
+        {
+            if(page is MainPage)
+            {
+                return SimpleIoc.Default.GetInstance<MainPageViewModel>();
+            }
+            else if(page is SettingsPage)
+            {
+                return SimpleIoc.Default.GetInstance<SettingsPageViewModel>();
+            }
+            else if(page is NetworkConfigPage)
+            {
+                return SimpleIoc.Default.GetInstance<NetworkConfigPageViewModel>();
+            }
+            else
+            {
+                return base.ResolveForPage(page, navigationService);
+            }
         }
     }
 }
