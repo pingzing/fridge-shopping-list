@@ -12,7 +12,7 @@
     xmlns:vm="using:FridgeShoppingList.ViewModels"
     xmlns:ctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:models="using:FridgeShoppingList.Models"
-    xmlns:ctlVms="using:FridgeShoppingList.ViewModels.ControlViewModel"
+    xmlns:ctlVms="using:FridgeShoppingList.ViewModels.ControlViewModels"
     xmlns:wifi="using:Windows.Devices.WiFi"
     mc:Ignorable="d">
 
@@ -72,7 +72,7 @@
                        RelativePanel.AlignBottomWith="NetworkIcon"
                        Margin="10 0 0 0"
                        Text="{x:Bind ViewModel.CurrentNetworkName, Mode=OneWay}"
-                       Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                       Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
 
             <ToggleSwitch x:Name="WifiOnOffSwitch"
                           RelativePanel.AlignLeftWithPanel="True"

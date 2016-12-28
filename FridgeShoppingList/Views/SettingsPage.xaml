@@ -101,13 +101,6 @@
                               HorizontalContentAlignment="Left"
                               VerticalScrollBarVisibility="Auto">
                     <RelativePanel HorizontalAlignment="Left">
-
-                        <ToggleSwitch x:Name="UseLightThemeToggleSwitch"
-                                      Header="Requested Application Theme"
-                                      IsOn="{Binding UseLightThemeButton, Mode=TwoWay}"
-                                      OffContent="Dark"
-                                      OnContent="Light"
-                                      RelativePanel.AlignLeftWithPanel="True"/>
                     </RelativePanel>
 
                 </ScrollViewer>
@@ -138,13 +131,13 @@
                                RelativePanel.AlignTopWithPanel="True"
                                Margin="0 0 0 10"
                                Text="{x:Bind ViewModel.AboutPartViewModel.DisplayName}" 
-                               Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                               Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
 
                     <TextBlock x:Name="VersionTextBlock"
                                RelativePanel.AlignLeftWithPanel="True"
                                RelativePanel.Below="DisplayNameTextBlock"
                                Text="Version"
-                               Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                               Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
 
                     <TextBlock x:Name="VersionNumberTextBlock"
                                RelativePanel.AlignLeftWithPanel="True"
@@ -157,7 +150,7 @@
                                RelativePanel.Below="VersionNumberTextBlock"
                                Margin="0 10 0 0"
                                Text="Available memory"
-                               Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                               Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
                     <TextBlock x:Name="AvailableMemoryNumber"
                                RelativePanel.AlignLeftWithPanel="True"
                                RelativePanel.Below="AvailableMemoryHeader"
@@ -168,7 +161,7 @@
                                RelativePanel.Below="AvailableMemoryNumber"
                                Margin="0 10 0 0"
                                Text="Network"
-                               Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                               Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
                     <ProgressBar x:Name="NetworkLoadingIndicator"
                                          RelativePanel.AlignLeftWithPanel="True"
                                          RelativePanel.Below="NetworkHeader"

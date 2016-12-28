@@ -11,12 +11,21 @@
       xmlns:vm="using:FridgeShoppingList.ViewModels"
       xmlns:ctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:models="using:FridgeShoppingList.Models"
+      xmlns:selectors="using:FridgeShoppingList.TemplateSelectors"
       mc:Ignorable="d">
 
     <Page.Resources>
-        <DataTemplate x:Key="DetailsTemplate" x:DataType="models:DummyElement">
-            <TextBlock Text="{x:Bind Element}"/>
+        <DataTemplate x:Key="GroupedItemTemplate">
+            <TextBlock/>
         </DataTemplate>
+        
+        <DataTemplate x:Key="SingleItemTemplate">
+            <TextBlock/>
+        </DataTemplate>
+
+        <selectors:GroceryItemTemplateSelector x:Key="GroceryTemplateSelector"  
+                                               GroupedItemTemplate="{StaticResource GroupedItemTemplate}"
+                                               SingleItemTemplate="{StaticResource SingleItemTemplate}"/>
     </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -58,21 +67,16 @@
                        RelativePanel.AlignBottomWithPanel="True"
                        RelativePanel.AlignLeftWithPanel="True"
                        RelativePanel.AlignRightWithPanel="True"
-                       RelativePanel.Below="pageHeader">
-            <ctCtls:MasterDetailsView x:Name="ListMasterDetails"
-                                      ItemsSource="{x:Bind ViewModel.ShoppingLists, Mode=OneWay}">
-                <ctCtls:MasterDetailsView.ItemTemplate>
-                    <DataTemplate x:DataType="models:DummyElement">
-                        <TextBlock Text="{x:Bind Element}"/>
-                    </DataTemplate>
-                </ctCtls:MasterDetailsView.ItemTemplate>
-                <ctCtls:MasterDetailsView.DetailsTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Element}"/>
-                    </DataTemplate>
-                </ctCtls:MasterDetailsView.DetailsTemplate>
+                       RelativePanel.Below="pageHeader"
+                       Margin="10 10 10 0">
+            <ListView x:Name="FridgeItemsList"
+                      RelativePanel.AlignLeftWithPanel="True"
+                      RelativePanel.AlignRightWithPanel="True"
+                      RelativePanel.AlignBottomWithPanel="True">
                 
-            </ctCtls:MasterDetailsView>
+            </ListView>
+
+            <TextBlock x:Name="Text1" Text="Test!"/>
         </RelativePanel>
 
     </RelativePanel>

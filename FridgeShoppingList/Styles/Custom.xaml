@@ -2,31 +2,102 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="using:Template10.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Styles/LcarsColors.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <x:Double x:Key="NarrowMinWidth">0</x:Double>
     <x:Double x:Key="NormalMinWidth">521</x:Double>
     <x:Double x:Key="WideMinWidth">1200</x:Double>
-    
-    <Color x:Key="SystemAccentColor">#FF27B5BA</Color>
 
+    <!--Tiny bit of duplication here, but we'll live-->
+    <Color x:Key="SystemAccentColor">#FFFE9900</Color>
+    
     <Color x:Key="ShutdownBorderColor">#333333</Color>
     <SolidColorBrush x:Key="ShutdownBorderBrush" Color="{StaticResource ShutdownBorderColor}"/>
     <SolidColorBrush x:Key="ExtendedSplashBackgroundBrush" Color="{ThemeResource ExtendedSplashBackgroundColor}"/>
     <SolidColorBrush x:Key="ExtendedSplashForegroundBrush" Color="{ThemeResource ExtendedSplashForegroundColor}"/>
 
+    <!--Textblock Styles-->
+    <!--Override boring unstyle textblocks-->
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{ThemeResource LcarsAccentBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource LcarsThinFont}"/>
+        <Setter Property="FontSize" Value="25"/>
+    </Style>
+
+    <Style x:Key="LcarsBaseTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource LcarsAccentBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource LcarsThinFont}"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+
+    <Style x:Key="LcarsHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
+        <Setter Property="FontFamily" Value="{StaticResource LcarsFont}"/>
+        <Setter Property="FontSize" Value="51"/>
+        <Setter Property="FontWeight" Value="Light"/>
+        <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
+    </Style>
+
+    <Style x:Key="LcarsSubheaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
+        <Setter Property="FontSize" Value="39"/>
+        <Setter Property="FontWeight" Value="Light"/>
+        <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
+    </Style>
+
+    <Style x:Key="LcarsTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
+        <Setter Property="FontWeight" Value="SemiLight"/>
+        <Setter Property="FontSize" Value="29"/>
+        <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
+    </Style>
+
+    <Style x:Key="LcarsSubtitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
+    </Style>
+
+    <Style x:Key="LcarsBodyTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
+        <Setter Property="FontFamily" Value="Normal"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+
+    <Style x:Key="LcarsCaptionTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{ThemeResource LcarsCaptionTextBlockBrush}"/>
+    </Style>
+
     <Style TargetType="controls:PageHeader">
         <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}" />
-        <Setter Property="Foreground" Value="{ThemeResource SystemBaseHighColor}" />
+        <Setter Property="Foreground" Value="Black" />
+    </Style>
+
+    <Style TargetType="AppBarButton">
+        <Setter Property="FontFamily" Value="{StaticResource LcarsThinFont}"/>
+        <Setter Property="Foreground" Value="Black"/>
     </Style>
 
     <Style TargetType="controls:HamburgerMenu">
-        <Setter Property="AccentColor" Value="{ThemeResource SystemAccentColor}" />
+        <Setter Property="HamburgerBackground" Value="{ThemeResource LcarsOrangeBrush}" />
+        <Setter Property="HamburgerForeground" Value="Black" />
+        <Setter Property="NavAreaBackground" Value="{ThemeResource LcarsOrangeBrush}" />
+        <Setter Property="NavButtonForeground" Value="Black" />
+        <Setter Property="NavButtonBackground" Value="Transparent" />
+        <Setter Property="NavButtonCheckedForeground" Value="Black" />
+        <Setter Property="NavButtonCheckedBackground" Value="{ThemeResource LcarsHamburgerBackgroundSelectedBrush}" />
+        <Setter Property="NavButtonCheckedIndicatorBrush" Value="{ThemeResource LcarsBlueGrayBrush}" />
+        <Setter Property="NavButtonHoverForeground" Value="Black"/>
+        <Setter Property="NavButtonHoverBackground" Value="{ThemeResource LcarsHamburgerBackgroundHoverBrush}"/>
+        <Setter Property="NavButtonPressedForeground" Value="White" />
+        <Setter Property="NavButtonPressedBackground" Value="{ThemeResource LcarsHamburgerBackgroundPressedBrush}"/>
         <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
         <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
         <Setter Property="VisualStateWideMinWidth" Value="{StaticResource WideMinWidth}" />
     </Style>
 
     <Style x:Key="WifiListViewItemStyle" TargetType="ListViewItem">
-        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontFamily" Value="{StaticResource LcarsFont}"/>
         <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="TabNavigation" Value="Local"/>
@@ -168,9 +239,9 @@
         </Setter>
     </Style>
 
-    <Style x:Key="EmptyCollectionHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+    <Style x:Key="EmptyCollectionHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
         <Setter Property="FontSize" Value="18"/>
-        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Foreground" Value="{ThemeResource LcarsBlueGrayBrush}"/>
     </Style>
 
     <ResourceDictionary.ThemeDictionaries>
@@ -181,8 +252,27 @@
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Default">
+
             <Color x:Key="ExtendedSplashBackgroundColor">Black</Color>
             <Color x:Key="ExtendedSplashForegroundColor">White</Color>
+
+            <SolidColorBrush x:Key="LcarsAccentBrush" Color="{StaticResource LcarsGold}"/>
+            <SolidColorBrush x:Key="LcarsOrangeBrush" Color="{StaticResource LcarsOrange}"/>
+            <SolidColorBrush x:Key="LcarsBlueGrayBrush" Color="{StaticResource LcarsBlueGray}"/>
+
+            <SolidColorBrush x:Key="LcarsCaptionTextBlockBrush" Color="{StaticResource LcarsGold}" Opacity=".8"/>
+
+                    <!--For listviews with a black background-->
+            <SolidColorBrush x:Key="LcarsListViewBackgroundHoverBrush" Color="{StaticResource LcarsOrange}" Opacity=".3"/>
+            <SolidColorBrush x:Key="LcarsListViewBackgroundPressedBrush" Color="{StaticResource LcarsOrange}" Opacity=".6"/>
+            <SolidColorBrush x:Key="LcarsListViewBackgroundHoverPressedBrush" Color="{StaticResource LcarsOrange}" Opacity=".7"/>
+            <SolidColorBrush x:Key="LcarsListViewBackgroundSelectedBrush" Color="{StaticResource LcarsOrange}" Opacity=".2"/>
+
+            <!--For listview with the LcarsGold background-->
+            <SolidColorBrush x:Key="LcarsHamburgerBackgroundHoverBrush" Color="{StaticResource LcarsBlueGray}" Opacity=".3"/>
+            <SolidColorBrush x:Key="LcarsHamburgerBackgroundPressedBrush" Color="{StaticResource LcarsBlueGray}" Opacity=".6"/>
+            <SolidColorBrush x:Key="LcarsHamburgerBackgroundHoverPressedBrush" Color="{StaticResource LcarsBlueGray}" Opacity=".7"/>
+            <SolidColorBrush x:Key="LcarsHamburgerBackgroundSelectedBrush" Color="{StaticResource LcarsBlueGray}" Opacity=".2"/>
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="HighContrast">

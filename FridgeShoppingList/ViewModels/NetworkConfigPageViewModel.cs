@@ -1,7 +1,7 @@
 ﻿using FridgeShoppingList.Models;
 using FridgeShoppingList.Services;
 using FridgeShoppingList.Services.SettingsServices;
-using FridgeShoppingList.ViewModels.ControlViewModel;
+using FridgeShoppingList.ViewModels.ControlViewModels;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Toolkit.Uwp;
 using System;

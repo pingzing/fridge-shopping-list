@@ -1,5 +1,5 @@
 ﻿using FridgeShoppingList.ViewModels;
-using FridgeShoppingList.ViewModels.ControlViewModel;
+using FridgeShoppingList.ViewModels.ControlViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;

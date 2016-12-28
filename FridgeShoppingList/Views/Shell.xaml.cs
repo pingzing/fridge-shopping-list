@@ -32,7 +32,7 @@ namespace FridgeShoppingList.Views
         public void SetNavigationService(INavigationService navigationService)
         {
             MyHamburgerMenu.NavigationService = navigationService;
-            HamburgerMenu.RefreshStyles(_settings.AppTheme, true);            
+            HamburgerMenu.RefreshStyles(ElementTheme.Dark, true);            
         }
     }
 }

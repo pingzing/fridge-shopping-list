@@ -90,6 +90,8 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="Assets\Fonts\tt0105m_.TTF" />
+    <Content Include="Assets\Fonts\tt0106m0.TTF" />
     <None Include="FridgeShoppingList_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>
@@ -105,7 +107,8 @@
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
     <Compile Include="Services\ServiceRegistrar.cs" />
     <Compile Include="Services\NetworkService.cs" />
-    <Compile Include="ViewModels\ControlViewModel\WifiItemViewModel.cs" />
+    <Compile Include="TemplateSelectors\GroceryItemTemplateSelector.cs" />
+    <Compile Include="ViewModels\ControlViewModels\WifiItemViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\NetworkConfigPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
@@ -152,7 +155,18 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Properties\DesignTimeResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
     <Page Include="Styles\Custom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Styles\LcarsColors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -182,7 +196,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Assets\Images\" />
+  </ItemGroup>
   <ItemGroup>
     <SDKReference Include="WindowsIoT, Version=10.0.14393.0">
       <Name>Windows IoT Extensions for the UWP</Name>

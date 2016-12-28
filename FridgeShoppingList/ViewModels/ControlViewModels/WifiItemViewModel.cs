@@ -14,7 +14,7 @@ using Windows.Networking.Connectivity;
 using Windows.Security.Credentials;
 using Windows.UI.Xaml;
 
-namespace FridgeShoppingList.ViewModels.ControlViewModel
+namespace FridgeShoppingList.ViewModels.ControlViewModels
 {
     public class WifiItemViewModel : BindableBase
     {        

@@ -16,21 +16,22 @@ namespace FridgeShoppingList.Services.SettingsServices
             _helper = new Template10.Services.SettingsService.SettingsHelper();
         }
 
-        public ApplicationTheme AppTheme
-        {
-            get
-            {
-                var theme = ApplicationTheme.Light;
-                var value = _helper.Read<string>(nameof(AppTheme), theme.ToString());
-                return Enum.TryParse<ApplicationTheme>(value, out theme) ? theme : ApplicationTheme.Dark;
-            }
-            set
-            {
-                _helper.Write(nameof(AppTheme), value.ToString());
-                (Window.Current.Content as FrameworkElement).RequestedTheme = value.ToElementTheme();
-                Views.Shell.HamburgerMenu.RefreshStyles(value, true);
-            }
-        }
+        //gonna default to Dark theme for a while to see how we like it
+        //public ApplicationTheme AppTheme
+        //{
+        //    get
+        //    {
+        //        var theme = ApplicationTheme.Light;
+        //        var value = _helper.Read<string>(nameof(AppTheme), theme.ToString());
+        //        return Enum.TryParse<ApplicationTheme>(value, out theme) ? theme : ApplicationTheme.Dark;
+        //    }
+        //    set
+        //    {
+        //        _helper.Write(nameof(AppTheme), value.ToString());
+        //        (Window.Current.Content as FrameworkElement).RequestedTheme = value.ToElementTheme();
+        //        Views.Shell.HamburgerMenu.RefreshStyles(value, true);
+        //    }
+        //}
 
         public TimeSpan CacheMaxDuration
         {
