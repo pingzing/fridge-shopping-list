@@ -18,7 +18,7 @@
         <DataTemplate x:Key="GroupedItemTemplate">
             <TextBlock/>
         </DataTemplate>
-        
+
         <DataTemplate x:Key="SingleItemTemplate">
             <TextBlock/>
         </DataTemplate>
@@ -29,7 +29,6 @@
     </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
                 <VisualState x:Name="VisualStateNarrow">
@@ -50,35 +49,53 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <controls:PageHeader x:Name="pageHeader"
-                             RelativePanel.AlignLeftWithPanel="True"
-                             RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True"
-                             Text="Main Page">
+        <Grid x:Name="PageHeader"
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.AlignTopWithPanel="True"
+                Background="{ThemeResource LcarsAccentBrush}"
+                Height="65">
+            <Border Background="Black" 
+                    HorizontalAlignment="Right"
+                    Margin="20 0 20 0"
+                    Padding="20 0 20 0">
+                <TextBlock Text="MAIN PAGE" 
+                           VerticalAlignment="Center"
+                           Style="{StaticResource LcarsHeaderTextBlockStyle}" />
+            </Border>
+        </Grid>
 
-            <!--  secondary commands  -->
-            <controls:PageHeader.SecondaryCommands>
-                <AppBarButton/>
-            </controls:PageHeader.SecondaryCommands>
+        <SplitView RelativePanel.Below="PageHeader" 
+                   RelativePanel.AlignLeftWithPanel="True"
+                   RelativePanel.AlignRightWithPanel="True"
+                   RelativePanel.AlignBottomWithPanel="True"
+                   DisplayMode="CompactInline">
+        <SplitView.Pane>
+            <Grid Background="{ThemeResource LcarsAccentBrush}">
+                <AppBarButton Icon="Back" Height="48" Width="48">
+                    <Interactivity:Interaction.Behaviors>
+                        <Behaviors:NavButtonBehavior Direction="Back" 
+                                                     Frame="{x:Bind ViewModel.NavigationService.Frame, Mode=OneWay}"/>
+                    </Interactivity:Interaction.Behaviors>
+                </AppBarButton>
+            </Grid>
+        </SplitView.Pane>
+            <SplitView.Content>
 
-        </controls:PageHeader>
-
-        <RelativePanel EntranceNavigationTransitionInfo.IsTargetElement="True"
-                       RelativePanel.AlignBottomWithPanel="True"
-                       RelativePanel.AlignLeftWithPanel="True"
-                       RelativePanel.AlignRightWithPanel="True"
-                       RelativePanel.Below="pageHeader"
-                       Margin="10 10 10 0">
-            <ListView x:Name="FridgeItemsList"
+                <RelativePanel Margin="10 10 10 0">
+                    <ListView x:Name="FridgeItemsList"
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.AlignBottomWithPanel="True">
-                
-            </ListView>
 
-            <TextBlock x:Name="Text1" Text="Test!"/>
-        </RelativePanel>
+                    </ListView>
 
+                    <TextBlock x:Name="Text1" Text="Test!"/>
+                </RelativePanel>
+
+        </SplitView.Content>
+    </SplitView>
     </RelativePanel>
+
 </Page>
 

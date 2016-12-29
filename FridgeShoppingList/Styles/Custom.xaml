@@ -1,6 +1,9 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="using:Template10.Controls">
+                    xmlns:controls="using:Template10.Controls"
+                    xmlns:Behaviors="using:Template10.Behaviors"
+                    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+                    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Styles/LcarsColors.xaml"/>
@@ -33,8 +36,7 @@
     </Style>
 
     <Style x:Key="LcarsHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
-        <Setter Property="FontFamily" Value="{StaticResource LcarsFont}"/>
-        <Setter Property="FontSize" Value="51"/>
+        <Setter Property="FontSize" Value="45"/>
         <Setter Property="FontWeight" Value="Light"/>
         <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
     </Style>
@@ -68,20 +70,15 @@
         <Setter Property="Foreground" Value="{ThemeResource LcarsCaptionTextBlockBrush}"/>
     </Style>
 
-    <Style TargetType="controls:PageHeader">
-        <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}" />
-        <Setter Property="Foreground" Value="Black" />
-    </Style>
-
     <Style TargetType="AppBarButton">
         <Setter Property="FontFamily" Value="{StaticResource LcarsThinFont}"/>
         <Setter Property="Foreground" Value="Black"/>
     </Style>
 
     <Style TargetType="controls:HamburgerMenu">
-        <Setter Property="HamburgerBackground" Value="{ThemeResource LcarsOrangeBrush}" />
+        <Setter Property="HamburgerBackground" Value="{ThemeResource LcarsAccentBrush}" />
         <Setter Property="HamburgerForeground" Value="Black" />
-        <Setter Property="NavAreaBackground" Value="{ThemeResource LcarsOrangeBrush}" />
+        <Setter Property="NavAreaBackground" Value="{ThemeResource LcarsAccentBrush}" />
         <Setter Property="NavButtonForeground" Value="Black" />
         <Setter Property="NavButtonBackground" Value="Transparent" />
         <Setter Property="NavButtonCheckedForeground" Value="Black" />
@@ -244,6 +241,62 @@
         <Setter Property="Foreground" Value="{ThemeResource LcarsBlueGrayBrush}"/>
     </Style>
 
+    <Style x:Key="PageHeaderButton" TargetType="Button">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Right" />
+        <Setter Property="Padding" Value="0,0,9,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Background" Value="{ThemeResource SystemControlHighlightListLowBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Background" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource SystemControlDisabledBaseLowBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          Padding="{TemplateBinding Padding}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="Width" Value="{ThemeResource AppBarExpandButtonThemeWidth}" />
+    </Style>
+    
     <ResourceDictionary.ThemeDictionaries>
 
         <ResourceDictionary x:Key="Light">
@@ -291,13 +344,6 @@
                 <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
                 <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
                 <Setter Property="VisualStateWideMinWidth" Value="{StaticResource WideMinWidth}" />
-            </Style>
-
-            <Style TargetType="controls:PageHeader">
-                <Setter Property="Background" Value="{ThemeResource SystemColorWindowColor}" />
-                <Setter Property="Foreground" Value="{ThemeResource SystemColorWindowTextColor}" />
-                <Setter Property="VisualStateNarrowMinWidth" Value="{StaticResource NarrowMinWidth}" />
-                <Setter Property="VisualStateNormalMinWidth" Value="{StaticResource NormalMinWidth}" />
             </Style>
 
         </ResourceDictionary>
