@@ -14,20 +14,8 @@ namespace FridgeShoppingList.ViewModels
     {
         public MainPageViewModel()
         {            
-            ShoppingLists = new ObservableCollection<DummyElement>
-            {
-                new DummyElement {Element = "Item 1" },
-                new DummyElement {Element = "Item 2" },
-                new DummyElement {Element = "Item 3" },
-            };
-        }        
-
-        private ObservableCollection<DummyElement> _shoppingLists = new ObservableCollection<DummyElement>();
-        public ObservableCollection<DummyElement> ShoppingLists
-        {
-            get { return _shoppingLists; }
-            set { Set(ref _shoppingLists, value); }
-        }
+            
+        }                
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
@@ -35,7 +23,7 @@ namespace FridgeShoppingList.ViewModels
             {
                 //restore values from suspensionState dict
             }
-            await Task.CompletedTask;
+            await Task.CompletedTask;            
         }
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
@@ -51,10 +39,12 @@ namespace FridgeShoppingList.ViewModels
         {
             args.Cancel = false;
             await Task.CompletedTask;
-        }        
+        }
 
-        public void GotoSettings() =>
-            NavigationService.Navigate(typeof(Views.SettingsPage), 0);
+        public void GotoSettings()
+        {
+            NavigationService.Navigate(typeof(Views.SettingsPage));
+        }
 
         public void GotoPrivacy() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 1);

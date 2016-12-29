@@ -12,6 +12,7 @@
       xmlns:ctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:models="using:FridgeShoppingList.Models"
       xmlns:selectors="using:FridgeShoppingList.TemplateSelectors"
+      xmlns:ctls="using:FridgeShoppingList.Controls"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -49,54 +50,37 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Grid x:Name="PageHeader"
-                RelativePanel.AlignLeftWithPanel="True"
-                RelativePanel.AlignRightWithPanel="True"
-                RelativePanel.AlignTopWithPanel="True" 
-              Margin="0 20 0 0"
-                Height="65">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Path Data="M181.833,0.041667 L88.4583,0.041667 C88.4583,0.041667 12.3339,0.6663 1.00057,64.833 L139.667,64.833 C139.667,64.833 134.333,16.6664 181.833,17.3331" Fill="{ThemeResource LcarsAccentBrush}" Stretch="Fill" Stroke="Transparent" StrokeThickness="0" UseLayoutRounding="False" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition"/>
-            <Rectangle Grid.Column="1"
-                       Height="17.4"
-                       VerticalAlignment="Top"
-                       Fill="{ThemeResource LcarsAccentBrush}"/>
-            <Border x:Name="HeaderContent" 
-                    Grid.Column="1" 
-                    Background="Black" 
-                    HorizontalAlignment="Right"
-                    Margin="20 0 20 0"
-                    Padding="20 0 20 0"
-                    VerticalAlignment="Top">
-                <TextBlock Text="MAIN PAGE" 
-                           Margin="0 -9 0 0"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource LcarsHeaderTextBlockStyle}"
-                           FontSize="30"/>
-            </Border>
-        </Grid>
+        <ctls:LcarsHeader x:Name="PageHeader" 
+                          RelativePanel.AlignTopWithPanel="True"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"
+                          Text="MAIN PAGE"/>
 
-        <SplitView RelativePanel.Below="PageHeader" 
+        <SplitView RelativePanel.Below="PageHeader"
                    RelativePanel.AlignLeftWithPanel="True"
                    RelativePanel.AlignRightWithPanel="True"
                    RelativePanel.AlignBottomWithPanel="True"
                    DisplayMode="Inline"
                    IsPaneOpen="True"
-                   OpenPaneLength="138.8">
+                   OpenPaneLength="140">
             <SplitView.Pane>
                 <Grid Background="{ThemeResource LcarsAccentBrush}">
-                    <AppBarButton Foreground="Black"
-                              FontWeight="Bold"
-                              Height="48" Width="48" 
-                              Icon="Back">
-                        <Interactivity:Interaction.Behaviors>
-                            <Behaviors:NavButtonBehavior Direction="Back" 
-                                                     Frame="{x:Bind ViewModel.NavigationService.Frame, Mode=OneWay}"/>
-                        </Interactivity:Interaction.Behaviors>
-                    </AppBarButton>
+                    <StackPanel>
+                        <ListViewItem Tapped="{x:Bind ViewModel.GotoSettings, Mode=OneTime}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" 
+                                          Foreground="Black"
+                                          Glyph="{Binding Source={StaticResource FontIcons}, Path=Ethernet}"
+                                          VerticalAlignment="Center"/>
+                                <TextBlock Foreground="Black" 
+                                           FontSize="25"
+                                           Margin="5 0 0 0"
+                                           Style="{ThemeResource LcarsBaseTextBlockStyle}"
+                                           Text="SETTINGS"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListViewItem>
+                    </StackPanel>
                 </Grid>
             </SplitView.Pane>
             <SplitView.Content>

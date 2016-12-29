@@ -48,7 +48,7 @@ namespace FridgeShoppingList
             return new ModalDialog
             {
                 DisableBackButtonWhenModal = true,
-                Content = new MainPage(),
+                Content = NavigationService.Frame,
                 ModalContent = new Views.Busy(),
             };
         }
