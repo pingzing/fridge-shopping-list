@@ -20,6 +20,7 @@
             <ctConv:BoolToObjectConverter x:Key="BoolToVisibilityInvertedConverter" TrueValue="Collapsed" FalseValue="Visible"/>
             <ctConv:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter"/>
             <ctConv:EmptyCollectionToObjectConverter x:Key="CollectionVisibilityInvertedConverter" EmptyValue="Visible" NotEmptyValue="Collapsed"/>
+            <ctConv:StringVisibilityConverter x:Key="StringToVisibilityConverter"/>
 
         </ResourceDictionary>
     </Application.Resources>

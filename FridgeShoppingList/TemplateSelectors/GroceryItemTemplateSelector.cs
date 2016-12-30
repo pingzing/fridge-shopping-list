@@ -17,6 +17,11 @@ namespace FridgeShoppingList.TemplateSelectors
         {
             //if (isSingleItem) //whatever
             //if (isMultiItem) //whatever
+            if(item is string)
+            {
+                return SingleItemTemplate;
+            }
+
             return base.SelectTemplateCore(item);
         }
     }

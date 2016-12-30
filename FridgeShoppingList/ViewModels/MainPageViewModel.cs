@@ -12,9 +12,17 @@ namespace FridgeShoppingList.ViewModels
 {   
     public class MainPageViewModel : ViewModelBaseEx
     {
+
+        private ObservableCollection<string> _groceryItems;
+        public ObservableCollection<string> GroceryItems
+        {
+            get { return _groceryItems; }
+            set { Set(ref _groceryItems, value); }
+        }
+
         public MainPageViewModel()
-        {            
-            
+        {
+            GroceryItems = new ObservableCollection<string> { "1", "2", "#" };
         }                
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)

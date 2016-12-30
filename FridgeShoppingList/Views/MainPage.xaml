@@ -17,11 +17,22 @@
 
     <Page.Resources>
         <DataTemplate x:Key="GroupedItemTemplate">
-            <TextBlock/>
         </DataTemplate>
 
         <DataTemplate x:Key="SingleItemTemplate">
-            <TextBlock/>
+            <ctCtls:SlidableListItem HorizontalAlignment="Stretch"
+                                     ActivationWidth="100"                                     
+                                     IsLeftCommandEnabled="True"
+                                     LeftBackground="{ThemeResource LcarsBlueGrayBrush}"
+                                     LeftForeground="White"
+                                     LeftLabel="+ Shopping List"
+                                     IsRightCommandEnabled="True"
+                                     RightBackground="{ThemeResource LcarsRedBrush}"
+                                     RightForeground="White"
+                                     RightLabel="- Delete"
+                                     MouseSlidingEnabled="True">
+                <TextBlock Text="Grocery Item!" Style="{ThemeResource LcarsTitleTextBlockStyle}"/>
+            </ctCtls:SlidableListItem>
         </DataTemplate>
 
         <selectors:GroceryItemTemplateSelector x:Key="GroceryTemplateSelector"  
@@ -29,7 +40,8 @@
                                                SingleItemTemplate="{StaticResource SingleItemTemplate}"/>
     </Page.Resources>
 
-    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          Padding="0 20 0 20">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
                 <VisualState x:Name="VisualStateNarrow">
@@ -50,55 +62,108 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <ctls:LcarsHeader x:Name="PageHeader" 
-                          RelativePanel.AlignTopWithPanel="True"
-                          RelativePanel.AlignLeftWithPanel="True"
-                          RelativePanel.AlignRightWithPanel="True"
-                          Text="MAIN PAGE"/>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-        <SplitView RelativePanel.Below="PageHeader"
-                   RelativePanel.AlignLeftWithPanel="True"
-                   RelativePanel.AlignRightWithPanel="True"
-                   RelativePanel.AlignBottomWithPanel="True"
-                   DisplayMode="Inline"
-                   IsPaneOpen="True"
-                   OpenPaneLength="140">
-            <SplitView.Pane>
-                <Grid Background="{ThemeResource LcarsAccentBrush}">
-                    <StackPanel>
-                        <ListViewItem Tapped="{x:Bind ViewModel.GotoSettings, Mode=OneTime}">
-                            <StackPanel Orientation="Horizontal">
-                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" 
-                                          Foreground="Black"
-                                          Glyph="{Binding Source={StaticResource FontIcons}, Path=Ethernet}"
-                                          VerticalAlignment="Center"/>
-                                <TextBlock Foreground="Black" 
-                                           FontSize="25"
-                                           Margin="5 0 0 0"
-                                           Style="{ThemeResource LcarsBaseTextBlockStyle}"
-                                           Text="SETTINGS"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </ListViewItem>
-                    </StackPanel>
-                </Grid>
-            </SplitView.Pane>
-            <SplitView.Content>
+        <RelativePanel x:Name="InventoryPanel">
+            <ctls:LcarsHeader x:Name="InventoryHeader" 
+                              RelativePanel.AlignTopWithPanel="True"
+                              RelativePanel.AlignLeftWithPanel="True"
+                              RelativePanel.AlignRightWithPanel="True"
+                              FrameReference="{x:Bind ViewModel.NavigationService.Frame}"
+                              Text="INVENTORY"/>
 
-                <RelativePanel Margin="10 10 10 0">
-                    <ListView x:Name="FridgeItemsList"
-                      RelativePanel.AlignLeftWithPanel="True"
-                      RelativePanel.AlignRightWithPanel="True"
-                      RelativePanel.AlignBottomWithPanel="True">
+            <SplitView x:Name="InventoryContent" 
+                       RelativePanel.Above="InventoryFooter"
+                       RelativePanel.Below="InventoryHeader"
+                       RelativePanel.AlignLeftWithPanel="True"
+                       RelativePanel.AlignRightWithPanel="True"                          
+                       DisplayMode="Inline"
+                       IsPaneOpen="True"
+                       OpenPaneLength="140">
+                <SplitView.Pane>
+                    <Grid Background="Black">
 
-                    </ListView>
+                        <StackPanel x:Name="InventoryControlPanel" 
+                                    Grid.Row="0" 
+                                    Background="{ThemeResource LcarsAccentBrush}">
+                            <ListViewItem BorderBrush="Black" BorderThickness="0,2,0,2" Tapped="{x:Bind ViewModel.GotoSettings, Mode=OneTime}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" 
+                                              Foreground="Black"
+                                              Glyph="{Binding Source={StaticResource FontIcons}, Path=Ethernet}"
+                                              VerticalAlignment="Center"/>
+                                    <TextBlock Foreground="Black" 
+                                               FontSize="25"
+                                               Margin="5 0 0 0"
+                                               Style="{ThemeResource LcarsBaseTextBlockStyle}"
+                                               Text="SETTINGS"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListViewItem>
+                        </StackPanel>
+                    </Grid>
+                </SplitView.Pane>
+                <SplitView.Content>
 
-                    <TextBlock x:Name="Text1" Text="Test!"/>
-                </RelativePanel>
+                    <RelativePanel Margin="10 0 10 0">
+                        <ListView x:Name="FridgeItemsList"
+                                  RelativePanel.AlignLeftWithPanel="True"
+                                  RelativePanel.AlignRightWithPanel="True"                                  
+                                  ItemTemplateSelector="{StaticResource GroceryTemplateSelector}"
+                                  ItemsSource="{x:Bind ViewModel.GroceryItems, Mode=OneWay}">
 
-            </SplitView.Content>
-        </SplitView>
-    </RelativePanel>
+                        </ListView>
+                    </RelativePanel>
 
+                </SplitView.Content>
+            </SplitView>
+            <ctls:LcarsFooter x:Name="InventoryFooter"                     
+                       RelativePanel.AlignBottomWithPanel="True"
+                       RelativePanel.AlignLeftWithPanel="True"
+                       RelativePanel.AlignRightWithPanel="True"
+                              Margin="0 0 0 10"/>
+        </RelativePanel>
+
+        <RelativePanel x:Name="ShoppingPanel" 
+                       Grid.Row="1"
+                       Margin="0 10 0 0">
+            <ctls:LcarsHeader x:Name="ShoppingListHeader" 
+                              RelativePanel.AlignTopWithPanel="True"
+                              RelativePanel.AlignLeftWithPanel="True"
+                              RelativePanel.AlignRightWithPanel="True" 
+                              Foreground="{ThemeResource LcarsBlueGrayBrush}"
+                              Text="SHOPPING LIST"/>
+            <SplitView x:Name="ShoppingListContent"
+                       RelativePanel.Below="ShoppingListHeader"
+                       RelativePanel.Above="ShoppingListFooter"
+                       RelativePanel.AlignLeftWithPanel="True"
+                       RelativePanel.AlignRightWithPanel="True"
+                       DisplayMode="Inline"
+                       IsPaneOpen="True"
+                       OpenPaneLength="140">
+                <SplitView.Pane>
+                    <Grid Background="Black">
+                        <StackPanel Background="{ThemeResource LcarsBlueGrayBrush}"/>
+                    </Grid>
+                </SplitView.Pane>
+
+                <SplitView.Content>
+                    <RelativePanel Margin="10 0 10 0"/>
+                </SplitView.Content>
+
+            </SplitView>
+
+            <ctls:LcarsFooter x:Name="ShoppingListFooter"                        
+                              RelativePanel.AlignBottomWithPanel="True"
+                              RelativePanel.AlignLeftWithPanel="True"
+                              RelativePanel.AlignRightWithPanel="True"
+                              Foreground="{ThemeResource LcarsBlueGrayBrush}"
+                              Text="22"/>
+
+        </RelativePanel>
+    </Grid>
 </Page>
 

@@ -312,6 +312,7 @@
             <SolidColorBrush x:Key="LcarsAccentBrush" Color="{StaticResource LcarsGold}"/>
             <SolidColorBrush x:Key="LcarsOrangeBrush" Color="{StaticResource LcarsOrange}"/>
             <SolidColorBrush x:Key="LcarsBlueGrayBrush" Color="{StaticResource LcarsBlueGray}"/>
+            <SolidColorBrush x:Key="LcarsRedBrush" Color="{StaticResource LcarsRed}"/>
 
             <SolidColorBrush x:Key="LcarsCaptionTextBlockBrush" Color="{StaticResource LcarsGold}" Opacity=".8"/>
 

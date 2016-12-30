@@ -99,6 +99,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LcarsFooter.xaml.cs">
+      <DependentUpon>LcarsFooter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LcarsHeader.xaml.cs">
       <DependentUpon>LcarsHeader.xaml</DependentUpon>
     </Compile>
@@ -156,6 +159,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\LcarsFooter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\LcarsHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

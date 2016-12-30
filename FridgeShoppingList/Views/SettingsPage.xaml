@@ -10,6 +10,7 @@
       xmlns:local="using:FridgeShoppingList.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:FridgeShoppingList.ViewModels"
+      xmlns:ctls="using:FridgeShoppingList.Controls"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -58,16 +59,13 @@
         </VisualStateManager.VisualStateGroups>
 
         <!--  header  -->
-        <controls:PageHeader x:Name="pageHeader"
-                             Content="Settings Page"
-                             Frame="{x:Bind Frame}"
-                             RelativePanel.AlignLeftWithPanel="True"
-                             RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True"
-                             EllipsisVisibility="Collapsed"
-                             DefaultLabelPosition="Right">
-            <controls:PageHeader.PrimaryCommands>
-                <AppBarButton x:Name="PowerOptionsButton"
+        <ctls:LcarsHeader x:Name="pageHeader"                          
+                          RelativePanel.AlignTopWithPanel="True"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"
+                          FrameReference="{x:Bind ViewModel.NavigationService.Frame}"
+                          Text="SETTINGS"/>
+        <!--<AppBarButton x:Name="PowerOptionsButton"
                               Label="Power">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="{Binding Source={StaticResource FontIcons}, Path=Power}"/>
@@ -82,9 +80,8 @@
                                             Style="{StaticResource ShutdownMenuFlyoutItemStyle}"/>
                         </MenuFlyout>
                     </AppBarButton.Flyout>
-                </AppBarButton>
-            </controls:PageHeader.PrimaryCommands>
-        </controls:PageHeader>
+                </AppBarButton>-->
+
 
         <!--  content  -->
         <Pivot x:Name="MyPivot"
