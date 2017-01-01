@@ -1,6 +1,8 @@
-﻿using Windows.UI.Xaml;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -58,6 +60,33 @@ namespace FridgeShoppingList.Controls
             this.InitializeComponent();            
             HeaderContentTemplate = DefaultHeaderContentTemplate;
             HeaderContent = Text;
+        }
+
+        bool animating = false;
+        public async void PlayButtonAppearAnimation()
+        {
+            if(animating)
+            {
+                return;
+            }
+
+            //setup
+            animating = true;
+            BackButton.Visibility = Visibility.Collapsed;
+            BackButtonCover.Visibility = Visibility.Visible;
+            BackButtonCover.Opacity = 1;                       
+            await BackButtonCover.Scale(0, 1, duration: 0)
+            
+            //Whoosh in the black cover
+                .Then().Scale(1, 1, duration: 500).StartAsync();
+
+            //fade in the back button by hiding the cover rectangle
+            BackButton.Visibility = Visibility.Visible;
+            await BackButtonCover.Fade(0, 200).StartAsync();
+            
+            //tear down                                   
+            BackButtonCover.Visibility = Visibility.Collapsed;            
+            animating = false;
         }
     }
 }

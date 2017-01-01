@@ -62,10 +62,10 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
         <RelativePanel x:Name="InventoryPanel">
             <ctls:LcarsHeader x:Name="InventoryHeader" 
@@ -82,22 +82,16 @@
                        RelativePanel.AlignRightWithPanel="True"                          
                        DisplayMode="Inline"
                        IsPaneOpen="True"
-                       OpenPaneLength="140">
+                       OpenPaneLength="70">
                 <SplitView.Pane>
                     <Grid Background="Black">
-
                         <StackPanel x:Name="InventoryControlPanel" 
                                     Grid.Row="0" 
                                     Background="{ThemeResource LcarsAccentBrush}">
                             <ListViewItem BorderBrush="Black" BorderThickness="0,2,0,2" Tapped="{x:Bind ViewModel.GotoSettings, Mode=OneTime}">
                                 <StackPanel Orientation="Horizontal">
-                                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" 
-                                              Foreground="Black"
-                                              Glyph="{Binding Source={StaticResource FontIcons}, Path=Ethernet}"
-                                              VerticalAlignment="Center"/>
                                     <TextBlock Foreground="Black" 
-                                               FontSize="25"
-                                               Margin="5 0 0 0"
+                                               FontSize="20"                                               
                                                Style="{ThemeResource LcarsBaseTextBlockStyle}"
                                                Text="SETTINGS"
                                                VerticalAlignment="Center"/>
@@ -110,8 +104,10 @@
 
                     <RelativePanel Margin="10 0 10 0">
                         <ListView x:Name="FridgeItemsList"
+                                  RelativePanel.AlignTopWithPanel="True"
                                   RelativePanel.AlignLeftWithPanel="True"
-                                  RelativePanel.AlignRightWithPanel="True"                                  
+                                  RelativePanel.AlignRightWithPanel="True"
+                                  RelativePanel.AlignBottomWithPanel="True"
                                   ItemTemplateSelector="{StaticResource GroceryTemplateSelector}"
                                   ItemsSource="{x:Bind ViewModel.GroceryItems, Mode=OneWay}">
 
@@ -123,13 +119,11 @@
             <ctls:LcarsFooter x:Name="InventoryFooter"                     
                        RelativePanel.AlignBottomWithPanel="True"
                        RelativePanel.AlignLeftWithPanel="True"
-                       RelativePanel.AlignRightWithPanel="True"
-                              Margin="0 0 0 10"/>
+                       RelativePanel.AlignRightWithPanel="True"/>
         </RelativePanel>
 
-        <RelativePanel x:Name="ShoppingPanel" 
-                       Grid.Row="1"
-                       Margin="0 10 0 0">
+        <RelativePanel x:Name="ShoppingPanel"                        
+                       Grid.Column="1">
             <ctls:LcarsHeader x:Name="ShoppingListHeader" 
                               RelativePanel.AlignTopWithPanel="True"
                               RelativePanel.AlignLeftWithPanel="True"
@@ -143,7 +137,7 @@
                        RelativePanel.AlignRightWithPanel="True"
                        DisplayMode="Inline"
                        IsPaneOpen="True"
-                       OpenPaneLength="140">
+                       OpenPaneLength="70">
                 <SplitView.Pane>
                     <Grid Background="Black">
                         <StackPanel Background="{ThemeResource LcarsBlueGrayBrush}"/>
@@ -151,7 +145,15 @@
                 </SplitView.Pane>
 
                 <SplitView.Content>
-                    <RelativePanel Margin="10 0 10 0"/>
+                    <RelativePanel Margin="10 0 10 0">
+                        <ListView x:Name="ShoppingListView"
+                                  RelativePanel.AlignTopWithPanel="True"
+                                  RelativePanel.AlignRightWithPanel="True"
+                                  RelativePanel.AlignLeftWithPanel="True"
+                                  RelativePanel.AlignBottomWithPanel="True">
+                            
+                        </ListView>
+                    </RelativePanel>
                 </SplitView.Content>
 
             </SplitView>

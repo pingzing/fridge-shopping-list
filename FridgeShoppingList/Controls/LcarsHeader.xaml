@@ -28,50 +28,6 @@
                            Text="{Binding ElementName=ThisLcarsHeader, Path=Text}"/>
             </Border>
         </DataTemplate>
-
-        <Storyboard x:Key="ButtonAppearStoryboard">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackButton">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.49" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="BackButtonCover">
-                <DiscreteObjectKeyFrame KeyTime="0">
-                    <DiscreteObjectKeyFrame.Value>
-                        <Visibility>Visible</Visibility>
-                    </DiscreteObjectKeyFrame.Value>
-                </DiscreteObjectKeyFrame>
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.701">
-                    <DiscreteObjectKeyFrame.Value>
-                        <Visibility>Collapsed</Visibility>
-                    </DiscreteObjectKeyFrame.Value>
-                </DiscreteObjectKeyFrame>
-            </ObjectAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="BackButtonCover">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <CubicEase EasingMode="EaseOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="BackButtonCover">
-                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <CubicEase EasingMode="EaseOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <PointAnimation Duration="0" To="0.5,0.5" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="BackButtonCover" d:IsOptimized="True"/>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackButtonCover">
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.702" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-
-        </Storyboard>
-
     </UserControl.Resources>
 
     <Grid x:Name="PageHeader"
@@ -85,11 +41,11 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Path x:Name="LcarsTopLeftCorner" 
-              Data="M180.0,0.0                     
-                    L88.4583,0.0                     
-                    C88.4583,0.0 12.3339,0.0 0,65.0                     
-                    L140.0,65.0                     
-                    C140.0,65.0 140.0,40.0 180.0,40.0" 
+              Data="M90.0,0.0                     
+                    L44.0,0.0                     
+                    C44.0,0.0 0,0.0 0,65.0                     
+                    L70.0,65.0                     
+                    C70.0,65.0 70.0,40.0 90.0,40.0" 
               Fill="{x:Bind Foreground, Mode=OneWay}" 
               Stretch="Fill" 
               Stroke="Transparent" 
@@ -116,7 +72,7 @@
                     Foreground="{x:Bind Foreground, Mode=OneWay}"
                     MinWidth="60"
                     Margin="0 -2 0 0"
-                    Height="44"
+                    Height="42"
                     FontSize="20"
                     VerticalAlignment="Center"
                     Style="{StaticResource NavigationBackButtonNormalStyle}">
@@ -127,18 +83,17 @@
                     <Core:DataTriggerBehavior Binding="{Binding Visibility, ElementName=BackButton}"
                                               ComparisonCondition="Equal"
                                               Value="Visible">
-                        <Media:ControlStoryboardAction Storyboard="{StaticResource ButtonAppearStoryboard}"
-                                                       ControlStoryboardOption="Play"/>
+                        <Core:CallMethodAction TargetObject="{x:Bind}"
+                                               MethodName="PlayButtonAppearAnimation"/>
                     </Core:DataTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Button>
             <Rectangle x:Name="BackButtonCover"
-                       Fill="Black"
-                       StrokeThickness="0"
+                       Fill="Black"                       
+                       StrokeThickness="0"                       
+                       RenderTransformOrigin="0.5,0.5"
+                       Width="60"
                        Visibility="Collapsed">
-                <Rectangle.RenderTransform>
-                    <CompositeTransform/>
-                </Rectangle.RenderTransform>
             </Rectangle>
 
             <ContentControl x:Name="HeaderContentControl"

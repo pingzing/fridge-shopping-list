@@ -33,11 +33,11 @@
 
         <Path x:Name="LcarsTopLeftCorner" 
               Grid.Column="0"
-              Data="M180.0,0.0
-                    L88.4583,0.0                     
-                    C88.4583,0.0 12.3339,0.0 0,45.0                     
-                    L140.0,45.0                     
-                    C140.0,45.0 140.0,20.0 180.0,20.0" 
+              Data="M90.0,0.0
+                    L44.0,0.0                     
+                    C44.0,0.0 0.0,0.0 0,45.0                     
+                    L70.0,45.0                     
+                    C70.0,45.0 70.0,20.0 90.0,20.0" 
               Fill="{x:Bind Foreground, Mode=OneWay}" 
               Stretch="Fill" 
               Stroke="Transparent" 
