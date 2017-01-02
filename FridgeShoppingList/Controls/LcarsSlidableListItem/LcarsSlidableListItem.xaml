@@ -17,11 +17,16 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid x:Name="CommandContainer"
+                              Grid.Column="1"
                               Margin="1"
                               x:DeferLoadStrategy="Lazy">
+                            <Grid.RenderTransform>
+                                <CompositeTransform/>
+                            </Grid.RenderTransform>
                             <StackPanel x:Name="LeftCommandPanel"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
@@ -37,7 +42,7 @@
                                 </StackPanel.RenderTransform>
                             </StackPanel>
 
-                            <StackPanel x:Name="RightCommandPanel"
+                            <StackPanel x:Name="RightCommandPanel"                                        
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
                                         Orientation="Horizontal">
@@ -52,7 +57,20 @@
                                 </StackPanel.RenderTransform>
                             </StackPanel>
                         </Grid>
-                        <Grid x:Name="ContentGrid" 
+                        
+                        <!--Stuck here in the middle so it draws on top of the command containers.-->
+                        <Path x:Name="StartcapPath"
+                              Grid.Column="0"                              
+                              Fill="{TemplateBinding EndcapBrush}"
+                              RenderTransformOrigin="0.5,0.5">
+                            <Path.RenderTransform>
+                                <CompositeTransform x:Name="StartcapPathTransform"
+                                                    ScaleX="-1"/>
+                            </Path.RenderTransform>
+                        </Path>
+
+                        <Grid x:Name="ContentGrid"
+                              Grid.Column="1"
                               Background="{TemplateBinding Background}"
                               ManipulationMode="TranslateX,System">
                             <ContentPresenter />
@@ -61,7 +79,8 @@
                             </Grid.RenderTransform>
                         </Grid>
                         <Path x:Name="EndcapPath"
-                              Grid.Column="1">
+                              Grid.Column="2"
+                              Fill="{TemplateBinding EndcapBrush}">
                             <Path.RenderTransform>
                                 <CompositeTransform x:Name="EndcapPathTransform"/>
                             </Path.RenderTransform>

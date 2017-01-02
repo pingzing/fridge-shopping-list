@@ -141,7 +141,13 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
         /// Identifues the <see cref="IsPointerReleasedOnSwipingHandled"/> property
         /// </summary>
         public static readonly DependencyProperty IsPointerReleasedOnSwipingHandledProperty =
-            DependencyProperty.Register("IsPointerReleasedOnSwipingHandled", typeof(bool), typeof(LcarsSlidableListItem), new PropertyMetadata(false));
+            DependencyProperty.Register(nameof(IsPointerReleasedOnSwipingHandled), typeof(bool), typeof(LcarsSlidableListItem), new PropertyMetadata(false));        
+
+        /// <summary>
+        /// Identifies the <see cref="EndcapBrush"/> property.
+        /// </summary>
+        public static readonly DependencyProperty EndcapBrushProperty =
+            DependencyProperty.Register(nameof(EndcapBrush), typeof(Brush), typeof(LcarsSlidableListItem), new PropertyMetadata(new SolidColorBrush()));
 
         /// <summary>
         /// Occurs when SwipeStatus has changed
@@ -153,11 +159,15 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
         private const string PartLeftCommandPanel = "LeftCommandPanel";
         private const string PartRightCommandPanel = "RightCommandPanel";
         private const string EndcapPath = "EndcapPath";
+        private const string StartcapPath = "StartcapPath";
         private const int FinishAnimationDuration = 150;
         private const int SnappedCommandMargin = 20;
+        private const int LeftSnappedCommandMargin = 30;
         private const int AnimationSetDuration = 200;
         private Path _endcapPath;
+        private Path _startcapPath;
         private CompositeTransform _endcapPathTransform;
+        private CompositeTransform _startcapPathTransform;
         private Grid _contentGrid;
         private CompositeTransform _transform;
         private Grid _commandContainer;
@@ -169,9 +179,11 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
         private CompositeTransform _rightCommandTransform;
         private DoubleAnimation _contentAnimation;
         private DoubleAnimation _endcapPathAnimation;
+        private DoubleAnimation _startcapAnimation;
         private Storyboard _contentStoryboard;
         private AnimationSet _leftCommandAnimationSet;
         private AnimationSet _rightCommandAnimationSet;
+        private bool _sizechangedSubscribed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LcarsSlidableListItem"/> class.
@@ -225,12 +237,29 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
             if(_endcapPath != null)
             {
                 _endcapPathTransform = _endcapPath.RenderTransform as CompositeTransform;
-                this.SizeChanged += LcarsSlidableListItem_SizeChanged;
+                if (!_sizechangedSubscribed)
+                {
+                    _sizechangedSubscribed = true;
+                    this.SizeChanged += LcarsSlidableListItem_SizeChanged;
+                }
+            }
+
+            _startcapPath = GetTemplateChild(StartcapPath) as Path;
+
+            if(_startcapPath != null)
+            {
+                _startcapPathTransform = _startcapPath.RenderTransform as CompositeTransform;
+                if (!_sizechangedSubscribed)
+                {
+                    _sizechangedSubscribed = true;
+                    this.SizeChanged += LcarsSlidableListItem_SizeChanged;
+                }
             }
 
             base.OnApplyTemplate();
         }
 
+        bool _startCapSizeChangedSubscribed;
         private void LcarsSlidableListItem_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Size newSize = e.NewSize;
@@ -249,7 +278,29 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
             geometry.Figures = figures;
             _endcapPath.Data = geometry;
             _endcapPath.StrokeThickness = 0;
-            _endcapPath.Fill = new SolidColorBrush(Colors.White);
+
+            PathGeometry startCapGeometry = new PathGeometry();
+            PathFigureCollection startFigures = new PathFigureCollection();
+            PathFigure startHalfCircleFigure = new PathFigure { StartPoint = new Point(0, 0) };
+            startHalfCircleFigure.Segments.Add(new ArcSegment
+            {
+                Size = new Size(newSize.Height / 2, newSize.Height / 2),
+                IsLargeArc = false,
+                Point = new Point(0, newSize.Height),
+                RotationAngle = 0,
+                SweepDirection = SweepDirection.Clockwise
+            });
+
+            startFigures.Add(startHalfCircleFigure);
+            startCapGeometry.Figures = startFigures;
+            _startcapPath.Data = startCapGeometry;            
+            _startcapPath.StrokeThickness = 0;
+
+            if (!_startCapSizeChangedSubscribed)
+            {
+                _startCapSizeChangedSubscribed = true;
+                _startcapPath.SizeChanged += (s, arg) => _startcapPath.Margin = new Thickness(-(_startcapPath.ActualWidth), 0, 0, 0);
+            }
         }
 
         private void ContentGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
@@ -283,9 +334,19 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                     _endcapPathAnimation = new DoubleAnimation();
                     Storyboard.SetTarget(_endcapPathAnimation, _endcapPathTransform);
                     Storyboard.SetTargetProperty(_endcapPathAnimation, "TranslateX");
-                    _endcapPathAnimation.To = 0; //this might need to be where the end of the content
+                    _endcapPathAnimation.To = 0;
                     _endcapPathAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(FinishAnimationDuration));
                     _contentStoryboard.Children.Add(_endcapPathAnimation);
+                }
+
+                if(_startcapPath != null && _startcapPathTransform != null)
+                {
+                    _startcapAnimation = new DoubleAnimation();
+                    Storyboard.SetTarget(_startcapAnimation, _startcapPathTransform);
+                    Storyboard.SetTargetProperty(_startcapAnimation, "TranslateX");
+                    _startcapAnimation.To = 0;
+                    _startcapAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(FinishAnimationDuration));
+                    _contentStoryboard.Children.Add(_startcapAnimation);
                 }
             }
             
@@ -326,11 +387,12 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                 }
             }
 
-            _contentStoryboard.Stop();
+            _contentStoryboard.Stop();            
             _commandContainer.Opacity = 0;
             _commandContainerTransform.TranslateX = 0;
             _transform.TranslateX = 0;
             _endcapPathTransform.TranslateX = 0;
+            _startcapPathTransform.TranslateX = 0;
             SwipeStatus = SwipeStatus.Starting;
         }
 
@@ -346,6 +408,9 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
 
             var endcapX = _endcapPathTransform.TranslateX;
             _endcapPathAnimation.From = endcapX;
+
+            var startcapX = _startcapPathTransform.TranslateX;
+            _startcapAnimation.From = startcapX;
 
             var x = _transform.TranslateX;
             _contentAnimation.From = x;
@@ -366,7 +431,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
 
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { SwipeStatus = SwipeStatus.Idle; }).AsTask();
         }
-
+        
         /// <summary>
         /// Handler for when slide manipulation is underway
         /// </summary>
@@ -377,15 +442,15 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                 return;
             }
 
-            var newTranslationX = _transform.TranslateX + e.Delta.Translation.X;
+            var newTranslationX = _transform.TranslateX + e.Delta.Translation.X;            
             bool swipingInDisabledArea = false;
             SwipeStatus newSwipeStatus = SwipeStatus.Idle;
 
             if (newTranslationX > 0)
             {
-                // Swiping from left to right
+                // Swiping from left to right                
                 if (!IsLeftCommandEnabled)
-                {
+                {                    
                     // If swipe is not enabled, only allow swipe a very short distance
                     if (newTranslationX > 0)
                     {
@@ -420,7 +485,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                 if (newTranslationX > (_contentGrid.ActualWidth - 4))
                 {
                     newTranslationX = _contentGrid.ActualWidth - 4;
-                }
+                }                
             }
             else
             {
@@ -458,11 +523,11 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
 
                 // Don't allow swiping more than almost the whole content grid width
                 // (doing this will cause the control to change size).
-                if (newTranslationX < -(_contentGrid.ActualWidth - 4))
+                if (newTranslationX < -(_contentGrid.ActualWidth + (_endcapPath?.ActualWidth ?? 0) + (_startcapPath?.ActualWidth ?? 0) - 4))
                 {
-                    newTranslationX = -(_contentGrid.ActualWidth - 4);
+                    newTranslationX = -(_contentGrid.ActualWidth + (_endcapPath?.ActualWidth ?? 0) + (_startcapPath?.ActualWidth ?? 0) - 4);
                 }
-            }
+            }           
 
             bool hasPassedThreshold = !swipingInDisabledArea && Math.Abs(newTranslationX) >= ActivationWidth;
 
@@ -479,6 +544,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                 _rightCommandPanel.Opacity = 0;
 
                 _commandContainer.Background = LeftBackground as SolidColorBrush;
+                (_commandContainer.RenderTransform as CompositeTransform).TranslateX = _startcapPath.ActualWidth;
                 _commandContainer.Opacity = 1;
                 _leftCommandPanel.Opacity = 1;
 
@@ -499,7 +565,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                         // The control was just put below the threshold.
                         // Run an animation to put the text and icon
                         // in the correct position.
-                        _leftCommandAnimationSet = _leftCommandPanel.Offset((float)(SnappedCommandMargin - _leftCommandTransform.TranslateX), duration: AnimationSetDuration);
+                        _leftCommandAnimationSet = _leftCommandPanel.Offset((float)(LeftSnappedCommandMargin - _leftCommandTransform.TranslateX), duration: AnimationSetDuration);
                         _leftCommandAnimationSet.Start();
                     }
                     else if (SwipeStatus != SwipeStatus.SwipingPassedRightThreshold)
@@ -508,7 +574,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                         // below threshold.
                         _leftCommandAnimationSet?.Stop();
                         _leftCommandPanel.RenderTransform = _leftCommandTransform;
-                        _leftCommandTransform.TranslateX = SnappedCommandMargin;
+                        _leftCommandTransform.TranslateX = LeftSnappedCommandMargin;
                     }
 
                     newSwipeStatus = SwipeStatus.SwipingPassedRightThreshold;
@@ -520,6 +586,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                 _leftCommandPanel.Opacity = 0;
 
                 _commandContainer.Background = RightBackground as SolidColorBrush;
+                (_commandContainer.RenderTransform as CompositeTransform).TranslateX = 0;
                 _commandContainer.Opacity = 1;
                 _rightCommandPanel.Opacity = 1;
 
@@ -556,7 +623,27 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                 }
             }
 
-            _transform.TranslateX = newTranslationX;
+            _transform.TranslateX = newTranslationX;            
+            if (newTranslationX > 0)
+            {
+                _endcapPathTransform.TranslateX = newTranslationX;
+                if(newTranslationX >= _startcapPath.ActualWidth )
+                {
+                    _startcapPathTransform.TranslateX = _startcapPath.ActualWidth;
+                }
+                else
+                {
+                    _startcapPathTransform.TranslateX = newTranslationX;
+                }
+            }
+            else
+            {
+                _startcapPathTransform.TranslateX = newTranslationX;
+                if (_endcapPathTransform.TranslateX + newTranslationX != 0)
+                {
+                    _endcapPathTransform.TranslateX = 0;
+                }
+            }
             SwipeStatus = newSwipeStatus;
         }
 
@@ -788,6 +875,15 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
         {
             get { return (bool)GetValue(IsPointerReleasedOnSwipingHandledProperty); }
             set { SetValue(IsPointerReleasedOnSwipingHandledProperty, value); }
+        }
+
+        /// <summary>
+        /// Determines the color used for the endcap at the far right of the list item.
+        /// </summary>
+        public Brush EndcapBrush
+        {
+            get { return (Brush)GetValue(EndcapBrushProperty); }
+            set { SetValue(EndcapBrushProperty, value); }
         }
     }
 }
