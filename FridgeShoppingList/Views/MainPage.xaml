@@ -20,19 +20,27 @@
         </DataTemplate>
 
         <DataTemplate x:Key="SingleItemTemplate">
-            <ctCtls:SlidableListItem HorizontalAlignment="Stretch"
-                                     ActivationWidth="100"                                     
-                                     IsLeftCommandEnabled="True"
-                                     LeftBackground="{ThemeResource LcarsBlueGrayBrush}"
-                                     LeftForeground="White"
-                                     LeftLabel="+ Shopping List"
-                                     IsRightCommandEnabled="True"
-                                     RightBackground="{ThemeResource LcarsRedBrush}"
-                                     RightForeground="White"
-                                     RightLabel="- Delete"
-                                     MouseSlidingEnabled="True">
-                <TextBlock Text="Grocery Item!" Style="{ThemeResource LcarsTitleTextBlockStyle}"/>
-            </ctCtls:SlidableListItem>
+            <StackPanel Orientation="Horizontal">
+                <ctCtls:SlidableListItem HorizontalAlignment="Stretch"                                                                      
+                                         IsLeftCommandEnabled="True"
+                                         LeftBackground="Black"
+                                         LeftForeground="White"
+                                         LeftLabel="+ Shopping List"
+                                         IsRightCommandEnabled="True"                                     
+                                         RightBackground="{ThemeResource LcarsRedBrush}"
+                                         RightForeground="White"
+                                         RightLabel="- Delete"
+                                         MouseSlidingEnabled="True">
+                    <Border Background="{StaticResource LcarsAccentBrush}">
+                        <TextBlock Text="Grocery Item!"
+                                   MinHeight="44"
+                                   Style="{ThemeResource LcarsTitleTextBlockStyle}"/>
+                    </Border>
+                </ctCtls:SlidableListItem>
+                <Path Data="M0,0
+                            A22,22 0 0 1 0,44 z"
+                      Fill="{ThemeResource LcarsAccentBrush}"/>
+            </StackPanel>
         </DataTemplate>
 
         <selectors:GroceryItemTemplateSelector x:Key="GroceryTemplateSelector"  
@@ -88,7 +96,11 @@
                         <StackPanel x:Name="InventoryControlPanel" 
                                     Grid.Row="0" 
                                     Background="{ThemeResource LcarsAccentBrush}">
-                            <ListViewItem BorderBrush="Black" BorderThickness="0,2,0,2" Tapped="{x:Bind ViewModel.GotoSettings, Mode=OneTime}">
+                            <ListViewItem BorderBrush="Black" 
+                                          BorderThickness="0 2 0 2" 
+                                          Height="48"
+                                          Margin="0 0 0 5"
+                                          Tapped="{x:Bind ViewModel.GotoSettings, Mode=OneTime}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Foreground="Black" 
                                                FontSize="20"                                               
@@ -97,19 +109,33 @@
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ListViewItem>
+                            <ListViewItem BorderBrush="Black"
+                                          BorderThickness="0 2 0 2"
+                                          Height="48"
+                                          Margin="0 0 0 5"/>
+                            <ListViewItem BorderBrush="Black"
+                                          BorderThickness="0 2 0 2"
+                                          Height="48"
+                                          Margin="0 0 0 5"/>
                         </StackPanel>
                     </Grid>
                 </SplitView.Pane>
                 <SplitView.Content>
 
-                    <RelativePanel Margin="10 0 10 0">
+                    <RelativePanel Margin="0 2 10 0">
                         <ListView x:Name="FridgeItemsList"
                                   RelativePanel.AlignTopWithPanel="True"
                                   RelativePanel.AlignLeftWithPanel="True"
                                   RelativePanel.AlignRightWithPanel="True"
                                   RelativePanel.AlignBottomWithPanel="True"
                                   ItemTemplateSelector="{StaticResource GroceryTemplateSelector}"
-                                  ItemsSource="{x:Bind ViewModel.GroceryItems, Mode=OneWay}">
+                                  ItemsSource="{x:Bind ViewModel.GroceryItems, Mode=OneWay}"
+                                  SelectionMode="None">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Padding" Value="2 0 12 9"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
 
                         </ListView>
                     </RelativePanel>
@@ -151,7 +177,7 @@
                                   RelativePanel.AlignRightWithPanel="True"
                                   RelativePanel.AlignLeftWithPanel="True"
                                   RelativePanel.AlignBottomWithPanel="True">
-                            
+
                         </ListView>
                     </RelativePanel>
                 </SplitView.Content>

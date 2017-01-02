@@ -58,6 +58,11 @@ namespace FridgeShoppingList.Controls
         public LcarsHeader()
         {
             this.InitializeComponent();            
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            {
+                return;
+            }
+
             HeaderContentTemplate = DefaultHeaderContentTemplate;
             HeaderContent = Text;
         }

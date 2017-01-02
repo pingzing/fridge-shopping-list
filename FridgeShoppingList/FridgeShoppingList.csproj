@@ -105,6 +105,9 @@
     <Compile Include="Controls\LcarsHeader.xaml.cs">
       <DependentUpon>LcarsHeader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.cs" />
+    <Compile Include="Controls\LcarsSlidableListItem\SwipeStatus.cs" />
+    <Compile Include="Controls\LcarsSlidableListItem\SwipeStatusChangedEventArgs.cs" />
     <Compile Include="Converters\SignalBarsToIconConverter.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DummyElement.cs" />
@@ -167,6 +170,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Properties\DesignTimeResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -182,6 +190,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Busy.xaml">
       <Generator>MSBuild:Compile</Generator>
