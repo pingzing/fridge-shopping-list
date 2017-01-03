@@ -20,7 +20,9 @@ namespace FridgeShoppingList.Controls
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register(nameof(Text), typeof(string), typeof(LcarsHeader), new PropertyMetadata(string.Empty, (d, e) =>
             {
-                (d as LcarsHeader).HeaderContent = e.NewValue;
+                LcarsHeader _this = (LcarsHeader)d;
+                _this.HeaderContent = e.NewValue;
+                _this.HeaderContentTemplate = _this.DefaultHeaderContentTemplate;
             }));
 
         public object HeaderContent
@@ -56,15 +58,12 @@ namespace FridgeShoppingList.Controls
 
 
         public LcarsHeader()
-        {
+        {            
             this.InitializeComponent();            
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 return;
-            }
-
-            HeaderContentTemplate = DefaultHeaderContentTemplate;
-            HeaderContent = Text;
+            }            
         }
 
         bool animating = false;

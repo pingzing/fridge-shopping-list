@@ -64,14 +64,22 @@
                           RelativePanel.AlignTopWithPanel="True"
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.AlignRightWithPanel="True"
-                          FrameReference="{x:Bind ViewModel.NavigationService.Frame}"
-                          Text="SETTINGS"/>
-        <!--<AppBarButton x:Name="PowerOptionsButton"
-                              Label="Power">
-                    <AppBarButton.Icon>
+                          FrameReference="{x:Bind ViewModel.NavigationService.Frame}">
+            <StackPanel Background="Black" 
+                        Margin="20 -5 20 0" 
+                        Padding="20 0 20 0"
+                        Orientation="Horizontal">
+                <TextBlock Text="SETTINGS" Style="{StaticResource LcarsHeaderTextBlockStyle}"/>
+                <Button x:Name="PowerOptionsButton"
+                        Background="Black"
+                        Foreground="{ThemeResource LcarsAccentBrush}"
+                        Margin="10 0 0 0"
+                        Height="38" Width="60"
+                        VerticalAlignment="Center">
+                    <Button.Content>
                         <FontIcon Glyph="{Binding Source={StaticResource FontIcons}, Path=Power}"/>
-                    </AppBarButton.Icon>
-                    <AppBarButton.Flyout>
+                    </Button.Content>
+                    <Button.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Command="{x:Bind ViewModel.ShutdownCommand}" 
                                             Text="Shutdown" 
@@ -80,10 +88,11 @@
                                             Text="Restart" 
                                             Style="{StaticResource ShutdownMenuFlyoutItemStyle}"/>
                         </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>-->
-
-
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+        </ctls:LcarsHeader>
+        
         <!--  content  -->
         <Pivot x:Name="MyPivot"
                Grid.Row="1"

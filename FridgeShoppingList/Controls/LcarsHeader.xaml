@@ -106,7 +106,8 @@
         </Grid>
         <Path x:Name="RoundedHeaderCap" 
               Grid.Column="2"              
-              Data="M0,0                      A20,20 0 0 1 0,40 z"
+              Data="M0,0 
+                    A20,20 0 0 1 0,40 z"
               Fill="{x:Bind Foreground, Mode=OneWay}"              
               VerticalAlignment="Top"/>
     </Grid>
