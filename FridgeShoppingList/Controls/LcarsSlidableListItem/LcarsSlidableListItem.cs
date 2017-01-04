@@ -161,8 +161,8 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
         private const string EndcapPath = "EndcapPath";
         private const string StartcapPath = "StartcapPath";
         private const int FinishAnimationDuration = 150;
-        private const int SnappedCommandMargin = 20;
-        private const int LeftSnappedCommandMargin = 30;
+        private const int RightSnappedCommandMargin = 20;
+        private const int LeftSnappedCommandMargin = 10;
         private const int AnimationSetDuration = 200;
         private Path _endcapPath;
         private Path _startcapPath;
@@ -344,8 +344,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                     _startcapAnimation = new DoubleAnimation();
                     Storyboard.SetTarget(_startcapAnimation, _startcapPathTransform);
                     Storyboard.SetTargetProperty(_startcapAnimation, "TranslateX");
-                    _startcapAnimation.To = 0;
-                    _startcapAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(FinishAnimationDuration));
+                    _startcapAnimation.To = 0;                                        
                     _contentStoryboard.Children.Add(_startcapAnimation);
                 }
             }
@@ -416,6 +415,23 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
             _contentAnimation.From = x;
             _commandContainerClipTranslateAnimation.From = 0;
             _commandContainerClipTranslateAnimation.To = -x;
+
+            if(x > _startcapPath.ActualWidth)
+            {
+                double unitsPerMs = x / FinishAnimationDuration;
+                double distanceTillStartCap = x - _startcapPath.ActualWidth;
+                double millisecondsTillStartCap = distanceTillStartCap / unitsPerMs;
+                _startcapAnimation.BeginTime = TimeSpan.FromMilliseconds(millisecondsTillStartCap);
+
+                double millisecondsFromStartCapToEnd = _startcapPath.ActualWidth / unitsPerMs;
+                _startcapAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(millisecondsFromStartCapToEnd));
+            }
+            else
+            {
+                _startcapAnimation.BeginTime = null;
+                _startcapAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(FinishAnimationDuration));
+            }
+
             _contentStoryboard.Begin();            
 
             if (SwipeStatus == SwipeStatus.SwipingPassedLeftThreshold)
@@ -607,7 +623,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                         // The control was just put below the threshold.
                         // Run an animation to put the text and icon
                         // in the correct position.
-                        _rightCommandAnimationSet = _rightCommandPanel.Offset((float)(-SnappedCommandMargin - _rightCommandTransform.TranslateX), duration: AnimationSetDuration);
+                        _rightCommandAnimationSet = _rightCommandPanel.Offset((float)(-RightSnappedCommandMargin - _rightCommandTransform.TranslateX), duration: AnimationSetDuration);
                         _rightCommandAnimationSet.Start();
                     }
                     else if (SwipeStatus != SwipeStatus.SwipingPassedLeftThreshold)
@@ -616,7 +632,7 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                         // below threshold.
                         _rightCommandAnimationSet?.Stop();
                         _rightCommandPanel.RenderTransform = _rightCommandTransform;
-                        _rightCommandTransform.TranslateX = -SnappedCommandMargin;
+                        _rightCommandTransform.TranslateX = -RightSnappedCommandMargin;
                     }
 
                     newSwipeStatus = SwipeStatus.SwipingPassedLeftThreshold;

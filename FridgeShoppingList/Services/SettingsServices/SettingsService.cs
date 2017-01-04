@@ -1,6 +1,10 @@
+using FridgeShoppingList.Models;
+using Reactive.Bindings;
+using System.Reactive;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Reactive.Linq;
 using Template10.Common;
 using Template10.Utils;
 using Windows.UI.Xaml;
@@ -11,31 +15,14 @@ namespace FridgeShoppingList.Services.SettingsServices
     {
         public static SettingsService Instance { get; } = new SettingsService();
         Template10.Services.SettingsService.ISettingsHelper _helper;
-        private SettingsService()
-        {
-            _helper = new Template10.Services.SettingsService.SettingsHelper();
-        }
 
-        //gonna default to Dark theme for a while to see how we like it
-        //public ApplicationTheme AppTheme
-        //{
-        //    get
-        //    {
-        //        var theme = ApplicationTheme.Light;
-        //        var value = _helper.Read<string>(nameof(AppTheme), theme.ToString());
-        //        return Enum.TryParse<ApplicationTheme>(value, out theme) ? theme : ApplicationTheme.Dark;
-        //    }
-        //    set
-        //    {
-        //        _helper.Write(nameof(AppTheme), value.ToString());
-        //        (Window.Current.Content as FrameworkElement).RequestedTheme = value.ToElementTheme();
-        //        Views.Shell.HamburgerMenu.RefreshStyles(value, true);
-        //    }
-        //}
+        public ReactiveCollection<GroceryItemType> GroceryTypes { get; set; }
+
+        public ReactiveCollection<GroceryItem> InventoryItems { get; set; }
 
         public TimeSpan CacheMaxDuration
         {
-            get { return _helper.Read<TimeSpan>(nameof(CacheMaxDuration), TimeSpan.FromDays(2)); }
+            get { return _helper.Read(nameof(CacheMaxDuration), TimeSpan.FromDays(2)); }
             set
             {
                 _helper.Write(nameof(CacheMaxDuration), value);
@@ -47,6 +34,31 @@ namespace FridgeShoppingList.Services.SettingsServices
         {
             get { return _helper.Read(nameof(SsidToAutoConnect), ImmutableDictionary<string, bool>.Empty); }
             set { _helper.Write(nameof(SsidToAutoConnect), value); }
+        }
+
+        private SettingsService()
+        {
+            _helper = new Template10.Services.SettingsService.SettingsHelper();
+
+            GroceryTypes = _helper.Read(nameof(GroceryTypes), new ReactiveCollection<GroceryItemType>());
+            GroceryTypes.ToCollectionChanged()
+                .Throttle(TimeSpan.FromSeconds(30))
+                .Subscribe(
+                    onNext: x =>
+                    {
+                        _helper.Write(nameof(GroceryTypes), GroceryTypes);
+                    }
+                );
+
+            InventoryItems = _helper.Read(nameof(InventoryItems), new ReactiveCollection<GroceryItem>());
+            InventoryItems.ToCollectionChanged()
+                .Throttle(TimeSpan.FromSeconds(30))
+                .Subscribe(
+                    onNext: x =>
+                    {
+                        _helper.Write(nameof(InventoryItems), InventoryItems);
+                    }
+                );
         }
     }
 }

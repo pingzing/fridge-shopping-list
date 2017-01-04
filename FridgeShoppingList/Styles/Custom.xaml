@@ -308,7 +308,7 @@
                                 <VisualState x:Name="Selected">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotHeaderItemForegroundSelected}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource LcarsPivotHeaderItemForegroundSelected}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotHeaderItemBackgroundSelected}" />
@@ -318,7 +318,7 @@
                                 <VisualState x:Name="UnselectedPointerOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotHeaderItemForegroundUnselectedPointerOver}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource LcarsPivotHeaderItemForegroundUnselectedPointerOver}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotHeaderItemBackgroundUnselectedPointerOver}" />
@@ -328,7 +328,7 @@
                                 <VisualState x:Name="SelectedPointerOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotHeaderItemForegroundSelectedPointerOver}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource LcarsPivotHeaderItemForegroundSelectedPointerOver}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotHeaderItemBackgroundSelectedPointerOver}" />
@@ -338,7 +338,7 @@
                                 <VisualState x:Name="UnselectedPressed">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotHeaderItemForegroundUnselectedPressed}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource LcarsPivotHeaderItemForegroundUnselectedPressed}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotHeaderItemBackgroundUnselectedPressed}" />
@@ -405,6 +405,7 @@
             <SolidColorBrush x:Key="LcarsOrangeBrush" Color="{StaticResource LcarsOrange}"/>
             <SolidColorBrush x:Key="LcarsBlueGrayBrush" Color="{StaticResource LcarsBlueGray}"/>
             <SolidColorBrush x:Key="LcarsRedBrush" Color="{StaticResource LcarsRed}"/>
+            <SolidColorBrush x:Key="LcarsLavenderBrush" Color="{StaticResource LcarsLavender}"/>
 
             <SolidColorBrush x:Key="LcarsCaptionTextBlockBrush" Color="{StaticResource LcarsGold}" Opacity=".8"/>
 
@@ -415,7 +416,11 @@
             <SolidColorBrush x:Key="LcarsListViewBackgroundSelectedBrush" Color="{StaticResource LcarsOrange}" Opacity=".2"/>
             
             <!--Pivot theme styles-->
-            <SolidColorBrush x:Key="LcarsPivotHeaderUnselectedBrush" Color="{StaticResource LcarsOrange}" Opacity="0.6"/>
+            <SolidColorBrush x:Key="LcarsPivotHeaderUnselectedBrush" Color="{StaticResource LcarsGold}" Opacity="0.5"/>
+            <SolidColorBrush x:Key="LcarsPivotHeaderItemForegroundSelected" Color="{StaticResource LcarsGold}" Opacity="0.9"/>
+            <SolidColorBrush x:Key="LcarsPivotHeaderItemForegroundSelectedPointerOver" Color="{StaticResource LcarsGold}"/>
+            <SolidColorBrush x:Key="LcarsPivotHeaderItemForegroundUnselectedPointerOver" Color="{StaticResource LcarsGold}" Opacity="0.6"/>
+            <SolidColorBrush x:Key="LcarsPivotHeaderItemForegroundUnselectedPressed" Color="{StaticResource LcarsGold}" Opacity="0.7"/>
 
             <!--For listview with the LcarsGold background-->
             <SolidColorBrush x:Key="LcarsHamburgerBackgroundHoverBrush" Color="{StaticResource LcarsBlueGray}" Opacity=".3"/>

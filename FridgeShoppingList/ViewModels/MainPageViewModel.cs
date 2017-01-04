@@ -1,4 +1,3 @@
-using Template10.Mvvm;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -7,22 +6,43 @@ using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 using FridgeShoppingList.Models;
+using FridgeShoppingList.ViewModels.ControlViewModels;
+using FridgeShoppingList.Services.SettingsServices;
+using Reactive.Bindings;
+using System.Reactive.Linq;
+using System.Collections.Specialized;
+using GalaSoft.MvvmLight.Command;
 
 namespace FridgeShoppingList.ViewModels
 {   
     public class MainPageViewModel : ViewModelBaseEx
     {
+        public readonly SettingsService _settings;
 
-        private ObservableCollection<string> _groceryItems;
-        public ObservableCollection<string> GroceryItems
+        public ReactiveCollection<InventoryEntryViewModel> InventoryItems
         {
-            get { return _groceryItems; }
-            set { Set(ref _groceryItems, value); }
+            get
+            {
+                return _settings.InventoryItems
+                    .ToObservable()
+                    .Select(x => new InventoryEntryViewModel(x))
+                    .ToReactiveCollection();       
+            }
         }
 
-        public MainPageViewModel()
+        private ObservableCollection<ShoppingListEntryViewModel> _shoppingListItems = new ObservableCollection<ShoppingListEntryViewModel>();
+        public ObservableCollection<ShoppingListEntryViewModel> ShoppingListItems
         {
-            GroceryItems = new ObservableCollection<string> { "1", "2", "#" };
+            get { return _shoppingListItems; }
+            set { Set(ref _shoppingListItems, value); }
+        }
+
+        public RelayCommand<GroceryItemType> AddItemCommand => new RelayCommand<GroceryItemType>(AddItem);
+        public RelayCommand<string> AddItemTypeCommand => new RelayCommand<string>(AddItemType);
+
+        public MainPageViewModel(SettingsService settings)
+        {
+            _settings = settings;
         }                
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
@@ -31,6 +51,7 @@ namespace FridgeShoppingList.ViewModels
             {
                 //restore values from suspensionState dict
             }
+
             await Task.CompletedTask;            
         }
 
@@ -54,12 +75,15 @@ namespace FridgeShoppingList.ViewModels
             NavigationService.Navigate(typeof(Views.SettingsPage));
         }
 
-        public void GotoPrivacy() =>
-            NavigationService.Navigate(typeof(Views.SettingsPage), 1);
+        public void AddItem(GroceryItemType item)
+        {
+            _settings.InventoryItems.AddOnScheduler(new GroceryItem { ItemType = item, ExpiryDate = DateTime.Today });
+        }
 
-        public void GotoAbout() =>
-            NavigationService.Navigate(typeof(Views.SettingsPage), 2);
-
+        public void AddItemType(string itemName)
+        {
+            _settings.GroceryTypes.AddOnScheduler(new GroceryItemType { Name = itemName, ItemTypeId = Guid.NewGuid() });
+        }
     }
 }
 

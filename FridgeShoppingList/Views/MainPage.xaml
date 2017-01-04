@@ -27,11 +27,11 @@
                                               IsOffsetLimited="False"                                              
                                               LeftBackground="{ThemeResource LcarsBlueGrayBrush}"
                                               LeftForeground="White"
-                                              LeftLabel="+ Shopping List"                                               
+                                              LeftLabel="Add to Shopping List"                                               
                                               IsRightCommandEnabled="True"                                     
                                               RightBackground="{ThemeResource LcarsRedBrush}"
                                               RightForeground="White"
-                                              RightLabel="- Delete"
+                                              RightLabel="Delete"
                                               MouseSlidingEnabled="True">
                 <Border Background="{StaticResource LcarsAccentBrush}"
                         Padding="12 0 0 0"
@@ -44,7 +44,7 @@
             </lcarsSlide:LcarsSlidableListItem>
         </DataTemplate>
 
-        <selectors:GroceryItemTemplateSelector x:Key="GroceryTemplateSelector"  
+        <selectors:InventoryItemTemplateSelector x:Key="InventoryItemTemplateSelector"  
                                                GroupedItemTemplate="{StaticResource GroupedItemTemplate}"
                                                SingleItemTemplate="{StaticResource SingleItemTemplate}"/>
     </Page.Resources>
@@ -94,30 +94,95 @@
                        OpenPaneLength="70">
                 <SplitView.Pane>
                     <Grid Background="Black">
-                        <StackPanel x:Name="InventoryControlPanel" 
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel x:Name="TopItems" 
                                     Grid.Row="0" 
                                     Background="{ThemeResource LcarsAccentBrush}">
                             <ListViewItem BorderBrush="Black" 
                                           BorderThickness="0 2 0 2" 
-                                          Height="48"
-                                          Margin="0 0 0 5"
-                                          Tapped="{x:Bind ViewModel.GotoSettings, Mode=OneTime}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Foreground="Black" 
-                                               FontSize="20"                                               
-                                               Style="{ThemeResource LcarsBaseTextBlockStyle}"
-                                               Text="SETTINGS"
-                                               VerticalAlignment="Center"/>
-                                </StackPanel>
+                                          Height="101"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch"
+                                          MinWidth="70"
+                                          Padding="2">
+                                <TextBlock Foreground="Black"
+                                           FontSize="22"
+                                           FontWeight="SemiLight"
+                                           HorizontalAlignment="Right"
+                                           Style="{ThemeResource LcarsBaseTextBlockStyle}"
+                                           Text="ADD ITEM"
+                                           VerticalAlignment="Bottom"/>
+                                <ListViewItem.ContextFlyout>
+                                    <Flyout Placement="Right">
+                                        <StackPanel>
+                                            <Button Content="Add" 
+                                                    Command="{x:Bind ViewModel.AddItemCommand}"
+                                                    CommandParameter="{Binding ElementName=AddItemList, Path=SelectedItem}"/>
+                                            <ListView x:Name="AddItemList" 
+                                                      ItemsSource="{x:Bind ViewModel._settings.GroceryTypes}"
+                                                      SelectionMode="Single">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Name}"/>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                        </StackPanel>
+                                    </Flyout>
+                                </ListViewItem.ContextFlyout>
                             </ListViewItem>
-                            <ListViewItem BorderBrush="Black"
-                                          BorderThickness="0 2 0 2"
+                            <ListViewItem BorderBrush="Black" 
+                                          BorderThickness="0 2 0 2" 
+                                          Height="101"
+                                          MinWidth="70"
+                                          Margin="0 5 0 0"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch"                                          
+                                          Padding="2">
+                                <TextBlock Foreground="Black"
+                                           FontSize="22"
+                                           FontWeight="SemiLight"
+                                           HorizontalAlignment="Right"
+                                           TextAlignment="Right"
+                                           Style="{ThemeResource LcarsBaseTextBlockStyle}"
+                                           Text="ADD ITEM TYPE"
+                                           VerticalAlignment="Bottom"/>
+                                <ListViewItem.ContextFlyout>
+                                    <Flyout Placement="Right">
+                                        <StackPanel Width="200">
+                                            <Button Content="Add" 
+                                                    Command="{x:Bind ViewModel.AddItemTypeCommand}" 
+                                                    CommandParameter="{Binding ElementName=AddItemTypeBox, Path=Text}"/>
+                                            <TextBox x:Name="AddItemTypeBox"/>
+                                        </StackPanel>
+                                    </Flyout>
+                                </ListViewItem.ContextFlyout>
+                            </ListViewItem>
+                        </StackPanel>
+                        <StackPanel x:Name="BottomItems" 
+                                    Grid.Row="1" 
+                                    Background="{ThemeResource LcarsAccentBrush}"
+                                    VerticalAlignment="Bottom">
+                            <ListViewItem Background="{StaticResource LcarsLavenderBrush}" 
+                                          BorderBrush="Black" 
+                                          BorderThickness="0 2 0 2" 
                                           Height="48"
-                                          Margin="0 0 0 5"/>
-                            <ListViewItem BorderBrush="Black"
-                                          BorderThickness="0 2 0 2"
-                                          Height="48"
-                                          Margin="0 0 0 5"/>
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch"
+                                          MinWidth="70"
+                                          Padding="2"                                          
+                                          Tapped="{x:Bind ViewModel.GotoSettings, Mode=OneTime}">
+                                <TextBlock Foreground="Black" 
+                                           FontSize="22"
+                                           FontWeight="SemiLight"
+                                           HorizontalAlignment="Right"
+                                           Style="{ThemeResource LcarsBaseTextBlockStyle}"
+                                           Text="SETTINGS"
+                                           VerticalAlignment="Top"/>
+                            </ListViewItem>
                         </StackPanel>
                     </Grid>
                 </SplitView.Pane>
@@ -129,25 +194,32 @@
                                   RelativePanel.AlignLeftWithPanel="True"
                                   RelativePanel.AlignRightWithPanel="True"
                                   RelativePanel.AlignBottomWithPanel="True"
-                                  ItemTemplateSelector="{StaticResource GroceryTemplateSelector}"
-                                  ItemsSource="{x:Bind ViewModel.GroceryItems, Mode=OneWay}"
-                                  SelectionMode="None">
+                                  ItemTemplateSelector="{StaticResource InventoryItemTemplateSelector}"
+                                  ItemsSource="{x:Bind ViewModel.InventoryItems, Mode=OneWay}"
+                                  SelectionMode="None"
+                                  IsItemClickEnabled="True">
+                            <ListView.Header>
+                                <TextBlock Foreground="{ThemeResource LcarsRedBrush}" 
+                                           HorizontalAlignment="Center" 
+                                           Text="NO ITEMS LOGGED IN INVENTORY"
+                                           Visibility="{x:Bind ViewModel.InventoryItems, Mode=OneWay, Converter={StaticResource CollectionVisibilityInvertedConverter}}"/>
+                            </ListView.Header>
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="Padding" Value="2 0 12 9"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
-
                         </ListView>
                     </RelativePanel>
 
                 </SplitView.Content>
             </SplitView>
             <ctls:LcarsFooter x:Name="InventoryFooter"                     
-                       RelativePanel.AlignBottomWithPanel="True"
-                       RelativePanel.AlignLeftWithPanel="True"
-                       RelativePanel.AlignRightWithPanel="True"/>
+                              RelativePanel.AlignBottomWithPanel="True"
+                              RelativePanel.AlignLeftWithPanel="True"
+                              RelativePanel.AlignRightWithPanel="True"
+                              Text="{x:Bind ViewModel.InventoryItems.Count, Mode=OneWay}"/>
         </RelativePanel>
 
         <RelativePanel x:Name="ShoppingPanel"                        
