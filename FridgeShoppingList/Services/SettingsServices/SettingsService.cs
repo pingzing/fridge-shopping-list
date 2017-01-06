@@ -1,5 +1,5 @@
 using FridgeShoppingList.Models;
-using Reactive.Bindings;
+using System.Linq;
 using System.Reactive;
 using System;
 using System.Collections.Generic;
@@ -8,6 +8,8 @@ using System.Reactive.Linq;
 using Template10.Common;
 using Template10.Utils;
 using Windows.UI.Xaml;
+using Reactive.Bindings;
+using DynamicData;
 
 namespace FridgeShoppingList.Services.SettingsServices
 {
@@ -16,9 +18,12 @@ namespace FridgeShoppingList.Services.SettingsServices
         public static SettingsService Instance { get; } = new SettingsService();
         Template10.Services.SettingsService.ISettingsHelper _helper;
 
-        public ReactiveCollection<GroceryItemType> GroceryTypes { get; set; }
+        private SourceList<GroceryItemType> _groceryTypes { get; set; } = new SourceList<GroceryItemType>();
+        public IObservable<IChangeSet<GroceryItemType>> GroceryTypes { get; }
 
-        public ReactiveCollection<GroceryItem> InventoryItems { get; set; }
+        private SourceList<GroceryEntry> _inventoryItems { get; set; } = new SourceList<GroceryEntry>();
+        public IObservable<IChangeSet<GroceryEntry>> InventoryItems { get; }
+
 
         public TimeSpan CacheMaxDuration
         {
@@ -40,25 +45,59 @@ namespace FridgeShoppingList.Services.SettingsServices
         {
             _helper = new Template10.Services.SettingsService.SettingsHelper();
 
-            GroceryTypes = _helper.Read(nameof(GroceryTypes), new ReactiveCollection<GroceryItemType>());
-            GroceryTypes.ToCollectionChanged()
-                .Throttle(TimeSpan.FromSeconds(30))
+            //Initialize GroceryItemTypes
+            GroceryItemType[] savedGroceryTypes = _helper.Read(nameof(GroceryTypes), new GroceryItemType[]
+            {
+                new GroceryItemType { ItemTypeId = Guid.NewGuid(), Name = "Milk, 1L" },
+                new GroceryItemType { ItemTypeId = Guid.NewGuid(), Name = "Bread" }
+            });
+            _groceryTypes.AddRange(savedGroceryTypes);
+            GroceryTypes = _groceryTypes.Connect();
+
+            //Initialize GroceryItems
+            GroceryEntry[] savedInventory = _helper.Read(nameof(InventoryItems), new GroceryEntry[0]);
+            _inventoryItems.AddRange(savedInventory);
+            InventoryItems = _inventoryItems.Connect();
+
+            //Write changes to Grocery Types to disk every 30 seconds
+            GroceryTypes.Throttle(TimeSpan.FromSeconds(30))
                 .Subscribe(
-                    onNext: x =>
-                    {
-                        _helper.Write(nameof(GroceryTypes), GroceryTypes);
-                    }
+                    onNext: _ => _helper.Write(nameof(GroceryTypes), _groceryTypes.Items)
                 );
 
-            InventoryItems = _helper.Read(nameof(InventoryItems), new ReactiveCollection<GroceryItem>());
-            InventoryItems.ToCollectionChanged()
-                .Throttle(TimeSpan.FromSeconds(30))
+            //Write changes to Inventory Items to disk every 30 seconds
+            InventoryItems.Throttle(TimeSpan.FromSeconds(30))
                 .Subscribe(
-                    onNext: x =>
-                    {
-                        _helper.Write(nameof(InventoryItems), InventoryItems);
-                    }
+                    onNext: _ => _helper.Write(nameof(InventoryItems), _inventoryItems.Items)
                 );
+        }
+
+        public void AddToGroceryTypes(GroceryItemType newType)
+        {
+            _groceryTypes.Add(newType);
+        }
+
+        public void RemoveFromGroceryTypes(GroceryItemType typeToRemove)
+        {
+            _groceryTypes.Remove(typeToRemove);
+        }
+
+        public void AddToInventoryItems(GroceryEntry item)
+        {
+            var existingEntry = _inventoryItems.Items.FirstOrDefault(x => x.ItemType == item.ItemType);
+            if (existingEntry != null)
+            {
+                existingEntry.ExpiryDates.AddRange(item.ExpiryDates);
+            }
+            else
+            {
+                _inventoryItems.Add(item);
+            }
+        }
+
+        public void RemoveFromInventoryItems(GroceryEntry itemToRemove)
+        {
+            _inventoryItems.Remove(itemToRemove);
         }
     }
 }

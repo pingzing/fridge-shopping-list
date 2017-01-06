@@ -9,6 +9,7 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:FridgeShoppingList.ViewModels"
+      xmlns:ctlVms="using:FridgeShoppingList.ViewModels.ControlViewModels"
       xmlns:ctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:models="using:FridgeShoppingList.Models"
       xmlns:selectors="using:FridgeShoppingList.TemplateSelectors"
@@ -17,36 +18,7 @@
       mc:Ignorable="d">
 
     <Page.Resources>
-        <DataTemplate x:Key="GroupedItemTemplate">
-        </DataTemplate>
 
-        <DataTemplate x:Key="SingleItemTemplate">
-            <lcarsSlide:LcarsSlidableListItem EndcapBrush="{ThemeResource LcarsAccentBrush}" 
-                                              HorizontalAlignment="Stretch"                                               
-                                              IsLeftCommandEnabled="True"
-                                              IsOffsetLimited="False"                                              
-                                              LeftBackground="{ThemeResource LcarsBlueGrayBrush}"
-                                              LeftForeground="White"
-                                              LeftLabel="Add to Shopping List"                                               
-                                              IsRightCommandEnabled="True"                                     
-                                              RightBackground="{ThemeResource LcarsRedBrush}"
-                                              RightForeground="White"
-                                              RightLabel="Delete"
-                                              MouseSlidingEnabled="True">
-                <Border Background="{StaticResource LcarsAccentBrush}"
-                        Padding="12 0 0 0"
-                        MinHeight="44">
-                    <TextBlock Text="Grocery Item!"
-                               Foreground="Black"                                             
-                               VerticalAlignment="Center"
-                               Style="{ThemeResource LcarsTitleTextBlockStyle}"/>
-                </Border>
-            </lcarsSlide:LcarsSlidableListItem>
-        </DataTemplate>
-
-        <selectors:InventoryItemTemplateSelector x:Key="InventoryItemTemplateSelector"  
-                                               GroupedItemTemplate="{StaticResource GroupedItemTemplate}"
-                                               SingleItemTemplate="{StaticResource SingleItemTemplate}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -103,7 +75,7 @@
                                     Background="{ThemeResource LcarsAccentBrush}">
                             <ListViewItem BorderBrush="Black" 
                                           BorderThickness="0 2 0 2" 
-                                          Height="101"
+                                          Height="64"
                                           HorizontalContentAlignment="Stretch"
                                           VerticalContentAlignment="Stretch"
                                           MinWidth="70"
@@ -122,7 +94,7 @@
                                                     Command="{x:Bind ViewModel.AddItemCommand}"
                                                     CommandParameter="{Binding ElementName=AddItemList, Path=SelectedItem}"/>
                                             <ListView x:Name="AddItemList" 
-                                                      ItemsSource="{x:Bind ViewModel._settings.GroceryTypes}"
+                                                      ItemsSource="{x:Bind ViewModel.SavedItemTypes, Mode=OneWay}"
                                                       SelectionMode="Single">
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate>
@@ -136,7 +108,7 @@
                             </ListViewItem>
                             <ListViewItem BorderBrush="Black" 
                                           BorderThickness="0 2 0 2" 
-                                          Height="101"
+                                          Height="64"
                                           MinWidth="70"
                                           Margin="0 5 0 0"
                                           HorizontalContentAlignment="Stretch"
@@ -193,16 +165,14 @@
                                   RelativePanel.AlignTopWithPanel="True"
                                   RelativePanel.AlignLeftWithPanel="True"
                                   RelativePanel.AlignRightWithPanel="True"
-                                  RelativePanel.AlignBottomWithPanel="True"
-                                  ItemTemplateSelector="{StaticResource InventoryItemTemplateSelector}"
+                                  RelativePanel.AlignBottomWithPanel="True"                                  
                                   ItemsSource="{x:Bind ViewModel.InventoryItems, Mode=OneWay}"
-                                  SelectionMode="None"
-                                  IsItemClickEnabled="True">
+                                  SelectionMode="None">
                             <ListView.Header>
                                 <TextBlock Foreground="{ThemeResource LcarsRedBrush}" 
                                            HorizontalAlignment="Center" 
                                            Text="NO ITEMS LOGGED IN INVENTORY"
-                                           Visibility="{x:Bind ViewModel.InventoryItems, Mode=OneWay, Converter={StaticResource CollectionVisibilityInvertedConverter}}"/>
+                                           Visibility="{x:Bind ViewModel.InventoryItems.Count, Mode=OneWay, Converter={StaticResource EmptyCollectionToVisConverter}}"/>
                             </ListView.Header>
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
@@ -210,6 +180,56 @@
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="ctlVms:InventoryEntryViewModel">
+                                    <lcarsSlide:LcarsSlidableListItem EndcapBrush="{ThemeResource LcarsAccentBrush}" 
+                                                                      HorizontalAlignment="Stretch"                                               
+                                                                      IsLeftCommandEnabled="True"
+                                                                      IsOffsetLimited="False"                                              
+                                                                      LeftBackground="{ThemeResource LcarsBlueGrayBrush}"
+                                                                      LeftForeground="White"
+                                                                      LeftLabel="Add to Shopping List"                                               
+                                                                      IsRightCommandEnabled="True"                                     
+                                                                      RightBackground="{ThemeResource LcarsRedBrush}"
+                                                                      RightForeground="White"
+                                                                      RightLabel="Delete"
+                                                                      MouseSlidingEnabled="True">
+                                        <Grid Background="{StaticResource LcarsAccentBrush}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0"                             
+                                                    Padding="12 0 0 0"
+                                                    MinHeight="44">
+                                                <TextBlock Text="{x:Bind Entry.ItemType.Name.ToUpper()}"
+                                                           Foreground="Black"                                             
+                                                           VerticalAlignment="Center"
+                                                           Style="{ThemeResource LcarsTitleTextBlockStyle}"/>
+                                            </Border>
+
+                                            <Border Grid.Column="1"
+                                                    Background="Black"
+                                                    Margin="5 0"
+                                                    Padding="6 0 6 0">
+                                                <TextBlock Text="{x:Bind Entry.ExpiryDates.Count, Mode=OneWay}"
+                                                           Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <Border Grid.Column="2"
+                                                    Background="Black"
+                                                    Margin="5 0"
+                                                    Padding="6 0 6 0">
+                                                <TextBlock Text="{x:Bind Entry.ExpiryDates[0].ToString('MMM dd', x:Null)}"
+                                                           Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+                                        </Grid>
+                                    </lcarsSlide:LcarsSlidableListItem>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                     </RelativePanel>
 

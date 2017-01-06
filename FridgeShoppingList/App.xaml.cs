@@ -26,7 +26,8 @@ namespace FridgeShoppingList
         {
             InitializeComponent();
             SplashFactory = (e) => new Views.Splash(e);
-            Registrar = new ServiceRegistrar();
+            
+            Registrar = new ServiceRegistrar();            
 
             #region app settings
 
