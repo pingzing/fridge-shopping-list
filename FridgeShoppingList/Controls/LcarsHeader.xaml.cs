@@ -58,7 +58,8 @@ namespace FridgeShoppingList.Controls
 
 
         public LcarsHeader()
-        {            
+        {
+            FrameReference = App.Current.NavigationService.Frame;  
             this.InitializeComponent();            
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {

@@ -10,13 +10,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Template10.Mvvm;
 using Windows.Devices.WiFi;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
 namespace FridgeShoppingList.ViewModels
 {
-    public class NetworkConfigPageViewModel : ViewModelBaseEx
+    public class NetworkConfigPageViewModel : ViewModelBase
     {        
         private readonly SettingsService _settingsService;
         private readonly INetworkService _networkService;

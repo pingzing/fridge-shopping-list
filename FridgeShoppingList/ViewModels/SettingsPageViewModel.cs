@@ -14,7 +14,7 @@ using FridgeShoppingList.Views;
 
 namespace FridgeShoppingList.ViewModels
 {
-    public class SettingsPageViewModel : ViewModelBaseEx
+    public class SettingsPageViewModel : ViewModelBase
     {
         private INetworkService _networkService;
 
@@ -66,7 +66,7 @@ namespace FridgeShoppingList.ViewModels
         }
     }
 
-    public class SettingsPartViewModel : ViewModelBaseEx
+    public class SettingsPartViewModel : ViewModelBase
     {
         Services.SettingsServices.SettingsService _settings;
 
@@ -82,7 +82,7 @@ namespace FridgeShoppingList.ViewModels
         }        
     }
 
-    public class AboutPartViewModel : ViewModelBaseEx
+    public class AboutPartViewModel : ViewModelBase
     {
         private readonly INetworkService _networkService;
 

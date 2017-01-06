@@ -59,13 +59,13 @@ namespace FridgeShoppingList.Services.SettingsServices
             _inventoryItems.AddRange(savedInventory);
             InventoryItems = _inventoryItems.Connect();
 
-            //Write changes to Grocery Types to disk every 30 seconds
+            //Write changes to Grocery Types 30 seconds after changes stop coming in
             GroceryTypes.Throttle(TimeSpan.FromSeconds(30))
                 .Subscribe(
                     onNext: _ => _helper.Write(nameof(GroceryTypes), _groceryTypes.Items)
                 );
 
-            //Write changes to Inventory Items to disk every 30 seconds
+            //Write changes to Inventory Items to disk 30 seconds after changes stop coming in
             InventoryItems.Throttle(TimeSpan.FromSeconds(30))
                 .Subscribe(
                     onNext: _ => _helper.Write(nameof(InventoryItems), _inventoryItems.Items)

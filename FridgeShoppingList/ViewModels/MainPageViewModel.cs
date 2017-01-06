@@ -14,24 +14,27 @@ using GalaSoft.MvvmLight.Command;
 using Reactive.Bindings;
 using DynamicData;
 using DynamicData.Binding;
+using FridgeShoppingList.Services;
+using Template10.Mvvm;
 
 namespace FridgeShoppingList.ViewModels
 {
-    public class MainPageViewModel : ViewModelBaseEx
+    public class MainPageViewModel : ViewModelBase
     {
         private readonly SettingsService _settings;
+        private readonly IDialogService _dialogService;
 
         public ObservableCollectionExtended<InventoryEntryViewModel> InventoryItems { get; private set; } = new ObservableCollectionExtended<InventoryEntryViewModel>();
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
-
-        public RelayCommand<GroceryItemType> AddItemCommand => new RelayCommand<GroceryItemType>(AddItem);
+        
         public RelayCommand<string> AddItemTypeCommand => new RelayCommand<string>(AddItemType);
 
         IObservable<IChangeSet<IGroup<GroceryEntry, Guid>>> groups;
 
-        public MainPageViewModel(SettingsService settings)
+        public MainPageViewModel(SettingsService settings, IDialogService dialog)
         {
             _settings = settings;
+            _dialogService = dialog;
 
             _settings.InventoryItems
                 .Transform(x => new InventoryEntryViewModel(x))                
@@ -75,9 +78,13 @@ namespace FridgeShoppingList.ViewModels
             NavigationService.Navigate(typeof(Views.SettingsPage));
         }
 
-        public void AddItem(GroceryItemType item)
+        public async void AddItem()
         {
-            _settings.AddToInventoryItems(new GroceryEntry(item, DateTime.Now));
+            GroceryEntry result = await _dialogService.ShowDialogAsync<AddToInventoryViewModel, GroceryEntry>();
+            if(result != null)
+            {
+                _settings.AddToInventoryItems(result);
+            }            
         }
 
         public void AddItemType(string itemName)

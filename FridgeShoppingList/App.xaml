@@ -17,9 +17,11 @@
             <!--Converters-->
             <conv:SignalBarsToIconConverter x:Key="SignalBarsToIconConverter"/>
             <conv:EmptyNullToVisibilityConverterInverted x:Key="EmptyCollectionToVisConverter"/>
+            <conv:EmptyNullToBoolConverter x:Key="EmptyNullToBoolConverter"/>
 
             <ctConv:BoolToObjectConverter x:Key="BoolToVisibilityInvertedConverter" TrueValue="Collapsed" FalseValue="Visible"/>
             <ctConv:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter"/>
+            <ctConv:CollectionVisibilityConverter x:Key="CollectionVisibilityInvertedConverter" EmptyValue="Visible" NotEmptyValue="Collapsed" />
             <ctConv:StringVisibilityConverter x:Key="StringToVisibilityConverter"/>
 
         </ResourceDictionary>

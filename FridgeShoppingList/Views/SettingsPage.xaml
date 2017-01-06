@@ -63,8 +63,7 @@
         <ctls:LcarsHeader x:Name="pageHeader"                          
                           RelativePanel.AlignTopWithPanel="True"
                           RelativePanel.AlignLeftWithPanel="True"
-                          RelativePanel.AlignRightWithPanel="True"
-                          FrameReference="{x:Bind ViewModel.NavigationService.Frame}">
+                          RelativePanel.AlignRightWithPanel="True">
             <StackPanel Background="Black" 
                         Margin="20 -5 20 0" 
                         Padding="20 0 20 0"

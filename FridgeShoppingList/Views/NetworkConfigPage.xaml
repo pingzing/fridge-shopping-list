@@ -9,6 +9,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:controls="using:Template10.Controls"    
+    xmlns:ctls="using:FridgeShoppingList.Controls"
     xmlns:vm="using:FridgeShoppingList.ViewModels"
     xmlns:ctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:models="using:FridgeShoppingList.Models"
@@ -38,19 +39,12 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <controls:PageHeader x:Name="PageHeader"
+        <ctls:LcarsHeader x:Name="PageHeader"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True"
-                             Frame="{x:Bind Frame}"
-                             Text="Network Configuration">
+                             RelativePanel.AlignTopWithPanel="True"                             
+                             Text="Network Configuration"/>
 
-            <!--  secondary commands  -->
-            <controls:PageHeader.SecondaryCommands>
-                <AppBarButton/>
-            </controls:PageHeader.SecondaryCommands>
-
-        </controls:PageHeader>
 
         <RelativePanel EntranceNavigationTransitionInfo.IsTargetElement="True"
                        RelativePanel.AlignBottomWithPanel="True"

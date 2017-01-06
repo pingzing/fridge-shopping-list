@@ -99,6 +99,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AddToInventoryDialog.xaml.cs">
+      <DependentUpon>AddToInventoryDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LcarsFooter.xaml.cs">
       <DependentUpon>LcarsFooter.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,8 @@
     <Compile Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatus.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatusChangedEventArgs.cs" />
+    <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
+    <Compile Include="Converters\EmptyNullToBoolConverter.cs" />
     <Compile Include="Converters\EmptyNullToVis.cs" />
     <Compile Include="Converters\SignalBarsToIconConverter.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
@@ -115,16 +120,18 @@
     <Compile Include="Models\GroceryEntry.cs" />
     <Compile Include="Models\GroceryItemType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
     <Compile Include="Services\ServiceRegistrar.cs" />
     <Compile Include="Services\NetworkService.cs" />
+    <Compile Include="ViewModels\ControlViewModels\AddToInventoryViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\InventoryEntryViewModel.cs" />
+    <Compile Include="ViewModels\ControlViewModels\IResultDialogViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\ShoppingListEntryViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\WifiItemViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\NetworkConfigPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBaseEx.cs" />
     <Compile Include="Views\Busy.xaml.cs">
       <DependentUpon>Busy.xaml</DependentUpon>
     </Compile>
@@ -165,6 +172,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\AddToInventoryDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\LcarsFooter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -226,6 +237,12 @@
     <SDKReference Include="WindowsIoT, Version=10.0.14393.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\TCD.Controls.Keyboard\TCD.Controls.Keyboard\TCD.Controls.Keyboard\TCD.Controls.Keyboard.csproj">
+      <Project>{9e8b0d12-8145-4247-821c-4a603fa683f2}</Project>
+      <Name>TCD.Controls.Keyboard</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -15,6 +15,7 @@
       xmlns:selectors="using:FridgeShoppingList.TemplateSelectors"
       xmlns:ctls="using:FridgeShoppingList.Controls"
       xmlns:lcarsSlide="using:FridgeShoppingList.Controls.LcarsSlidableListItem"
+      xmlns:osk="using:TCD.Controls.Keyboard"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -52,8 +53,7 @@
             <ctls:LcarsHeader x:Name="InventoryHeader" 
                               RelativePanel.AlignTopWithPanel="True"
                               RelativePanel.AlignLeftWithPanel="True"
-                              RelativePanel.AlignRightWithPanel="True"
-                              FrameReference="{x:Bind ViewModel.NavigationService.Frame}"
+                              RelativePanel.AlignRightWithPanel="True"                              
                               Text="INVENTORY"/>
 
             <SplitView x:Name="InventoryContent" 
@@ -79,7 +79,8 @@
                                           HorizontalContentAlignment="Stretch"
                                           VerticalContentAlignment="Stretch"
                                           MinWidth="70"
-                                          Padding="2">
+                                          Padding="2"
+                                          Tapped="{x:Bind ViewModel.AddItem}">
                                 <TextBlock Foreground="Black"
                                            FontSize="22"
                                            FontWeight="SemiLight"
@@ -87,24 +88,6 @@
                                            Style="{ThemeResource LcarsBaseTextBlockStyle}"
                                            Text="ADD ITEM"
                                            VerticalAlignment="Bottom"/>
-                                <ListViewItem.ContextFlyout>
-                                    <Flyout Placement="Right">
-                                        <StackPanel>
-                                            <Button Content="Add" 
-                                                    Command="{x:Bind ViewModel.AddItemCommand}"
-                                                    CommandParameter="{Binding ElementName=AddItemList, Path=SelectedItem}"/>
-                                            <ListView x:Name="AddItemList" 
-                                                      ItemsSource="{x:Bind ViewModel.SavedItemTypes, Mode=OneWay}"
-                                                      SelectionMode="Single">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Name}"/>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                            </ListView>
-                                        </StackPanel>
-                                    </Flyout>
-                                </ListViewItem.ContextFlyout>
                             </ListViewItem>
                             <ListViewItem BorderBrush="Black" 
                                           BorderThickness="0 2 0 2" 
@@ -122,16 +105,6 @@
                                            Style="{ThemeResource LcarsBaseTextBlockStyle}"
                                            Text="ADD ITEM TYPE"
                                            VerticalAlignment="Bottom"/>
-                                <ListViewItem.ContextFlyout>
-                                    <Flyout Placement="Right">
-                                        <StackPanel Width="200">
-                                            <Button Content="Add" 
-                                                    Command="{x:Bind ViewModel.AddItemTypeCommand}" 
-                                                    CommandParameter="{Binding ElementName=AddItemTypeBox, Path=Text}"/>
-                                            <TextBox x:Name="AddItemTypeBox"/>
-                                        </StackPanel>
-                                    </Flyout>
-                                </ListViewItem.ContextFlyout>
                             </ListViewItem>
                         </StackPanel>
                         <StackPanel x:Name="BottomItems" 
@@ -282,8 +255,8 @@
                               RelativePanel.AlignBottomWithPanel="True"
                               RelativePanel.AlignLeftWithPanel="True"
                               RelativePanel.AlignRightWithPanel="True"
-                              Foreground="{ThemeResource LcarsBlueGrayBrush}"
-                              Text="22"/>
+                              Foreground="{ThemeResource LcarsBlueGrayBrush}">
+            </ctls:LcarsFooter>
 
         </RelativePanel>
     </Grid>
