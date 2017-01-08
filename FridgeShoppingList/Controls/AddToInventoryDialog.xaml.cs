@@ -19,11 +19,11 @@ namespace FridgeShoppingList.Controls
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            ViewModel.SetResultToCurrentState();                        
+            ViewModel.SetResultToCurrentState();
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {            
-        }        
+        {
+        }
     }
 }

@@ -1,13 +1,12 @@
 ﻿<ContentDialog
     x:Class="FridgeShoppingList.Controls.AddToInventoryDialog"
+    x:Name="ThisAddToInventoryDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:FridgeShoppingList.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
-    xmlns:models="using:FridgeShoppingList.Models"
-    xmlns:system="using:System"
-    xmlns:conv="using:FridgeShoppingList.Converters"
+    xmlns:models="using:FridgeShoppingList.Models"    
     mc:Ignorable="d"
     Title="ADD ITEM"
     PrimaryButtonText="Add"
@@ -20,11 +19,7 @@
     IsPrimaryButtonEnabled="{x:Bind ViewModel.ExpiryDates.Count, Mode=OneWay, Converter={StaticResource EmptyNullToBoolConverter}}"    
     Style="{StaticResource LcarsContentDialogStyle}">
 
-    <ContentDialog.Resources>
-        <conv:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
-    </ContentDialog.Resources>
-
-    <Grid Margin="0 10 0 0">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
 
@@ -42,12 +37,33 @@
                   SelectedItem="{x:Bind ViewModel.SelectedItemType, Mode=TwoWay}">
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="models:GroceryItemType">
-                    <TextBlock Text="{x:Bind Name}" 
-                               FontFamily="{StaticResource LcarsFont}"
-                               FontSize="20"/>
+                    <TextBlock Text="{x:Bind Name}"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+
+        <!--TODO: Switch to this when the WrapPanel control shows up in the UWP toolkit-->
+        <!--<GridView Grid.Row="0"
+                  HorizontalAlignment="Center"                  
+                  ItemsSource="{x:Bind ViewModel.ItemTypes, Mode=OneWay}"
+                  SelectedItem="{x:Bind ViewModel.SelectedItemType, Mode=TwoWay}">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="models:GroceryItemType">
+                    <Border Background="{Binding ElementName=ThisAddToInventoryDialog, Path=BorderBrush}"
+                            BorderThickness="0"
+                            CornerRadius="20"
+                            MinWidth="70"
+                            Padding="10"
+                            Margin="5">
+                        <TextBlock Text="{x:Bind Name}"
+                                   FontFamily="{StaticResource LcarsFont}"
+                                   FontSize="20"
+                                   HorizontalAlignment="Center"/>
+                    </Border>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+            
+        </GridView>-->
 
         <RelativePanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="0 10 0 0">
             <Button x:Name="SubtractOneButton"
@@ -79,7 +95,7 @@
 
         <DatePicker x:Name="SingleExpiryDate"
                     Grid.Row="3"
-                    Date="{x:Bind ViewModel.ExpiryDates[0], Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffsetConverter}}"
+                    Date="{x:Bind ViewModel.ExpiryDates[0].DateTimeOffset, Mode=TwoWay}"
                     HorizontalAlignment="Stretch"
                     Foreground="{StaticResource LcarsRedPurpleBrush}"
                     FontFamily="{StaticResource LcarsFont}"
@@ -102,8 +118,8 @@
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="system:DateTime">
-                    <DatePicker Date="{x:Bind Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffsetConverter}}"
+                <DataTemplate x:DataType="models:DateTimeOffsetWrapper">
+                    <DatePicker Date="{x:Bind DateTimeOffset, Mode=TwoWay}"
                                 Foreground="{StaticResource LcarsRedPurpleBrush}"
                                 FontFamily="{StaticResource LcarsFont}"
                                 FontSize="20"/>

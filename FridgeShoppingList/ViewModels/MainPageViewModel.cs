@@ -11,7 +11,6 @@ using FridgeShoppingList.Services.SettingsServices;
 using System.Reactive.Linq;
 using System.Collections.Specialized;
 using GalaSoft.MvvmLight.Command;
-using Reactive.Bindings;
 using DynamicData;
 using DynamicData.Binding;
 using FridgeShoppingList.Services;
@@ -26,10 +25,10 @@ namespace FridgeShoppingList.ViewModels
 
         public ObservableCollectionExtended<InventoryEntryViewModel> InventoryItems { get; private set; } = new ObservableCollectionExtended<InventoryEntryViewModel>();
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
+        public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();
         
-        public RelayCommand<string> AddItemTypeCommand => new RelayCommand<string>(AddItemType);
-
-        IObservable<IChangeSet<IGroup<GroceryEntry, Guid>>> groups;
+        public RelayCommand<InventoryEntryViewModel> DeleteItemCommand => new RelayCommand<InventoryEntryViewModel>(DeleteItem);
+        public RelayCommand<InventoryEntryViewModel> AddToShoppingListCommand => new RelayCommand<InventoryEntryViewModel>(AddToShoppingList);
 
         public MainPageViewModel(SettingsService settings, IDialogService dialog)
         {
@@ -37,14 +36,20 @@ namespace FridgeShoppingList.ViewModels
             _dialogService = dialog;
 
             _settings.InventoryItems
-                .Transform(x => new InventoryEntryViewModel(x))                
+                .Transform(x => new InventoryEntryViewModel(x))
                 .ObserveOnDispatcher()
                 .Bind(InventoryItems)
-                .Subscribe();            
+                .Subscribe();
 
             _settings.GroceryTypes
                 .ObserveOnDispatcher()
                 .Bind(SavedItemTypes)
+                .Subscribe();
+
+            _settings.ShoppingListItems
+                .Transform(x => new ShoppingListEntryViewModel(x))
+                .ObserveOnDispatcher()
+                .Bind(ShoppingListItems)
                 .Subscribe();
         }
 
@@ -84,12 +89,26 @@ namespace FridgeShoppingList.ViewModels
             if(result != null)
             {
                 _settings.AddToInventoryItems(result);
-            }            
+            }
         }
 
-        public void AddItemType(string itemName)
+        public async void AddItemType()
         {
-            _settings.AddToGroceryTypes(new GroceryItemType { Name = itemName, ItemTypeId = Guid.NewGuid() });
+            GroceryItemType result = await _dialogService.ShowDialogAsync<AddGroceryItemTypeViewModel, GroceryItemType>();
+            if (result != null)
+            {
+                _settings.AddToGroceryTypes(result);
+            }
+        }
+
+        private void AddToShoppingList(InventoryEntryViewModel obj)
+        {
+            
+        }
+
+        private void DeleteItem(InventoryEntryViewModel obj)
+        {
+            _settings.RemoveFromInventoryItems(obj.Entry);
         }
     }
 }

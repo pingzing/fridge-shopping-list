@@ -21,7 +21,11 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
         public GroceryEntry Result { get; set; }
 
         public ObservableCollectionExtended<GroceryItemType> ItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
-        public ObservableCollectionExtended<DateTime> ExpiryDates { get; private set; } = new ObservableCollectionExtended<DateTime>() { DateTime.Today };
+        public ObservableCollectionExtended<DateTimeOffsetWrapper> ExpiryDates { get; private set; } 
+            = new ObservableCollectionExtended<DateTimeOffsetWrapper>()
+            {
+                new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Today }
+            };
 
         GroceryItemType _selectedItemType = default(GroceryItemType);
         public GroceryItemType SelectedItemType
@@ -44,13 +48,18 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
 
         public AddToInventoryViewModel()
         {
-            _settings.GroceryTypes
-                .ObserveOnDispatcher()
+            _settings.GroceryTypes           
+                .Sort(SortExpressionComparer<GroceryItemType>.Ascending(x => x.Name))
+                .ObserveOnDispatcher()                
                 .Bind(ItemTypes)
                 .Subscribe();
 
-            SelectedItemType = _settings.GroceryTypes.AsObservableList().Items.FirstOrDefault();            
-        }
+            SelectedItemType = _settings.GroceryTypes
+                .AsObservableList()
+                .Items
+                .OrderBy(x => x.Name)
+                .FirstOrDefault();
+        }        
 
         public void SubtractOne()
         {
@@ -64,13 +73,13 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
         {
             if (ExpiryDates.Count < int.MaxValue)
             {
-                ExpiryDates.Add(DateTime.Today);
+                ExpiryDates.Add(new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Today });
             }
         }
 
         public void SetResultToCurrentState()
         {
-            Result = new GroceryEntry(SelectedItemType, ExpiryDates);
+            Result = new GroceryEntry(SelectedItemType, ExpiryDates.Select(x => x.DateTimeOffset.DateTime));
         }
     }
 }

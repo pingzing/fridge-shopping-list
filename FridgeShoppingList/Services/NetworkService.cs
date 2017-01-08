@@ -19,7 +19,7 @@ using Windows.Security.Credentials;
 namespace FridgeShoppingList.Services
 {
     public interface INetworkService
-    {        
+    {
         Task<bool> ConnectToNetwork(WiFiAvailableNetwork network, bool autoConnect);
         Task<bool> ConnectToNetworkWithPassword(WiFiAvailableNetwork network, bool autoConnect, PasswordCredential password);
         void DisconnectNetwork(WiFiAvailableNetwork network);
@@ -62,7 +62,7 @@ namespace FridgeShoppingList.Services
         private Radio _wifiRadio;
 
         public event TypedEventHandler<Radio, object> WifiRadioStateChanged;
-        public event TypedEventHandler<NetworkService, AvailableNetworksChangedArgs> AvailableNetworksChanged;             
+        public event TypedEventHandler<NetworkService, AvailableNetworksChangedArgs> AvailableNetworksChanged;
 
         public NetworkService()
         {
@@ -71,7 +71,7 @@ namespace FridgeShoppingList.Services
             _wiFiAdaptersWatcher.Added += AdaptersAdded;
             _wiFiAdaptersWatcher.Removed += AdaptersRemoved;
             _wiFiAdaptersWatcher.Start();
-            InitializeWifiRadio();            
+            InitializeWifiRadio();
         }
 
         private async Task<bool> InitializeWifiRadio()
@@ -93,7 +93,7 @@ namespace FridgeShoppingList.Services
                 if (radio.Kind == RadioKind.WiFi)
                 {
                     _wifiRadio = radio;
-                    radio.StateChanged += WifiRadioStateChanged;                               
+                    radio.StateChanged += WifiRadioStateChanged;
                     return true;
                 }
             }
@@ -105,12 +105,12 @@ namespace FridgeShoppingList.Services
         {
             _wiFiAdapters[args.Id].AvailableNetworksChanged -= AdapterNetworksChanged;
             _wiFiAdapters.Remove(args.Id);
-        }        
+        }
 
         private void AdaptersAdded(DeviceWatcher sender, DeviceInformation args)
         {
-            _wiFiAdapters.Add(args.Id, null);            
-        }        
+            _wiFiAdapters.Add(args.Id, null);
+        }
 
         private async void AdaptersEnumCompleted(DeviceWatcher sender, object args)
         {
@@ -132,7 +132,7 @@ namespace FridgeShoppingList.Services
         }
 
         private void AdapterNetworksChanged(WiFiAdapter sender, object args)
-        {            
+        {
             if (!_availableNetworks.ContainsKey(sender))
             {
                 //blindly add it, woooo
@@ -228,7 +228,7 @@ namespace FridgeShoppingList.Services
                 if (adapter.Value == null)
                 {
                     // New Adapter plugged-in which requires Initialization
-                    fInit = true;                                        
+                    fInit = true;
                 }
             }
 
@@ -273,7 +273,7 @@ namespace FridgeShoppingList.Services
             if ((await TestAccess()) == false)
             {
                 return false;
-            }            
+            }
 
             _networkNameToInfo = new Dictionary<WiFiAvailableNetwork, WiFiAdapter>();
             List<WiFiAdapter> WiFiAdaptersList = new List<WiFiAdapter>(_wiFiAdapters.Values);
@@ -283,8 +283,8 @@ namespace FridgeShoppingList.Services
                 {
                     return false;
                 }
-                
-                await adapter.ScanAsync();                
+
+                await adapter.ScanAsync();
 
                 if (adapter.NetworkReport == null)
                 {
@@ -295,7 +295,7 @@ namespace FridgeShoppingList.Services
                 {
                     if (!HasSsid(_networkNameToInfo, network.Ssid))
                     {
-                        _networkNameToInfo[network] = adapter;                        
+                        _networkNameToInfo[network] = adapter;
                     }
                 }
             }
@@ -416,7 +416,7 @@ namespace FridgeShoppingList.Services
                 }
             }
             return false;
-        }       
+        }
 
         public async Task<IList<NetworkInfo>> GetNetworkInformation()
         {
@@ -459,7 +459,7 @@ namespace FridgeShoppingList.Services
                                     }
                                     var statusTag = profile.GetNetworkConnectivityLevel().ToString();
                                     info.NetworkStatus = statusTag;
-                                    info.IsWired = hostName.IPInformation.NetworkAdapter.IanaInterfaceType == EthernetIanaType;                              
+                                    info.IsWired = hostName.IPInformation.NetworkAdapter.IanaInterfaceType == EthernetIanaType;
                                 }
                             }
                         }
@@ -522,7 +522,7 @@ namespace FridgeShoppingList.Services
                 return;
             }
             await _wifiRadio.SetStateAsync(RadioState.On);
-        }        
+        }
     }
 
     public class AvailableNetworksChangedArgs

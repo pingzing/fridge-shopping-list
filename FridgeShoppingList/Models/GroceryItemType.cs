@@ -7,6 +7,18 @@ namespace FridgeShoppingList.Models
         public string Name { get; set; }
         public Guid ItemTypeId { get; set; }
 
+        public GroceryItemType()
+        {
+            Name = null;
+            ItemTypeId = Guid.Empty;
+        }
+
+        public GroceryItemType(string name)
+        {
+            Name = name;
+            ItemTypeId = Guid.NewGuid();
+        }
+
         public bool Equals(GroceryItemType other)
         {
             return Name == other?.Name
@@ -44,7 +56,7 @@ namespace FridgeShoppingList.Models
 
         public static bool operator ==(GroceryItemType a, GroceryItemType b)
         {
-            return a.Equals(b);
+            return Equals(a, b);
         }
 
         public static bool operator !=(GroceryItemType a, GroceryItemType b)

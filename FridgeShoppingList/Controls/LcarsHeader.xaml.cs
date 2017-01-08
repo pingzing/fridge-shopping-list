@@ -30,7 +30,7 @@ namespace FridgeShoppingList.Controls
             get { return (object)GetValue(HeaderContentProperty); }
             set { SetValue(HeaderContentProperty, value); }
         }
-        
+
         public static readonly DependencyProperty HeaderContentProperty =
             DependencyProperty.Register(nameof(HeaderContent), typeof(object), typeof(LcarsHeader), new PropertyMetadata(null));
 
@@ -39,7 +39,7 @@ namespace FridgeShoppingList.Controls
             get { return (DataTemplate)GetValue(HeaderContentTemplateProperty); }
             set { SetValue(HeaderContentTemplateProperty, value); }
         }
-        
+
         public static readonly DependencyProperty HeaderContentTemplateProperty =
             DependencyProperty.Register(nameof(HeaderContentTemplate), typeof(DataTemplate), typeof(LcarsHeader), new PropertyMetadata(null));
 
@@ -51,7 +51,7 @@ namespace FridgeShoppingList.Controls
             get { return (Frame)GetValue(FrameReferenceProperty); }
             set { SetValue(FrameReferenceProperty, value); }
         }
-        
+
         public static readonly DependencyProperty FrameReferenceProperty =
             DependencyProperty.Register(nameof(FrameReference), typeof(Frame), typeof(LcarsHeader), new PropertyMetadata(null));
 
@@ -59,12 +59,12 @@ namespace FridgeShoppingList.Controls
 
         public LcarsHeader()
         {
-            FrameReference = App.Current.NavigationService.Frame;  
-            this.InitializeComponent();            
+            FrameReference = App.Current.NavigationService.Frame;
+            this.InitializeComponent();
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 return;
-            }            
+            }
         }
 
         bool animating = false;
@@ -79,18 +79,18 @@ namespace FridgeShoppingList.Controls
             animating = true;
             BackButton.Visibility = Visibility.Collapsed;
             BackButtonCover.Visibility = Visibility.Visible;
-            BackButtonCover.Opacity = 1;                       
+            BackButtonCover.Opacity = 1;
             await BackButtonCover.Scale(0, 1, duration: 0)
-            
+
             //Whoosh in the black cover
                 .Then().Scale(1, 1, duration: 500).StartAsync();
 
             //fade in the back button by hiding the cover rectangle
             BackButton.Visibility = Visibility.Visible;
             await BackButtonCover.Fade(0, 200).StartAsync();
-            
+
             //tear down                                   
-            BackButtonCover.Visibility = Visibility.Collapsed;            
+            BackButtonCover.Visibility = Visibility.Collapsed;
             animating = false;
         }
     }

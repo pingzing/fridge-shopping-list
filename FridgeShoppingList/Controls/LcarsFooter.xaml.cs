@@ -42,7 +42,7 @@ namespace FridgeShoppingList.Controls
         public LcarsFooter()
         {
             this.InitializeComponent();
-            FooterContentTemplate = DefaultFooterContentTemplate;            
+            FooterContentTemplate = DefaultFooterContentTemplate;
         }
     }
 }

@@ -14,14 +14,14 @@ namespace FridgeShoppingList.Views
         public SettingsPageViewModel ViewModel => _viewModel ?? (_viewModel = (SettingsPageViewModel)DataContext);
 
         public SettingsPage()
-        {            
+        {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
-            _SerializationService = Template10.Services.SerializationService.SerializationService.Json;            
+            _SerializationService = Template10.Services.SerializationService.SerializationService.Json;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
-        {                        
+        {
         }
 
         private void WifiButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)

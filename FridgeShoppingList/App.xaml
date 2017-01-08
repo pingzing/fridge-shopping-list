@@ -4,7 +4,8 @@
                      xmlns:common="using:Template10.Common"
                      xmlns:models="using:FridgeShoppingList.Models"
                      xmlns:ctConv="using:Microsoft.Toolkit.Uwp.UI.Converters"
-                     xmlns:conv="using:FridgeShoppingList.Converters">
+                     xmlns:conv="using:FridgeShoppingList.Converters"
+                     xmlns:osk="using:TCD.Controls.Keyboard">
 
     <Application.Resources>
         <ResourceDictionary>

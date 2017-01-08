@@ -26,8 +26,8 @@ namespace FridgeShoppingList
         {
             InitializeComponent();
             SplashFactory = (e) => new Views.Splash(e);
-            
-            Registrar = new ServiceRegistrar();            
+
+            Registrar = new ServiceRegistrar();
 
             #region app settings
 
@@ -35,7 +35,7 @@ namespace FridgeShoppingList
             var settings = SettingsService.Instance;
             RequestedTheme = ApplicationTheme.Dark;
             CacheMaxDuration = settings.CacheMaxDuration;
-            ShowShellBackButton = false;            
+            ShowShellBackButton = false;
             AutoSuspendAllFrames = true;
             AutoRestoreAfterTerminated = true;
             AutoExtendExecutionSession = true;
@@ -49,7 +49,7 @@ namespace FridgeShoppingList
             return new ModalDialog
             {
                 DisableBackButtonWhenModal = true,
-                Content = NavigationService.Frame,
+                Content = new Views.Shell(service),
                 ModalContent = new Views.Busy(),
             };
         }

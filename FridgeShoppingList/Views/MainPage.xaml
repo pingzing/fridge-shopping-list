@@ -13,7 +13,7 @@
       xmlns:ctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:models="using:FridgeShoppingList.Models"      
       xmlns:ctls="using:FridgeShoppingList.Controls"
-      xmlns:lcarsSlide="using:FridgeShoppingList.Controls.LcarsSlidableListItem"
+      xmlns:lcarsSlide="using:FridgeShoppingList.Controls.LcarsSlidableListItem"  
       xmlns:osk="using:TCD.Controls.Keyboard"
       mc:Ignorable="d">
 
@@ -95,7 +95,8 @@
                                           Margin="0 5 0 0"
                                           HorizontalContentAlignment="Stretch"
                                           VerticalContentAlignment="Stretch"                                          
-                                          Padding="2">
+                                          Padding="2"
+                                          Tapped="{x:Bind ViewModel.AddItemType}">
                                 <TextBlock Foreground="Black"
                                            FontSize="22"
                                            FontWeight="SemiLight"
@@ -159,10 +160,14 @@
                                                                       IsLeftCommandEnabled="True"
                                                                       IsOffsetLimited="False"                                              
                                                                       LeftBackground="{ThemeResource LcarsBlueGrayBrush}"
+                                                                      LeftCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.AddToShoppingListCommand}"
+                                                                      LeftCommandParameter="{x:Bind}"
                                                                       LeftForeground="White"
                                                                       LeftLabel="Add to Shopping List"                                               
                                                                       IsRightCommandEnabled="True"                                     
                                                                       RightBackground="{ThemeResource LcarsRedBrush}"
+                                                                      RightCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.DeleteItemCommand}"
+                                                                      RightCommandParameter="{x:Bind}"
                                                                       RightForeground="White"
                                                                       RightLabel="Delete"
                                                                       MouseSlidingEnabled="True">
@@ -254,9 +259,7 @@
                               RelativePanel.AlignBottomWithPanel="True"
                               RelativePanel.AlignLeftWithPanel="True"
                               RelativePanel.AlignRightWithPanel="True"
-                              Foreground="{ThemeResource LcarsBlueGrayBrush}">
-            </ctls:LcarsFooter>
-
+                              Foreground="{ThemeResource LcarsBlueGrayBrush}"/>
         </RelativePanel>
     </Grid>
 </Page>

@@ -26,6 +26,6 @@ namespace FridgeShoppingList.Services
             SimpleIoc.Default.Register<MainPageViewModel>();
             SimpleIoc.Default.Register<SettingsPageViewModel>();
             SimpleIoc.Default.Register<NetworkConfigPageViewModel>();
-        }        
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace FridgeShoppingList.Services
 
     public class DialogService : IDialogService
     {
-        private static readonly SemaphoreSlim _semaphore;       
+        private static readonly SemaphoreSlim _semaphore;
 
         static DialogService()
         {
@@ -49,7 +49,7 @@ namespace FridgeShoppingList.Services
             var result = await dialog.ShowAsync();
             _semaphore.Release();
 
-            return result;        
+            return result;
         }
 
         public async Task<ContentDialogResult> ShowDialog(ContentDialog dialog)
@@ -59,7 +59,7 @@ namespace FridgeShoppingList.Services
             _semaphore.Release();
 
             return result;
-        }      
+        }
 
         public async Task<TResult> ShowDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>
         {
@@ -86,6 +86,10 @@ namespace FridgeShoppingList.Services
             {
                 return (IResultDialogViewModel<TResult>)new AddToInventoryViewModel();
             }
+            else if(typeof(TViewModel) == typeof(AddGroceryItemTypeViewModel))
+            {
+                return (IResultDialogViewModel<TResult>)new AddGroceryItemTypeViewModel();
+            }
             else
             {
                 throw new ArgumentException("No ViewModel registered for the given type.");
@@ -93,10 +97,14 @@ namespace FridgeShoppingList.Services
         }
 
         private static ContentDialog ResolveDialogForVieWModel<T>(IResultDialogViewModel<T> vm)
-        {            
+        {
             if (vm is AddToInventoryViewModel)
             {
                 return new AddToInventoryDialog((AddToInventoryViewModel)vm);
+            }
+            else if (vm is AddGroceryItemTypeViewModel)
+            {
+                return new AddGroceryItemTypeDialog((AddGroceryItemTypeViewModel)vm);
             }
             else
             {

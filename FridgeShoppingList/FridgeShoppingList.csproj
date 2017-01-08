@@ -99,6 +99,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AddGroceryItemTypeDialog.xaml.cs">
+      <DependentUpon>AddGroceryItemTypeDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\AddToInventoryDialog.xaml.cs">
       <DependentUpon>AddToInventoryDialog.xaml</DependentUpon>
     </Compile>
@@ -111,11 +114,11 @@
     <Compile Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatus.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatusChangedEventArgs.cs" />
-    <Compile Include="Converters\DateTimeToDateTimeOffsetConverter.cs" />
     <Compile Include="Converters\EmptyNullToBoolConverter.cs" />
     <Compile Include="Converters\EmptyNullToVis.cs" />
     <Compile Include="Converters\SignalBarsToIconConverter.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
+    <Compile Include="Models\DateTimeOffsetWrapper.cs" />
     <Compile Include="Models\FontIcons.cs" />
     <Compile Include="Models\GroceryEntry.cs" />
     <Compile Include="Models\GroceryItemType.cs" />
@@ -124,6 +127,7 @@
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
     <Compile Include="Services\ServiceRegistrar.cs" />
     <Compile Include="Services\NetworkService.cs" />
+    <Compile Include="ViewModels\ControlViewModels\AddGroceryItemTypeViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\AddToInventoryViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\InventoryEntryViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\IResultDialogViewModel.cs" />
@@ -143,6 +147,9 @@
     </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Splash.xaml.cs">
       <DependentUpon>Splash.xaml</DependentUpon>
@@ -172,6 +179,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\AddGroceryItemTypeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\AddToInventoryDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -222,6 +233,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

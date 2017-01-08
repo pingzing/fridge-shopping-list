@@ -8,7 +8,6 @@ using System.Reactive.Linq;
 using Template10.Common;
 using Template10.Utils;
 using Windows.UI.Xaml;
-using Reactive.Bindings;
 using DynamicData;
 
 namespace FridgeShoppingList.Services.SettingsServices
@@ -23,6 +22,9 @@ namespace FridgeShoppingList.Services.SettingsServices
 
         private SourceList<GroceryEntry> _inventoryItems { get; set; } = new SourceList<GroceryEntry>();
         public IObservable<IChangeSet<GroceryEntry>> InventoryItems { get; }
+
+        private SourceList<GroceryEntry> _shoppingListItems { get; set; } = new SourceList<GroceryEntry>();
+        public IObservable<IChangeSet<GroceryEntry>> ShoppingListItems { get; }
 
 
         public TimeSpan CacheMaxDuration
@@ -48,8 +50,13 @@ namespace FridgeShoppingList.Services.SettingsServices
             //Initialize GroceryItemTypes
             GroceryItemType[] savedGroceryTypes = _helper.Read(nameof(GroceryTypes), new GroceryItemType[]
             {
-                new GroceryItemType { ItemTypeId = Guid.NewGuid(), Name = "Milk, 1L" },
-                new GroceryItemType { ItemTypeId = Guid.NewGuid(), Name = "Bread" }
+                new GroceryItemType("Milk, 1L"),
+                new GroceryItemType("Bread"),
+                new GroceryItemType("Cheese"),
+                new GroceryItemType("Ketchup"),
+                new GroceryItemType("Weiner schnitzel"),
+                new GroceryItemType("Juice"),
+                new GroceryItemType("Herb tomato pureé")
             });
             _groceryTypes.AddRange(savedGroceryTypes);
             GroceryTypes = _groceryTypes.Connect();
@@ -58,6 +65,11 @@ namespace FridgeShoppingList.Services.SettingsServices
             GroceryEntry[] savedInventory = _helper.Read(nameof(InventoryItems), new GroceryEntry[0]);
             _inventoryItems.AddRange(savedInventory);
             InventoryItems = _inventoryItems.Connect();
+
+            //Initialize ShoppingListItems
+            GroceryEntry[] savedShoppingList = _helper.Read(nameof(ShoppingListItems), new GroceryEntry[0]);
+            _shoppingListItems.AddRange(savedShoppingList);
+            ShoppingListItems = _shoppingListItems.Connect();
 
             //Write changes to Grocery Types 30 seconds after changes stop coming in
             GroceryTypes.Throttle(TimeSpan.FromSeconds(30))
@@ -69,6 +81,12 @@ namespace FridgeShoppingList.Services.SettingsServices
             InventoryItems.Throttle(TimeSpan.FromSeconds(30))
                 .Subscribe(
                     onNext: _ => _helper.Write(nameof(InventoryItems), _inventoryItems.Items)
+                );
+
+            //Write changed to the Shopping List items to disk 30 seconds after changes stop coming in
+            ShoppingListItems.Throttle(TimeSpan.FromSeconds(30))
+                .Subscribe(
+                    onNext: _ => _helper.Write(nameof(ShoppingListItems), _shoppingListItems.Items)
                 );
         }
 
