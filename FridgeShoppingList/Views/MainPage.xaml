@@ -11,8 +11,7 @@
       xmlns:vm="using:FridgeShoppingList.ViewModels"
       xmlns:ctlVms="using:FridgeShoppingList.ViewModels.ControlViewModels"
       xmlns:ctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:models="using:FridgeShoppingList.Models"
-      xmlns:selectors="using:FridgeShoppingList.TemplateSelectors"
+      xmlns:models="using:FridgeShoppingList.Models"      
       xmlns:ctls="using:FridgeShoppingList.Controls"
       xmlns:lcarsSlide="using:FridgeShoppingList.Controls.LcarsSlidableListItem"
       xmlns:osk="using:TCD.Controls.Keyboard"
@@ -133,7 +132,7 @@
                 </SplitView.Pane>
                 <SplitView.Content>
 
-                    <RelativePanel Margin="0 2 10 0">
+                    <RelativePanel Margin="4 2 10 0">
                         <ListView x:Name="FridgeItemsList"
                                   RelativePanel.AlignTopWithPanel="True"
                                   RelativePanel.AlignLeftWithPanel="True"

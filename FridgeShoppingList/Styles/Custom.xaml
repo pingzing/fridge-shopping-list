@@ -12,13 +12,13 @@
     <x:Double x:Key="NarrowMinWidth">0</x:Double>
     <x:Double x:Key="NormalMinWidth">521</x:Double>
     <x:Double x:Key="WideMinWidth">1200</x:Double>
-    
+
     <!--Lcars styles-->
     <x:Double x:Key="LcarsTitleFontSize">29</x:Double>
 
     <!--Tiny bit of duplication here, but we'll live-->
     <Color x:Key="SystemAccentColor">#FFFE9900</Color>
-    
+
     <Color x:Key="ShutdownBorderColor">#333333</Color>
     <SolidColorBrush x:Key="ShutdownBorderBrush" Color="{StaticResource ShutdownBorderColor}"/>
     <SolidColorBrush x:Key="ExtendedSplashBackgroundBrush" Color="{ThemeResource ExtendedSplashBackgroundColor}"/>
@@ -243,7 +243,7 @@
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="Foreground" Value="{ThemeResource LcarsBlueGrayBrush}"/>
     </Style>
-    
+
     <!--Custom pivot style to override default fonts-->
     <Style TargetType="PivotHeaderItem">
         <Setter Property="FontSize" Value="{StaticResource LcarsTitleFontSize}" />
@@ -388,6 +388,204 @@
         </Setter>
     </Style>
 
+    <Style TargetType="ContentDialog" x:Key="LcarsContentDialogStyle">
+        <Setter Property="Foreground" Value="{ThemeResource ContentDialogForeground}" />
+        <Setter Property="Background" Value="{ThemeResource ContentDialogBackground}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource ContentDialogBorderBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="MaxHeight" Value="440" />
+        <Setter Property="MinHeight" Value="{ThemeResource ContentDialogMinHeight}" />
+        <Setter Property="MaxWidth" Value="{ThemeResource ContentDialogMaxWidth}" />
+        <Setter Property="MinWidth" Value="{ThemeResource ContentDialogMinWidth}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentDialog">
+                    <Border x:Name="Container">
+                        <Grid x:Name="LayoutRoot">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!--LCARS header, footer and sides down below-->
+                            <Border x:Name="BackgroundElement"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="55"
+                                    FlowDirection="{TemplateBinding FlowDirection}"
+                                    BorderThickness="0"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    MaxWidth="{TemplateBinding MaxWidth}"
+                                    MaxHeight="{TemplateBinding MaxHeight}"
+                                    MinWidth="{TemplateBinding MinWidth}"
+                                    MinHeight="{TemplateBinding MinHeight}">
+                                <Grid x:Name="DialogSpace" VerticalAlignment="Stretch">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ScrollViewer x:Name="ContentScrollViewer"                                                  
+                                                  Grid.Row="1" Grid.Column="1"
+                                                  HorizontalScrollBarVisibility="Disabled"
+                                                  IsTabStop="False"
+                                                  Margin="{ThemeResource ContentDialogContentScrollViewerMargin}"                                                  
+                                                  VerticalScrollBarVisibility="Disabled"
+                                                  ZoomMode="Disabled">
+                                        <Grid>
+                                            <ContentPresenter x:Name="Content"
+                                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                              Content="{TemplateBinding Content}"
+                                                              FontSize="{ThemeResource ControlContentThemeFontSize}"
+                                                              FontFamily="{ThemeResource ContentControlThemeFontFamily}"
+                                                              Margin="{ThemeResource ContentDialogContentMargin}"
+                                                              Foreground="{TemplateBinding Foreground}"                                                              
+                                                              TextWrapping="Wrap" />
+                                        </Grid>
+                                    </ScrollViewer>
+                                    <Grid x:Name="CommandSpace"
+                                          Grid.Row="2" Grid.Column="1"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="Button1Host"
+                                                Margin="{ThemeResource ContentDialogButton1HostMargin}"
+                                                MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
+                                                MinHeight="{ThemeResource ContentDialogButtonMinHeight}" />
+                                        <Border x:Name="Button2Host"
+                                                Margin="{ThemeResource ContentDialogButton2HostMargin}"
+                                                MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
+                                                MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
+                                                Grid.Column="1" />
+                                    </Grid>
+                                    <Path x:Name="LcarsTopLeftCorner"
+                                          Grid.Row="0" Grid.Column="0"
+                                          Data="M80.0,0.0
+                                                L44.0,0.0
+                                                C44.0,0.0 0,0.0 0,55.0
+                                                L60.0,55.0
+                                                C60.0,55.0 60.0,20.0 80.0,20.0" 
+                                          Fill="{TemplateBinding BorderBrush}"
+                                          StrokeThickness="0"/>
+                                    <Rectangle x:Name="LcarsTopRectangle"
+                                               Grid.Row="0" Grid.Column="1"
+                                               Fill="{TemplateBinding BorderBrush}"                                       
+                                               HorizontalAlignment="Stretch"
+                                               Height="20"
+                                               VerticalAlignment="Top"/>
+                                    <Path x:Name="LcarsTopRightCorner"
+                                          Grid.Row="0" Grid.Column="2"
+                                          Data="M80.0,0.0
+                                                L44.0,0.0
+                                                C44.0,0.0 0,0.0 0,55.0
+                                                L60.0,55.0
+                                                C60.0,55.0 60.0,20.0 80.0,20.0"
+                                          Fill="{TemplateBinding BorderBrush}"
+                                          StrokeThickness="0" 
+                                          RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <CompositeTransform ScaleX="-1"/>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                    <Rectangle x:Name="LcarsLeftBorder"
+                                               Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
+                                               Fill="{TemplateBinding BorderBrush}"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Stretch"
+                                               Width="60"/>
+                                    <Rectangle x:Name="LcarsRightBorder"
+                                               Grid.Row="1" Grid.RowSpan="2" Grid.Column="2"
+                                               Fill="{TemplateBinding BorderBrush}"
+                                               HorizontalAlignment="Right"
+                                               VerticalAlignment="Stretch"
+                                               Width="60"/>
+                                    <Path x:Name="LcarsBottomLeftCorner"
+                                          Grid.Row="3" Grid.Column="0"
+                                          Data="M80.0,0.0
+                                                L44.0,0.0
+                                                C44.0,0.0 0,0.0 0,55.0
+                                                L60.0,55.0
+                                                C60.0,55.0 60.0,20.0 80.0,20.0"
+                                          Fill="{TemplateBinding BorderBrush}"
+                                          StrokeThickness="0" 
+                                          RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <CompositeTransform ScaleY="-1"/>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                    <Rectangle x:Name="LcarsBottomRectangle"
+                                               Grid.Row="3"
+                                               Grid.Column="1"
+                                               Fill="{TemplateBinding BorderBrush}"
+                                               HorizontalAlignment="Stretch"
+                                               Height="20"
+                                               VerticalAlignment="Bottom"/>
+                                    <Path x:Name="LcarsBottomRightCorner"
+                                          Grid.Row="3"
+                                          Grid.Column="2"
+                                          Data="M80.0,0.0
+                                                L44.0,0.0
+                                                C44.0,0.0 0,0.0 0,55.0
+                                                L60.0,55.0
+                                                C60.0,55.0 60.0,20.0 80.0,20.0"
+                                          Fill="{TemplateBinding BorderBrush}"
+                                          StrokeThickness="0" 
+                                          RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <CompositeTransform ScaleY="-1" ScaleX="-1"/>
+                                        </Path.RenderTransform>
+                                    </Path>
+
+                                    <ContentControl x:Name="Title"
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"                                                    
+                                                    Content="{TemplateBinding Title}"
+                                                    ContentTemplate="{TemplateBinding TitleTemplate}"
+                                                    FontSize="20"
+                                                    FontFamily="{StaticResource LcarsFont}"
+                                                    FontWeight="Normal"
+                                                    Foreground="{TemplateBinding Foreground}"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Top"
+                                                    IsTabStop="False">
+                                        <ContentControl.Template>
+                                            <ControlTemplate TargetType="ContentControl">
+                                                <Border Background="Black" 
+                                                        Margin="20 0 20 0"
+                                                        Padding="20 0 20 0">
+                                                    <ContentPresenter Content="{TemplateBinding Content}"
+                                                                      MaxLines="2"
+                                                                      TextWrapping="Wrap"
+                                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                      Margin="{TemplateBinding Padding}"
+                                                                      ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </ContentControl.Template>
+                                    </ContentControl>
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <ResourceDictionary.ThemeDictionaries>
 
@@ -406,6 +604,7 @@
             <SolidColorBrush x:Key="LcarsBlueGrayBrush" Color="{StaticResource LcarsBlueGray}"/>
             <SolidColorBrush x:Key="LcarsRedBrush" Color="{StaticResource LcarsRed}"/>
             <SolidColorBrush x:Key="LcarsLavenderBrush" Color="{StaticResource LcarsLavender}"/>
+            <SolidColorBrush x:Key="LcarsRedPurpleBrush" Color="{StaticResource LcarsRedPurple}"/>
 
             <SolidColorBrush x:Key="LcarsCaptionTextBlockBrush" Color="{StaticResource LcarsGold}" Opacity=".8"/>
 
@@ -414,7 +613,7 @@
             <SolidColorBrush x:Key="LcarsListViewBackgroundPressedBrush" Color="{StaticResource LcarsOrange}" Opacity=".6"/>
             <SolidColorBrush x:Key="LcarsListViewBackgroundHoverPressedBrush" Color="{StaticResource LcarsOrange}" Opacity=".7"/>
             <SolidColorBrush x:Key="LcarsListViewBackgroundSelectedBrush" Color="{StaticResource LcarsOrange}" Opacity=".2"/>
-            
+
             <!--Pivot theme styles-->
             <SolidColorBrush x:Key="LcarsPivotHeaderUnselectedBrush" Color="{StaticResource LcarsGold}" Opacity="0.5"/>
             <SolidColorBrush x:Key="LcarsPivotHeaderItemForegroundSelected" Color="{StaticResource LcarsGold}" Opacity="0.9"/>

@@ -21,13 +21,20 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
         public GroceryEntry Result { get; set; }
 
         public ObservableCollectionExtended<GroceryItemType> ItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
-        public ObservableCollectionExtended<DateTime> ExpiryDates { get; private set; } = new ObservableCollectionExtended<DateTime>();      
+        public ObservableCollectionExtended<DateTime> ExpiryDates { get; private set; } = new ObservableCollectionExtended<DateTime>() { DateTime.Today };
 
         GroceryItemType _selectedItemType = default(GroceryItemType);
         public GroceryItemType SelectedItemType
         {
             get { return _selectedItemType; }
             set { Set(ref _selectedItemType, value); }
+        }
+
+        bool areDatesLinked = default(bool);
+        public bool AreDatesLinked
+        {
+            get { return areDatesLinked; }
+            set { Set(ref areDatesLinked, value); }
         }
 
         static AddToInventoryViewModel()
@@ -47,7 +54,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
 
         public void SubtractOne()
         {
-            if (ExpiryDates.Count > 0)
+            if (ExpiryDates.Count > 1)
             {
                 ExpiryDates.RemoveAt(ExpiryDates.Count - 1);
             }

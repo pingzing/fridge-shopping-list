@@ -1,5 +1,6 @@
 ﻿using FridgeShoppingList.Models;
 using FridgeShoppingList.ViewModels.ControlViewModels;
+using Microsoft.Toolkit.Uwp.UI;
 using Windows.UI.Xaml.Controls;
 
 // The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
