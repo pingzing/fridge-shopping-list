@@ -1,24 +1,25 @@
-﻿<ContentDialog
-    x:Class="FridgeShoppingList.Controls.AddToInventoryDialog"
-    x:Name="ThisAddToInventoryDialog"
+﻿<lcarsDlg:LcarsModalDialog
+    x:Class="FridgeShoppingList.Controls.AddToInventoryModalDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:FridgeShoppingList.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
-    xmlns:models="using:FridgeShoppingList.Models"    
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lcarsDlg="using:FridgeShoppingList.Controls.LcarsModalDialog"
+    xmlns:models="using:FridgeShoppingList.Models"
     mc:Ignorable="d"
+    d:DesignHeight="440"
+    d:DesignWidth="480"
     
+    Background="Black"
     Title="ADD ITEM"
     PrimaryButtonText="Add"
     SecondaryButtonText="Cancel"
-    Background="Black"
     BorderBrush="{ThemeResource LcarsRedPurpleBrush}"
     Foreground="{ThemeResource LcarsRedPurpleBrush}"    
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
-    IsPrimaryButtonEnabled="{x:Bind ViewModel.ExpiryDates.Count, Mode=OneWay, Converter={StaticResource EmptyNullToBoolConverter}}"    
-    Style="{StaticResource LcarsContentDialogStyle}">
+    PrimaryButtonClick="LcarsModalDialog_PrimaryButtonClick"
+    SecondaryButtonClick="LcarsModalDialog_SecondaryButtonClick"
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.ExpiryDates.Count, Mode=OneWay, Converter={StaticResource EmptyNullToBoolConverter}}">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -129,4 +130,4 @@
         </ListView>
 
     </Grid>
-</ContentDialog>
+</lcarsDlg:LcarsModalDialog>

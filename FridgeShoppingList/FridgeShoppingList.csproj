@@ -105,12 +105,16 @@
     <Compile Include="Controls\AddToInventoryDialog.xaml.cs">
       <DependentUpon>AddToInventoryDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AddToInventoryModalDialog.xaml.cs">
+      <DependentUpon>AddToInventoryModalDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LcarsFooter.xaml.cs">
       <DependentUpon>LcarsFooter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LcarsHeader.xaml.cs">
       <DependentUpon>LcarsHeader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LcarsModalDialog\LcarsModalDialog.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatus.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatusChangedEventArgs.cs" />
@@ -187,6 +191,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\AddToInventoryModalDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\LcarsFooter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -194,6 +202,11 @@
     <Page Include="Controls\LcarsHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LcarsModalDialog\LcarsModalDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.xaml">
       <SubType>Designer</SubType>
