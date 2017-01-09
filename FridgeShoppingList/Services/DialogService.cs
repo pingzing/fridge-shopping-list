@@ -1,4 +1,5 @@
 ﻿using FridgeShoppingList.Controls;
+using FridgeShoppingList.Controls.LcarsModalDialog;
 using FridgeShoppingList.ViewModels.ControlViewModels;
 using GalaSoft.MvvmLight.Ioc;
 using System;
@@ -18,7 +19,8 @@ namespace FridgeShoppingList.Services
         Task ShowDialog(string message, string title);
         Task<IUICommand> ShowDialog(MessageDialog dialog);
         Task<ContentDialogResult> ShowDialog(ContentDialog dialog);
-        Task<TResult> ShowDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>;
+        Task<TResult> ShowContentDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>;
+        Task<TResult> ShowModalDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>;
     }
 
     public class DialogService : IDialogService
@@ -61,10 +63,10 @@ namespace FridgeShoppingList.Services
             return result;
         }
 
-        public async Task<TResult> ShowDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>
+        public async Task<TResult> ShowContentDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>
         {
             IResultDialogViewModel<TResult> vm = GetViewModel<TViewModel, TResult>();
-            ContentDialog dialog = ResolveDialogForVieWModel(vm);
+            ContentDialog dialog = ResolveContentDialogForViewModel(vm);
 
             _semaphore.Wait();
             var result = await dialog.ShowAsync();
@@ -80,13 +82,25 @@ namespace FridgeShoppingList.Services
             }
         }
 
+        public async Task<TResult> ShowModalDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>
+        {
+            IResultDialogViewModel<TResult> vm = GetViewModel<TViewModel, TResult>();
+            LcarsModalDialog dialog = ResolveModalDialogForViewModel(vm);
+
+            _semaphore.Wait();
+            await dialog.OpenAsync();
+            _semaphore.Release();
+
+            return vm.Result;
+        }
+
         private static IResultDialogViewModel<TResult> GetViewModel<TViewModel, TResult>()
         {
-            if(typeof(TViewModel) == typeof(AddToInventoryViewModel))
+            if (typeof(TViewModel) == typeof(AddToInventoryViewModel))
             {
                 return (IResultDialogViewModel<TResult>)new AddToInventoryViewModel();
             }
-            else if(typeof(TViewModel) == typeof(AddGroceryItemTypeViewModel))
+            else if (typeof(TViewModel) == typeof(AddGroceryItemTypeViewModel))
             {
                 return (IResultDialogViewModel<TResult>)new AddGroceryItemTypeViewModel();
             }
@@ -96,7 +110,7 @@ namespace FridgeShoppingList.Services
             }
         }
 
-        private static ContentDialog ResolveDialogForVieWModel<T>(IResultDialogViewModel<T> vm)
+        private static ContentDialog ResolveContentDialogForViewModel<T>(IResultDialogViewModel<T> vm)
         {
             if (vm is AddToInventoryViewModel)
             {
@@ -109,6 +123,18 @@ namespace FridgeShoppingList.Services
             else
             {
                 return new ContentDialog();
+            }
+        }
+
+        private static LcarsModalDialog ResolveModalDialogForViewModel<T>(IResultDialogViewModel<T> vm)
+        {
+            if (vm is AddToInventoryViewModel)
+            {
+                return new AddToInventoryModalDialog((AddToInventoryViewModel)vm);
+            }
+            else
+            {
+                return new LcarsModalDialog();
             }
         }
     }

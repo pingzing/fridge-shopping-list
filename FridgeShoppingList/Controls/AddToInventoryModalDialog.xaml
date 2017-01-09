@@ -12,11 +12,12 @@
     d:DesignWidth="480"
     
     Background="Black"
-    Title="ADD ITEM"
-    PrimaryButtonText="Add"
-    SecondaryButtonText="Cancel"
     BorderBrush="{ThemeResource LcarsRedPurpleBrush}"
     Foreground="{ThemeResource LcarsRedPurpleBrush}"    
+    MinHeight="440"
+    Title="ADD ITEM"
+    PrimaryButtonText="Add"
+    SecondaryButtonText="Cancel"    
     PrimaryButtonClick="LcarsModalDialog_PrimaryButtonClick"
     SecondaryButtonClick="LcarsModalDialog_SecondaryButtonClick"
     IsPrimaryButtonEnabled="{x:Bind ViewModel.ExpiryDates.Count, Mode=OneWay, Converter={StaticResource EmptyNullToBoolConverter}}">

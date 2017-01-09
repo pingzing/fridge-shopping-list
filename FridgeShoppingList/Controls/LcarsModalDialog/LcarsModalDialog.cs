@@ -18,6 +18,8 @@ using Windows.UI.Xaml.Media;
 
 namespace FridgeShoppingList.Controls.LcarsModalDialog
 {
+    //TODO: Add animations on open and close, and switch out the background to be transparent, and a blur effect
+
     [TemplatePart(Name = PartButton1Host, Type = typeof(Border))]
     [TemplatePart(Name = PartButton2Host, Type = typeof(Border))]
     public class LcarsModalDialog : ContentControl
@@ -76,12 +78,9 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             WindowWrapper.Current().Dispatcher.Dispatch(() => 
             {
                 var modal = Window.Current.Content as ModalDialog;
-                var dialog = modal.ModalContent as LcarsModalDialog;
-                if (dialog == null)
-                {
-                    modal.ModalContent = this;
-                    modal.IsModal = true;
-                }
+                var dialog = modal.ModalContent as LcarsModalDialog;                                
+                modal.ModalContent = this;
+                modal.IsModal = true;
             });
 
             await _windowClosedTask.Task; //This gets run to completion in Close().
@@ -98,11 +97,7 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             {
                 var modal = Window.Current.Content as ModalDialog;
                 var dialog = modal.ModalContent as LcarsModalDialog;
-                if (dialog == null)
-                {
-                    modal.ModalContent = this;
-                    modal.IsModal = false;
-                }
+                modal.IsModal = false;
 
                 _windowClosedTask.SetResult(true);
             });
