@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FridgeShoppingList", "FridgeShoppingList\FridgeShoppingList.csproj", "{15026C5D-1465-4C59-90EA-DDCE205E02CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCD.Controls.Keyboard", "..\TCD.Controls.Keyboard\TCD.Controls.Keyboard\TCD.Controls.Keyboard\TCD.Controls.Keyboard.csproj", "{9E8B0D12-8145-4247-821C-4A603FA683F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCD.Controls.Keyboard", "libs\TCD.Controls.Keyboard\TCD.Controls.Keyboard.csproj", "{9E8B0D12-8145-4247-821C-4A603FA683F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -254,7 +254,7 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TCD.Controls.Keyboard\TCD.Controls.Keyboard\TCD.Controls.Keyboard\TCD.Controls.Keyboard.csproj">
+    <ProjectReference Include="..\libs\TCD.Controls.Keyboard\TCD.Controls.Keyboard.csproj">
       <Project>{9e8b0d12-8145-4247-821c-4a603fa683f2}</Project>
       <Name>TCD.Controls.Keyboard</Name>
     </ProjectReference>
