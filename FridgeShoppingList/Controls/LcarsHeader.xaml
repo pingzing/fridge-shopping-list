@@ -91,7 +91,6 @@
             <Rectangle x:Name="BackButtonCover"
                        Fill="Black"                       
                        StrokeThickness="0"                       
-                       RenderTransformOrigin="0.5,0.5"
                        Width="60"
                        Visibility="Collapsed">
             </Rectangle>

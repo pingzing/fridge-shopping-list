@@ -11,6 +11,9 @@ using FridgeShoppingList.Views;
 using GalaSoft.MvvmLight.Ioc;
 using FridgeShoppingList.ViewModels;
 using FridgeShoppingList.Services;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 
 namespace FridgeShoppingList
 {
@@ -51,6 +54,7 @@ namespace FridgeShoppingList
                 DisableBackButtonWhenModal = true,
                 Content = new Views.Shell(service),
                 ModalContent = new Views.Busy(),
+                ModalBackground = new SolidColorBrush(Colors.Transparent)
             };
         }
 
@@ -58,6 +62,8 @@ namespace FridgeShoppingList
         {
             // TODO: add your long-running task here
             await NavigationService.NavigateAsync(typeof(Views.MainPage));
+
+            AnimationSet.UseComposition = true;
         }
 
         //Handles resolution for pages' ViewModels.

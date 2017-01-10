@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
@@ -79,11 +80,12 @@ namespace FridgeShoppingList.Controls
             animating = true;
             BackButton.Visibility = Visibility.Collapsed;
             BackButtonCover.Visibility = Visibility.Visible;
-            BackButtonCover.Opacity = 1;
-            await BackButtonCover.Scale(0, 1, duration: 0)
-
+            await Task.WhenAll(
+                BackButtonCover.Scale(0, 1, 0.5f, 0.5f, 0).StartAsync(),
+                BackButtonCover.Fade(1, 0).StartAsync()
+            );
             //Whoosh in the black cover
-                .Then().Scale(1, 1, duration: 500).StartAsync();
+            await BackButtonCover.Scale(1, 1, (float)(BackButtonCover.ActualWidth / 2), (float)(BackButtonCover.ActualHeight / 2), 500).StartAsync();
 
             //fade in the back button by hiding the cover rectangle
             BackButton.Visibility = Visibility.Visible;

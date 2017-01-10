@@ -1,16 +1,20 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Template10.Common;
 using Template10.Controls;
 using Windows.Foundation;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
@@ -75,14 +79,23 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
         public async Task OpenAsync()
         {
             _windowClosedTask = new TaskCompletionSource<bool>();
-            WindowWrapper.Current().Dispatcher.Dispatch(() => 
+            await WindowWrapper.Current().Dispatcher.Dispatch(async () =>
             {
                 var modal = Window.Current.Content as ModalDialog;
-                var dialog = modal.ModalContent as LcarsModalDialog;                                
+                var dialog = modal.ModalContent as LcarsModalDialog;
+
+                await this.Fade(0, 0).StartAsync();
+
                 modal.ModalContent = this;
                 modal.IsModal = true;
-            });
 
+                await Task.WhenAll
+                (
+                    this.Fade(1, 500).StartAsync(),
+                    (modal.Content as FrameworkElement).Blur(6, 500).StartAsync()
+                );                
+            });
+            
             await _windowClosedTask.Task; //This gets run to completion in Close().
         }
 
@@ -98,6 +111,7 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
                 var modal = Window.Current.Content as ModalDialog;
                 var dialog = modal.ModalContent as LcarsModalDialog;
                 modal.IsModal = false;
+                (modal.Content as FrameworkElement).Blur(0, 150).Start();
 
                 _windowClosedTask.SetResult(true);
             });
