@@ -39,7 +39,8 @@ namespace FridgeShoppingList.Models
             }
 
             return !this.ExpiryDates.Except(other.ExpiryDates).Any()
-                && !other.ExpiryDates.Except(this.ExpiryDates).Any();
+                && !other.ExpiryDates.Except(this.ExpiryDates).Any()
+                && this.ItemType == other.ItemType;
         }
 
         public override bool Equals(object obj)

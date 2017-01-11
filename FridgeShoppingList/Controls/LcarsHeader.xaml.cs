@@ -11,13 +11,7 @@ namespace FridgeShoppingList.Controls
 {
     [ContentProperty(Name = nameof(HeaderContent))]
     public sealed partial class LcarsHeader : UserControl
-    {
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
-
+    { 
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register(nameof(Text), typeof(string), typeof(LcarsHeader), new PropertyMetadata(string.Empty, (d, e) =>
             {
@@ -26,41 +20,39 @@ namespace FridgeShoppingList.Controls
                 _this.HeaderContentTemplate = _this.DefaultHeaderContentTemplate;
             }));
 
-        public object HeaderContent
-        {
-            get { return (object)GetValue(HeaderContentProperty); }
-            set { SetValue(HeaderContentProperty, value); }
-        }
-
         public static readonly DependencyProperty HeaderContentProperty =
             DependencyProperty.Register(nameof(HeaderContent), typeof(object), typeof(LcarsHeader), new PropertyMetadata(null));
 
-        public DataTemplate HeaderContentTemplate
-        {
-            get { return (DataTemplate)GetValue(HeaderContentTemplateProperty); }
-            set { SetValue(HeaderContentTemplateProperty, value); }
-        }
-
         public static readonly DependencyProperty HeaderContentTemplateProperty =
-            DependencyProperty.Register(nameof(HeaderContentTemplate), typeof(DataTemplate), typeof(LcarsHeader), new PropertyMetadata(null));
-
-        /// <summary>
-        /// A reference to the application <see cref="Frame"/>, used to feed the back button's NavButtonBehavior.
-        /// </summary>
-        public Frame FrameReference
-        {
-            get { return (Frame)GetValue(FrameReferenceProperty); }
-            set { SetValue(FrameReferenceProperty, value); }
-        }
+            DependencyProperty.Register(nameof(HeaderContentTemplate), typeof(DataTemplate), typeof(LcarsHeader), new PropertyMetadata(null));        
 
         public static readonly DependencyProperty FrameReferenceProperty =
-            DependencyProperty.Register(nameof(FrameReference), typeof(Frame), typeof(LcarsHeader), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(FrameReference), typeof(Frame), typeof(LcarsHeader), new PropertyMetadata(null));        
+        
+        public static readonly DependencyProperty IsBackButtonShownProperty =
+            DependencyProperty.Register(nameof(IsBackButtonShown), typeof(bool), typeof(LcarsHeader), new PropertyMetadata(false, (d, e) =>
+            {
+                if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                {
+                    return;
+                }
 
-
+                LcarsHeader _this = (LcarsHeader)d;
+                bool newIsBackShown = (bool)e.NewValue;
+                if (newIsBackShown)
+                {
+                    _this.FrameReference = App.Current.NavigationService.Frame;
+                }
+                else
+                {
+                    _this.FrameReference = null;
+                    _this.BackButton.Visibility = Visibility.Collapsed;
+                    _this.BackButtonCover.Visibility = Visibility.Collapsed;
+                }
+            }));
 
         public LcarsHeader()
-        {
-            FrameReference = App.Current.NavigationService.Frame;
+        {            
             this.InitializeComponent();
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
@@ -71,6 +63,11 @@ namespace FridgeShoppingList.Controls
         bool animating = false;
         public async void PlayButtonAppearAnimation()
         {
+            if(!IsBackButtonShown)
+            {
+                return;
+            }
+
             if(animating)
             {
                 return;
@@ -94,6 +91,39 @@ namespace FridgeShoppingList.Controls
             //tear down                                   
             BackButtonCover.Visibility = Visibility.Collapsed;
             animating = false;
+        }
+
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        public object HeaderContent
+        {
+            get { return (object)GetValue(HeaderContentProperty); }
+            set { SetValue(HeaderContentProperty, value); }
+        }
+
+        public DataTemplate HeaderContentTemplate
+        {
+            get { return (DataTemplate)GetValue(HeaderContentTemplateProperty); }
+            set { SetValue(HeaderContentTemplateProperty, value); }
+        }
+
+        /// <summary>
+        /// A reference to the application <see cref="Frame"/>, used to feed the back button's NavButtonBehavior.
+        /// </summary>
+        public Frame FrameReference
+        {
+            get { return (Frame)GetValue(FrameReferenceProperty); }
+            set { SetValue(FrameReferenceProperty, value); }
+        }
+
+        public bool IsBackButtonShown
+        {
+            get { return (bool)GetValue(IsBackButtonShownProperty); }
+            set { SetValue(IsBackButtonShownProperty, value); }
         }
     }
 }

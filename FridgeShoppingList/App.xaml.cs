@@ -30,9 +30,7 @@ namespace FridgeShoppingList
             InitializeComponent();
             SplashFactory = (e) => new Views.Splash(e);
 
-            Registrar = new ServiceRegistrar();
-
-            #region app settings
+            Registrar = new ServiceRegistrar();            
 
             // some settings must be set in app.constructor
             var settings = SettingsService.Instance;
@@ -42,8 +40,6 @@ namespace FridgeShoppingList
             AutoSuspendAllFrames = true;
             AutoRestoreAfterTerminated = true;
             AutoExtendExecutionSession = true;
-
-            #endregion
         }
 
         public override UIElement CreateRootElement(IActivatedEventArgs e)
@@ -61,9 +57,7 @@ namespace FridgeShoppingList
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             // TODO: add your long-running task here
-            await NavigationService.NavigateAsync(typeof(Views.MainPage));
-
-            AnimationSet.UseComposition = true;
+            await NavigationService.NavigateAsync(typeof(Views.MainPage));            
         }
 
         //Handles resolution for pages' ViewModels.

@@ -32,10 +32,14 @@
                                         VerticalAlignment="Center"
                                         Orientation="Horizontal">
                                 <SymbolIcon Foreground="{TemplateBinding LeftForeground}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
                                             Symbol="{TemplateBinding LeftIcon}" />
                                 <TextBlock Margin="10,0,0,0"
                                            FontSize="15"
                                            Foreground="{TemplateBinding LeftForeground}"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
                                            Text="{TemplateBinding LeftLabel}" />
                                 <StackPanel.RenderTransform>
                                     <CompositeTransform />
@@ -49,8 +53,12 @@
                                 <TextBlock Margin="0,0,10,0"
                                            FontSize="15"
                                            Foreground="{TemplateBinding RightForeground}"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
                                            Text="{TemplateBinding RightLabel}" />
                                 <SymbolIcon Foreground="{TemplateBinding RightForeground}"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
                                             Symbol="{TemplateBinding RightIcon}" />
                                 <StackPanel.RenderTransform>
                                     <CompositeTransform />

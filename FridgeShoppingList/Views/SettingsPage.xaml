@@ -63,7 +63,8 @@
         <ctls:LcarsHeader x:Name="pageHeader"                          
                           RelativePanel.AlignTopWithPanel="True"
                           RelativePanel.AlignLeftWithPanel="True"
-                          RelativePanel.AlignRightWithPanel="True">
+                          RelativePanel.AlignRightWithPanel="True"
+                          IsBackButtonShown="True">
             <StackPanel Background="Black" 
                         Margin="20 -5 20 0" 
                         Padding="20 0 20 0"

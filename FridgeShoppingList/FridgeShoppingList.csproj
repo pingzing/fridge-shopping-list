@@ -124,6 +124,7 @@
     <Compile Include="Converters\EmptyNullToBoolConverter.cs" />
     <Compile Include="Converters\EmptyNullToVis.cs" />
     <Compile Include="Converters\SignalBarsToIconConverter.cs" />
+    <Compile Include="Converters\StringFormatConverter.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DateTimeOffsetWrapper.cs" />
     <Compile Include="Models\FontIcons.cs" />
