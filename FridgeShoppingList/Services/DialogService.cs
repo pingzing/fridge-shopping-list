@@ -132,6 +132,10 @@ namespace FridgeShoppingList.Services
             {
                 return new AddToInventoryModalDialog((AddToInventoryViewModel)vm);
             }
+            else if(vm is AddGroceryItemTypeViewModel)
+            {
+                return new AddGroceryItemTypeModalDialog((AddGroceryItemTypeViewModel)vm);
+            }
             else
             {
                 return new LcarsModalDialog();

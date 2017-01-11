@@ -102,6 +102,9 @@
     <Compile Include="Controls\AddGroceryItemTypeDialog.xaml.cs">
       <DependentUpon>AddGroceryItemTypeDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AddGroceryItemTypeModalDialog.xaml.cs">
+      <DependentUpon>AddGroceryItemTypeModalDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\AddToInventoryDialog.xaml.cs">
       <DependentUpon>AddToInventoryDialog.xaml</DependentUpon>
     </Compile>
@@ -184,6 +187,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\AddGroceryItemTypeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\AddGroceryItemTypeModalDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -40,7 +40,7 @@ namespace FridgeShoppingList.Models
                 return false;
             }
 
-            return Equals(obj as GroceryEntry);
+            return Equals(obj as GroceryItemType);
         }
 
         public override int GetHashCode()

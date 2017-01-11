@@ -94,7 +94,7 @@ namespace FridgeShoppingList.ViewModels
 
         public async void AddItemType()
         {
-            GroceryItemType result = await _dialogService.ShowContentDialogAsync<AddGroceryItemTypeViewModel, GroceryItemType>();
+            GroceryItemType result = await _dialogService.ShowModalDialogAsync<AddGroceryItemTypeViewModel, GroceryItemType>();
             if (result != null)
             {
                 _settings.AddToGroceryTypes(result);
@@ -103,7 +103,7 @@ namespace FridgeShoppingList.ViewModels
 
         private void AddToShoppingList(InventoryEntryViewModel obj)
         {
-            
+            _settings.AddToShoppingList(obj.Entry);
         }
 
         private void DeleteItem(InventoryEntryViewModel obj)

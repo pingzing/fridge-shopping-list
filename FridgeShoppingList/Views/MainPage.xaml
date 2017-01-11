@@ -247,8 +247,47 @@
                                   RelativePanel.AlignTopWithPanel="True"
                                   RelativePanel.AlignRightWithPanel="True"
                                   RelativePanel.AlignLeftWithPanel="True"
-                                  RelativePanel.AlignBottomWithPanel="True">
-
+                                  RelativePanel.AlignBottomWithPanel="True"
+                                  ItemsSource="{x:Bind ViewModel.ShoppingListItems, Mode=OneWay}"
+                                  SelectionMode="None">
+                            <ListView.Header>
+                                <TextBlock Foreground="{ThemeResource LcarsRedBrush}"
+                                           HorizontalAlignment="Center"
+                                           Text="NO ITEMS LOGGED IN SHOPPING MANIFEST"
+                                           Visibility="{x:Bind ViewModel.ShoppingListItems.Count, Mode=OneWay, Converter={StaticResource EmptyCollectionToVisConverter}}"/>
+                            </ListView.Header>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Padding" Value="2 0 12 9"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="ctlVms:ShoppingListEntryViewModel">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0"
+                                                Padding="12 0 0 0"
+                                                MinHeight="44">
+                                            <TextBlock Text="{x:Bind Entry.ItemType.Name.ToUpper()}"
+                                                       Foreground="Black"
+                                                       VerticalAlignment="Center"
+                                                       Style="{ThemeResource LcarsTitleTextBlockStyle}"/>
+                                        </Border>
+                                        <Border Grid.Column="1"
+                                                Background="Black"
+                                                Margin="5 0"
+                                                Padding="6 0 6 0">
+                                            <TextBlock Text="{x:Bind Entry.ExpiryDates.Count, Mode=OneWay}"
+                                                       Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                     </RelativePanel>
                 </SplitView.Content>

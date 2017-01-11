@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace FridgeShoppingList.Models
 {
-    [DebuggerDisplay("Name: {ItemType.Name}, Expires: {ExpiryDate?.ToString()}")]
+    [DebuggerDisplay("Name: {ItemType.Name}, ExpiryDates Count: {ExpiryDates.Count}")]
     public class GroceryEntry : IEquatable<GroceryEntry>
     {
         public GroceryItemType ItemType { get; set; }

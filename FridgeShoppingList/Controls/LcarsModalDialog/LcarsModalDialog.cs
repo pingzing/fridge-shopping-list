@@ -1,22 +1,12 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Animations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Template10.Common;
 using Template10.Controls;
 using Windows.Foundation;
-using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 // The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
@@ -104,17 +94,27 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             Close(DialogCloseReason.Programmatic);
         }
 
+        bool closing = false;
         private void Close(DialogCloseReason closeReason)
         {
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            if (!closing)
             {
-                var modal = Window.Current.Content as ModalDialog;
-                var dialog = modal.ModalContent as LcarsModalDialog;
-                modal.IsModal = false;
-                (modal.Content as FrameworkElement).Blur(0, 150).Start();
+                closing = true;
+                WindowWrapper.Current().Dispatcher.Dispatch(async () =>
+                {
+                    var modal = Window.Current.Content as ModalDialog;
+                    var dialog = modal.ModalContent as LcarsModalDialog;
 
-                _windowClosedTask.SetResult(true);
-            });
+                    await Task.WhenAll(
+                        this.Fade(0, 250).StartAsync(),
+                        (modal.Content as FrameworkElement).Blur(0, 250).StartAsync()
+                    );
+
+                    modal.IsModal = false;
+
+                    _windowClosedTask.SetResult(true);
+                });
+            }
         }
 
         protected override void OnApplyTemplate()

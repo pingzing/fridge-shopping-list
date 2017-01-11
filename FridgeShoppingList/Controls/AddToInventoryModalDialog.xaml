@@ -18,8 +18,7 @@
     Title="ADD ITEM"
     PrimaryButtonText="Add"
     SecondaryButtonText="Cancel"    
-    PrimaryButtonClick="LcarsModalDialog_PrimaryButtonClick"
-    SecondaryButtonClick="LcarsModalDialog_SecondaryButtonClick"
+    PrimaryButtonClick="LcarsModalDialog_PrimaryButtonClick"    
     IsPrimaryButtonEnabled="{x:Bind ViewModel.ExpiryDates.Count, Mode=OneWay, Converter={StaticResource EmptyNullToBoolConverter}}">
 
     <Grid>
@@ -107,6 +106,7 @@
                     MinHeight="44"
                     MinWidth="320"
                     Padding="12 4 12 0"
+                    VerticalAlignment="Center"
                     Visibility="{x:Bind DatesLinkedCheckbox.IsChecked, Mode=OneWay}"/>
 
         <ListView x:Name="ExpiryDates"

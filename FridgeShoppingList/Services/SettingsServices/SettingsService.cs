@@ -24,8 +24,7 @@ namespace FridgeShoppingList.Services.SettingsServices
         public IObservable<IChangeSet<GroceryEntry>> InventoryItems { get; }
 
         private SourceList<GroceryEntry> _shoppingListItems { get; set; } = new SourceList<GroceryEntry>();
-        public IObservable<IChangeSet<GroceryEntry>> ShoppingListItems { get; }
-
+        public IObservable<IChangeSet<GroceryEntry>> ShoppingListItems { get; }        
 
         public TimeSpan CacheMaxDuration
         {
@@ -116,6 +115,24 @@ namespace FridgeShoppingList.Services.SettingsServices
         public void RemoveFromInventoryItems(GroceryEntry itemToRemove)
         {
             _inventoryItems.Remove(itemToRemove);
+        }
+
+        public void AddToShoppingList(GroceryEntry entry)
+        {
+            var existingEntry = _shoppingListItems.Items.FirstOrDefault(x => x.ItemType == entry.ItemType);
+            if (existingEntry != null)
+            {
+                existingEntry.ExpiryDates.AddRange(entry.ExpiryDates.ToList());
+            }
+            else
+            {
+                _shoppingListItems.Add(entry);
+            }
+        }
+
+        public void RemoveFromShoppingListItems(GroceryEntry itemToRemove)
+        {
+            _shoppingListItems.Remove(itemToRemove);
         }
     }
 }

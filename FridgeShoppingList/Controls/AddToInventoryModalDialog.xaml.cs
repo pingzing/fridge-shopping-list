@@ -18,10 +18,5 @@ namespace FridgeShoppingList.Controls
         {
             ViewModel.SetResultToCurrentState();
         }
-
-        private void LcarsModalDialog_SecondaryButtonClick(LcarsModalDialog.LcarsModalDialog sender, object args)
-        {
-
-        }
     }
 }
