@@ -24,7 +24,7 @@ namespace FridgeShoppingList.Controls
 
         public AddGroceryItemTypeModalDialog(AddGroceryItemTypeViewModel viewModel)
         {
-            ViewModel = ViewModel;
+            ViewModel = viewModel;
             this.DataContext = ViewModel;
             this.InitializeComponent();
         }

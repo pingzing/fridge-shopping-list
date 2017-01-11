@@ -621,7 +621,7 @@
                                 <VisualStateGroup.Transitions>
                                     <VisualTransition From="Pressed">
                                         <Storyboard>
-                                            <ColorAnimation Duration="0:0:01.5" 
+                                            <ColorAnimation Duration="0:0:0.75" 
                                                             From="{StaticResource LcarsGold}" 
                                                             Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)"
                                                             Storyboard.TargetName="ButtonContainer"/>
