@@ -11,6 +11,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Template10.Mvvm;
+using Windows.UI.Xaml.Controls;
 
 namespace FridgeShoppingList.ViewModels.ControlViewModels
 {
@@ -74,6 +75,23 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             if (ExpiryDates.Count < int.MaxValue)
             {
                 ExpiryDates.Add(new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Today });
+            }
+        }
+
+        public void GridView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
+        {
+            int value = Convert.ToInt32(((GridViewItem)e.AddedItems.FirstOrDefault()).Content);
+            var dateTimes = new List<DateTimeOffsetWrapper>(value);
+            for(int i = 0; i < value; i++)
+            {
+                dateTimes.Add(new DateTimeOffsetWrapper());
+            }
+
+            using (ExpiryDates.SuspendCount())
+            using (ExpiryDates.SuspendNotifications())
+            {
+                ExpiryDates.Clear();
+                ExpiryDates.AddRange(dateTimes);
             }
         }
 

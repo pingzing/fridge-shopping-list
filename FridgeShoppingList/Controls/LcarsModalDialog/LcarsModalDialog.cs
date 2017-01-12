@@ -69,21 +69,15 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
         public async Task OpenAsync()
         {
             _windowClosedTask = new TaskCompletionSource<bool>();
-            await WindowWrapper.Current().Dispatcher.Dispatch(async () =>
+            WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
                 var modal = Window.Current.Content as ModalDialog;
                 var dialog = modal.ModalContent as LcarsModalDialog;
 
-                await this.Fade(0, 0).StartAsync();
+                (modal.Content as FrameworkElement).Blur(6, 0).Start();
 
                 modal.ModalContent = this;
-                modal.IsModal = true;
-
-                await Task.WhenAll
-                (
-                    this.Fade(1, 500).StartAsync(),
-                    (modal.Content as FrameworkElement).Blur(6, 500).StartAsync()
-                );                
+                modal.IsModal = true;                
             });
             
             await _windowClosedTask.Task; //This gets run to completion in Close().
@@ -100,15 +94,12 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             if (!closing)
             {
                 closing = true;
-                WindowWrapper.Current().Dispatcher.Dispatch(async () =>
+                WindowWrapper.Current().Dispatcher.Dispatch(() =>
                 {
                     var modal = Window.Current.Content as ModalDialog;
                     var dialog = modal.ModalContent as LcarsModalDialog;
 
-                    await Task.WhenAll(
-                        this.Fade(0, 250).StartAsync(),
-                        (modal.Content as FrameworkElement).Blur(0, 250).StartAsync()
-                    );
+                    (modal.Content as FrameworkElement).Blur(0, 0).Start();
 
                     modal.IsModal = false;
 

@@ -67,7 +67,7 @@
             
         </GridView>-->
 
-        <RelativePanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="0 10 0 0">
+        <!--<RelativePanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="0 10 0 0">
             <Button x:Name="SubtractOneButton"
                     RelativePanel.AlignLeftWithPanel="True"
                     Click="{x:Bind ViewModel.SubtractOne}"
@@ -82,14 +82,36 @@
                     Content="+"
                     HorizontalAlignment="Right"
                     Padding="30 15"/>
-        </RelativePanel>
+        </RelativePanel>-->
+
+        <GridView Grid.Row="1" 
+                  HorizontalAlignment="Stretch"                                    
+                  SelectionMode="Single"
+                  SelectionChanged="{x:Bind ViewModel.GridView_SelectionChanged}">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="6"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridViewItem>1</GridViewItem>
+            <GridViewItem>2</GridViewItem>
+            <GridViewItem>3</GridViewItem>
+            <GridViewItem>4</GridViewItem>
+            <GridViewItem>5</GridViewItem>
+            <GridViewItem>6</GridViewItem>
+            <GridViewItem>7</GridViewItem>
+            <GridViewItem>8</GridViewItem>
+            <GridViewItem>9</GridViewItem>
+            <GridViewItem>10</GridViewItem>
+            <GridViewItem>11</GridViewItem>
+            <GridViewItem>12</GridViewItem>
+        </GridView>
 
         <CheckBox x:Name="DatesLinkedCheckbox"
                   Grid.Row="2"                  
                   Foreground="{ThemeResource LcarsRedPurpleBrush}"
                   HorizontalAlignment="Stretch"
-                  IsChecked="{x:Bind ViewModel.AreDatesLinked, Mode=TwoWay}"
-                  Margin="0 10 0 0">
+                  IsChecked="{x:Bind ViewModel.AreDatesLinked, Mode=TwoWay}">
             <TextBlock Foreground="{ThemeResource LcarsRedPurpleBrush}"
                        FontFamily="{StaticResource LcarsThinFont}"
                        Text="Link all expiration dates together"/>

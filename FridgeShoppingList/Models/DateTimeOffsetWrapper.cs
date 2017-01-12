@@ -12,7 +12,7 @@ namespace FridgeShoppingList.Models
     /// <summary>
     /// A wrapper for DateTimeOffsets, because binding to them directly in lists seems to not propagate changes correctly.
     /// </summary>
-    [DebuggerDisplay("{DateTimeOffSet.ToString()}")]
+    [DebuggerDisplay("{DateTimeOffset.ToString()}")]
     public class DateTimeOffsetWrapper : INotifyPropertyChanged
     {
         private DateTimeOffset _dateTimeOffset;
