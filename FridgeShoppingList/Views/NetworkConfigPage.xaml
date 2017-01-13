@@ -40,10 +40,11 @@
         </VisualStateManager.VisualStateGroups>
 
         <ctls:LcarsHeader x:Name="PageHeader"
-                             RelativePanel.AlignLeftWithPanel="True"
-                             RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True"                             
-                             Text="Network Configuration"/>
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"
+                          RelativePanel.AlignTopWithPanel="True"                             
+                          Text="Network Configuration"
+                          IsBackButtonShown="True"/>
 
 
         <RelativePanel EntranceNavigationTransitionInfo.IsTargetElement="True"

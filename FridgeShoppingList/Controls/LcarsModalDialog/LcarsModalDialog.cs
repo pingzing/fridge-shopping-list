@@ -80,7 +80,7 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
                 modal.IsModal = true;                
             });
             
-            await _windowClosedTask.Task; //This gets run to completion in Close().
+            await _windowClosedTask.Task.ConfigureAwait(false); //This gets run to completion in Close().
         }
 
         public void Close()

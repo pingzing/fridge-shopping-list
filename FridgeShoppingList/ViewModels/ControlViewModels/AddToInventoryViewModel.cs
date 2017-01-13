@@ -80,19 +80,19 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
 
         public void GridView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
-            int value = Convert.ToInt32(((GridViewItem)e.AddedItems.FirstOrDefault()).Content);
-            var dateTimes = new List<DateTimeOffsetWrapper>(value);
-            for(int i = 0; i < value; i++)
-            {
-                dateTimes.Add(new DateTimeOffsetWrapper());
-            }
+            //int value = Convert.ToInt32(((GridViewItem)e.AddedItems.FirstOrDefault()).Content);
+            //var dateTimes = new List<DateTimeOffsetWrapper>(value);
+            //for(int i = 0; i < value; i++)
+            //{
+            //    dateTimes.Add(new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Today });
+            //}
 
-            using (ExpiryDates.SuspendCount())
-            using (ExpiryDates.SuspendNotifications())
-            {
-                ExpiryDates.Clear();
-                ExpiryDates.AddRange(dateTimes);
-            }
+            //using (ExpiryDates.SuspendCount())
+            //using (ExpiryDates.SuspendNotifications())
+            //{
+            //    ExpiryDates.Clear();
+            //    ExpiryDates.AddRange(dateTimes);
+            //}
         }
 
         public void SetResultToCurrentState()
