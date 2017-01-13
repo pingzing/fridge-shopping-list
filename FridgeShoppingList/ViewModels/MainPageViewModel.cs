@@ -15,6 +15,7 @@ using DynamicData;
 using DynamicData.Binding;
 using FridgeShoppingList.Services;
 using Template10.Mvvm;
+using Windows.UI.Xaml;
 
 namespace FridgeShoppingList.ViewModels
 {
@@ -26,9 +27,18 @@ namespace FridgeShoppingList.ViewModels
         public ObservableCollectionExtended<InventoryEntryViewModel> InventoryItems { get; private set; } = new ObservableCollectionExtended<InventoryEntryViewModel>();
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
         public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();
-        
+
+        private string _dateTimeText;
+        public string DateTimeText
+        {
+            get { return _dateTimeText; }
+            set { Set(ref _dateTimeText, value); }
+        }
+
         public RelayCommand<InventoryEntryViewModel> DeleteItemCommand => new RelayCommand<InventoryEntryViewModel>(DeleteItem);
         public RelayCommand<InventoryEntryViewModel> AddToShoppingListCommand => new RelayCommand<InventoryEntryViewModel>(AddToShoppingList);
+
+        public RelayCommand<ShoppingListEntryViewModel> DeleteFromShoppingListCommand => new RelayCommand<ShoppingListEntryViewModel>(DeleteFromShoppingList);
 
         public MainPageViewModel(SettingsService settings, IDialogService dialog)
         {
@@ -51,6 +61,17 @@ namespace FridgeShoppingList.ViewModels
                 .ObserveOnDispatcher()
                 .Bind(ShoppingListItems)
                 .Subscribe();
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMinutes(1);
+            timer.Tick += (s, e) =>
+            {
+                var tickNow = DateTime.Now;
+                DateTimeText = tickNow.ToString("dddd, MMMM dd yyyy, hh:mmtt");
+            };
+            timer.Start();
+            var now = DateTime.Now;
+            DateTimeText = now.ToString("dddd, MMMM dd yyyy, hh:mmtt");
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
@@ -85,11 +106,16 @@ namespace FridgeShoppingList.ViewModels
 
         public async void AddItem()
         {
-            GroceryEntry result = await _dialogService.ShowModalDialogAsync<AddToInventoryViewModel, GroceryEntry>();
+            InventoryEntry result = await _dialogService.ShowModalDialogAsync<AddToInventoryViewModel, InventoryEntry>();
             if(result != null)
             {
                 _settings.AddToInventoryItems(result);
             }
+        }
+
+        private void DeleteItem(InventoryEntryViewModel obj)
+        {
+            _settings.RemoveFromInventoryItems(obj.Entry);
         }
 
         public async void AddItemType()
@@ -106,9 +132,9 @@ namespace FridgeShoppingList.ViewModels
             _settings.AddToShoppingList(obj.Entry);
         }
 
-        private void DeleteItem(InventoryEntryViewModel obj)
+        private void DeleteFromShoppingList(ShoppingListEntryViewModel obj)
         {
-            _settings.RemoveFromInventoryItems(obj.Entry);
+            _settings.RemoveFromShoppingListItems(obj.Entry);
         }
     }
 }

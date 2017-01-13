@@ -48,11 +48,17 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
+                                    <Rectangle x:Name="LcarsTopRectangle"
+                                               Grid.Row="0" Grid.Column="1"
+                                               Fill="{TemplateBinding BorderBrush}"                                       
+                                               HorizontalAlignment="Stretch"
+                                               Height="20"
+                                               VerticalAlignment="Top"/>
                                     <ScrollViewer x:Name="ContentScrollViewer"                                                  
                                                   Grid.Row="1" Grid.Column="1"
                                                   HorizontalScrollBarVisibility="Disabled"
                                                   IsTabStop="False"
-                                                  Margin="{ThemeResource ContentDialogContentScrollViewerMargin}"                                                  
+                                                  Margin="0 -20 0 4"
                                                   VerticalScrollBarVisibility="Disabled"
                                                   ZoomMode="Disabled">
                                         <Grid>
@@ -69,6 +75,7 @@
                                     <Grid x:Name="CommandSpace"
                                           Grid.Row="2" Grid.Column="1"
                                           HorizontalAlignment="Stretch"
+                                          Margin="0 0 0 -20"
                                           VerticalAlignment="Bottom">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
@@ -93,12 +100,6 @@
                                                 C60.0,55.0 60.0,20.0 80.0,20.0" 
                                           Fill="{TemplateBinding BorderBrush}"
                                           StrokeThickness="0"/>
-                                    <Rectangle x:Name="LcarsTopRectangle"
-                                               Grid.Row="0" Grid.Column="1"
-                                               Fill="{TemplateBinding BorderBrush}"                                       
-                                               HorizontalAlignment="Stretch"
-                                               Height="20"
-                                               VerticalAlignment="Top"/>
                                     <Path x:Name="LcarsTopRightCorner"
                                           Grid.Row="0" Grid.Column="2"
                                           Data="M80.0,0.0

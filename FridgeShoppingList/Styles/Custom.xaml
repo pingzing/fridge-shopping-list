@@ -611,7 +611,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ButtonBase">
-                    <Grid x:Name="ButtonContainer" Margin="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                    <Grid x:Name="ButtonContainer" Margin="{TemplateBinding Padding}" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <CompositeTransform/>
+                        </Grid.RenderTransform>
                         <ContentPresenter x:Name="Text"
                             Content="{TemplateBinding Content}"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -625,6 +628,14 @@
                                                             From="{StaticResource LcarsGold}" 
                                                             Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)"
                                                             Storyboard.TargetName="ButtonContainer"/>
+                                            <DoubleAnimation Duration="0:0:0.75"
+                                                             From="1.5"
+                                                             Storyboard.TargetProperty="(Grid.RenderTransform).(CompositeTransform.ScaleX)"
+                                                             Storyboard.TargetName="ButtonContainer"/>
+                                            <DoubleAnimation Duration="0:0:0.75"
+                                                             From="1.5"
+                                                             Storyboard.TargetProperty="(Grid.RenderTransform).(CompositeTransform.ScaleY)"
+                                                             Storyboard.TargetName="ButtonContainer"/>
                                         </Storyboard>
                                     </VisualTransition>
                                 </VisualStateGroup.Transitions>
@@ -634,11 +645,17 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Text" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HyperlinkButtonForegroundPressed}" />
                                         </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Text" Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HyperlinkButtonBorderBrushPressed}" />
+                                        </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonContainer" Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource LcarsGold}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Text" Storyboard.TargetProperty="BorderBrush">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HyperlinkButtonBorderBrushPressed}" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonContainer" Storyboard.TargetProperty="(Grid.RenderTransform).(CompositeTransform.ScaleX)">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="1.5"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonContainer" Storyboard.TargetProperty="(Grid.RenderTransform).(CompositeTransform.ScaleY)">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="1.5"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>

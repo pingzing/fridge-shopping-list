@@ -12,26 +12,29 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
     public class ShoppingListEntryViewModel : BindableBase
     {
         //Todo: Maybe replace this with a ShoppingListEntry.
-        public GroceryEntry Entry { get; set; }
+        public ShoppingListEntry Entry { get; set; }
 
         public RelayCommand AddOneCommand => new RelayCommand(AddOne);
         public RelayCommand SubtractOneCommand => new RelayCommand(SubtractOne);        
 
-        public ShoppingListEntryViewModel(GroceryEntry entry)
+        public ShoppingListEntryViewModel(ShoppingListEntry entry)
         {
             Entry = entry;
         }
 
         private void AddOne()
         {
-            Entry.ExpiryDates.Add(new DateTime());
+            if(Entry.Count < uint.MaxValue)
+            {
+                Entry.Count += 1;
+            }
         }
 
         private void SubtractOne()
         {
-            if (Entry.ExpiryDates.Count > 1)
+            if (Entry.Count > 1)
             {
-                Entry.ExpiryDates.RemoveAt(0);
+                Entry.Count -= 1;
             }
         }
     }

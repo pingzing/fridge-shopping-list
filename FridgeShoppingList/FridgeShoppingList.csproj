@@ -99,14 +99,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\AddGroceryItemTypeDialog.xaml.cs">
-      <DependentUpon>AddGroceryItemTypeDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\AddGroceryItemTypeModalDialog.xaml.cs">
       <DependentUpon>AddGroceryItemTypeModalDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AddToInventoryDialog.xaml.cs">
-      <DependentUpon>AddToInventoryDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\AddToInventoryModalDialog.xaml.cs">
       <DependentUpon>AddToInventoryModalDialog.xaml</DependentUpon>
@@ -128,8 +122,9 @@
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DateTimeOffsetWrapper.cs" />
     <Compile Include="Models\FontIcons.cs" />
-    <Compile Include="Models\GroceryEntry.cs" />
+    <Compile Include="Models\InventoryEntry.cs" />
     <Compile Include="Models\GroceryItemType.cs" />
+    <Compile Include="Models\ShoppingListEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
@@ -187,15 +182,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\AddGroceryItemTypeDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\AddGroceryItemTypeModalDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\AddToInventoryDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

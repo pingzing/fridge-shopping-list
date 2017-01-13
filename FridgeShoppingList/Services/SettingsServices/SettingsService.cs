@@ -20,11 +20,11 @@ namespace FridgeShoppingList.Services.SettingsServices
         private SourceList<GroceryItemType> _groceryTypes { get; set; } = new SourceList<GroceryItemType>();
         public IObservable<IChangeSet<GroceryItemType>> GroceryTypes { get; }
 
-        private SourceList<GroceryEntry> _inventoryItems { get; set; } = new SourceList<GroceryEntry>();
-        public IObservable<IChangeSet<GroceryEntry>> InventoryItems { get; }
+        private SourceList<InventoryEntry> _inventoryItems { get; set; } = new SourceList<InventoryEntry>();
+        public IObservable<IChangeSet<InventoryEntry>> InventoryItems { get; }
 
-        private SourceList<GroceryEntry> _shoppingListItems { get; set; } = new SourceList<GroceryEntry>();
-        public IObservable<IChangeSet<GroceryEntry>> ShoppingListItems { get; }        
+        private SourceList<ShoppingListEntry> _shoppingListItems { get; set; } = new SourceList<ShoppingListEntry>();
+        public IObservable<IChangeSet<ShoppingListEntry>> ShoppingListItems { get; }        
 
         public TimeSpan CacheMaxDuration
         {
@@ -61,12 +61,12 @@ namespace FridgeShoppingList.Services.SettingsServices
             GroceryTypes = _groceryTypes.Connect();
 
             //Initialize GroceryItems
-            GroceryEntry[] savedInventory = _helper.Read(nameof(InventoryItems), new GroceryEntry[0]);
+            InventoryEntry[] savedInventory = _helper.Read(nameof(InventoryItems), new InventoryEntry[0]);
             _inventoryItems.AddRange(savedInventory);
             InventoryItems = _inventoryItems.Connect();
 
             //Initialize ShoppingListItems
-            GroceryEntry[] savedShoppingList = _helper.Read(nameof(ShoppingListItems), new GroceryEntry[0]);
+            ShoppingListEntry[] savedShoppingList = _helper.Read(nameof(ShoppingListItems), new ShoppingListEntry[0]);
             _shoppingListItems.AddRange(savedShoppingList);
             ShoppingListItems = _shoppingListItems.Connect();
 
@@ -99,7 +99,7 @@ namespace FridgeShoppingList.Services.SettingsServices
             _groceryTypes.Remove(typeToRemove);
         }
 
-        public void AddToInventoryItems(GroceryEntry item)
+        public void AddToInventoryItems(InventoryEntry item)
         {
             var existingEntry = _inventoryItems.Items.FirstOrDefault(x => x.ItemType == item.ItemType);
             if (existingEntry != null)
@@ -112,25 +112,25 @@ namespace FridgeShoppingList.Services.SettingsServices
             }
         }
 
-        public void RemoveFromInventoryItems(GroceryEntry itemToRemove)
+        public void RemoveFromInventoryItems(InventoryEntry itemToRemove)
         {
             _inventoryItems.Remove(itemToRemove);
         }
 
-        public void AddToShoppingList(GroceryEntry entry)
+        public void AddToShoppingList(InventoryEntry entry)
         {
             var existingEntry = _shoppingListItems.Items.FirstOrDefault(x => x.ItemType == entry.ItemType);
             if (existingEntry != null)
             {
-                existingEntry.ExpiryDates.AddRange(entry.ExpiryDates.ToList());
+                existingEntry.Count += 1;
             }
             else
             {
-                _shoppingListItems.Add(entry);
+                _shoppingListItems.Add(new ShoppingListEntry { ItemType = entry.ItemType, Count = (uint)entry.ExpiryDates.Count });
             }
         }
 
-        public void RemoveFromShoppingListItems(GroceryEntry itemToRemove)
+        public void RemoveFromShoppingListItems(ShoppingListEntry itemToRemove)
         {
             _shoppingListItems.Remove(itemToRemove);
         }

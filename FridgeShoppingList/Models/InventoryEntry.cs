@@ -8,30 +8,30 @@ using System.Linq;
 namespace FridgeShoppingList.Models
 {
     [DebuggerDisplay("Name: {ItemType.Name}, ExpiryDates Count: {ExpiryDates.Count}")]
-    public class GroceryEntry : IEquatable<GroceryEntry>
+    public class InventoryEntry : IEquatable<InventoryEntry>
     {
         public GroceryItemType ItemType { get; set; }
         //Eventually, this'll turn into some kind of list of GroceryItems if we ever need more than an expiry date 
         public ObservableCollectionExtended<DateTime> ExpiryDates { get; set; } = new ObservableCollectionExtended<DateTime>();
 
-        public GroceryEntry()
+        public InventoryEntry()
         {
             ItemType = null;
         }
 
-        public GroceryEntry(GroceryItemType item, DateTime singleItemExpiry)
+        public InventoryEntry(GroceryItemType item, DateTime singleItemExpiry)
         {
             ItemType = item;
             ExpiryDates.Add(singleItemExpiry);
         }
 
-        public GroceryEntry(GroceryItemType item, IEnumerable<DateTime> expiryTimes)
+        public InventoryEntry(GroceryItemType item, IEnumerable<DateTime> expiryTimes)
         {
             ItemType = item;
             ExpiryDates = new ObservableCollectionExtended<DateTime>(expiryTimes);
         }
 
-        public bool Equals(GroceryEntry other)
+        public bool Equals(InventoryEntry other)
         {
             if((object)other == null)
             {
@@ -58,7 +58,7 @@ namespace FridgeShoppingList.Models
                 return false;
             }
 
-            return Equals(obj as GroceryEntry);
+            return Equals(obj as InventoryEntry);
         }
 
         public override int GetHashCode()
@@ -72,12 +72,12 @@ namespace FridgeShoppingList.Models
             }
         }
 
-        public static bool operator ==(GroceryEntry a, GroceryEntry b)
+        public static bool operator ==(InventoryEntry a, InventoryEntry b)
         {
             return Equals(a, b);
         }
 
-        public static bool operator !=(GroceryEntry a, GroceryEntry b)
+        public static bool operator !=(InventoryEntry a, InventoryEntry b)
         {
             return !(a == b);
         }

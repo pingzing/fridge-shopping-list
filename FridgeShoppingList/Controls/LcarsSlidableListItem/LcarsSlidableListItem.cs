@@ -474,9 +474,10 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
                         newSwipeStatus = SwipeStatus.DisabledSwipingToRight;
                     }
 
-                    if (newTranslationX > 16)
+                    double disabledSwipeDistance = _startcapPath.ActualWidth;
+                    if (newTranslationX > disabledSwipeDistance)
                     {
-                        newTranslationX = 16;
+                        newTranslationX = disabledSwipeDistance;
                     }
                 }
                 else if (IsOffsetLimited)

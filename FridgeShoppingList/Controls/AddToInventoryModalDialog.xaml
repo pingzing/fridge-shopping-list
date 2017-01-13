@@ -16,27 +16,31 @@
     Foreground="{ThemeResource LcarsRedPurpleBrush}"    
     MinHeight="440"
     Title="ADD ITEM"
-    PrimaryButtonText="Add"
-    SecondaryButtonText="Cancel"    
+    PrimaryButtonText="ADD"
+    SecondaryButtonText="CANCEL"    
     PrimaryButtonClick="LcarsModalDialog_PrimaryButtonClick"    
-    IsPrimaryButtonEnabled="{x:Bind ViewModel.ExpiryDates.Count, Mode=OneWay, Converter={StaticResource EmptyNullToBoolConverter}}">
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.IsAddButtonEnabled, Mode=OneWay}">
+    
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <ComboBox Grid.Row="0"
+        <ComboBox Grid.Row="0"                  
                   HorizontalAlignment="Stretch"
                   ItemsSource="{x:Bind ViewModel.ItemTypes, Mode=OneWay}"
                   SelectedItem="{x:Bind ViewModel.SelectedItemType, Mode=TwoWay}">
+            <ComboBox.Header>
+                <TextBlock Text="Item" Style="{StaticResource LcarsHeaderControlTextBlockStyle}"/>
+            </ComboBox.Header>
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="models:GroceryItemType">
                     <TextBlock Text="{x:Bind Name}"/>
@@ -67,30 +71,23 @@
             
         </GridView>-->
 
-        <!--<RelativePanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="0 10 0 0">
-            <Button x:Name="SubtractOneButton"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    Click="{x:Bind ViewModel.SubtractOne}"
-                    Content="-"
-                    Padding="30 15"/>
-            <TextBlock RelativePanel.AlignHorizontalCenterWithPanel="True"
-                       RelativePanel.AlignVerticalCenterWithPanel="True"
-                       Text="{x:Bind ViewModel.ExpiryDates.Count, Mode=OneWay}"/>
-            <Button x:Name="AddOneButton"
-                    RelativePanel.AlignRightWithPanel="True"
-                    Click="{x:Bind ViewModel.AddOne}"
-                    Content="+"
-                    HorizontalAlignment="Right"
-                    Padding="30 15"/>
-        </RelativePanel>-->
-
-        <GridView Grid.Row="1" 
-                  HorizontalAlignment="Stretch"                                    
+        <TextBlock Grid.Row="1" 
+                   Margin="0 10 0 0"
+                   Text="Amount"
+                   Style="{StaticResource LcarsHeaderControlTextBlockStyle}"/>
+        
+        <GridView x:Name="CountGrid" 
+                  Grid.Row="2"                   
+                  HorizontalAlignment="Stretch" 
+                  Margin="0 0 30 0"
+                  SelectedIndex="0"
                   SelectionMode="Single"
-                  SelectionChanged="{x:Bind ViewModel.GridView_SelectionChanged}">
+                  SelectionChanged="{x:Bind ViewModel.GridView_SelectionChanged}"
+                  ScrollViewer.HorizontalScrollMode="Auto"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="6"/>
+                    <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="1"/>
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridViewItem>1</GridViewItem>
@@ -108,13 +105,12 @@
         </GridView>
 
         <CheckBox x:Name="DatesLinkedCheckbox"
-                  Grid.Row="2"                  
+                  Grid.Row="3"                 
                   Foreground="{ThemeResource LcarsRedPurpleBrush}"
                   HorizontalAlignment="Stretch"
                   IsChecked="{x:Bind ViewModel.AreDatesLinked, Mode=TwoWay}">
-            <TextBlock Foreground="{ThemeResource LcarsRedPurpleBrush}"
-                       FontFamily="{StaticResource LcarsThinFont}"
-                       Text="Link all expiration dates together"/>
+            <TextBlock Text="Link all expiration dates together"
+                       Style="{StaticResource LcarsHeaderControlTextBlockStyle}"/>
         </CheckBox>
 
         <DatePicker x:Name="SingleExpiryDate"
@@ -132,14 +128,14 @@
                     Visibility="{x:Bind DatesLinkedCheckbox.IsChecked, Mode=OneWay}"/>
 
         <ListView x:Name="ExpiryDates"
-                  Grid.Row="3"
+                  Grid.Row="4"
                   ItemsSource="{x:Bind ViewModel.ExpiryDates, Mode=OneWay}"
-                  Margin="0 10 0 0"
+                  Margin="0 10 0 20"
                   SelectionMode="None"
                   Visibility="{x:Bind DatesLinkedCheckbox.IsChecked, Mode=OneWay, Converter={StaticResource BoolToVisibilityInvertedConverter}}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>

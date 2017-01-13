@@ -22,7 +22,7 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-          Padding="0 20 0 20">
+          Padding="0 0 0 20">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
                 <VisualState x:Name="VisualStateNarrow">
@@ -43,12 +43,26 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <RelativePanel x:Name="InventoryPanel">
+        <TextBlock x:Name="TimeBlock"
+                   Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                   Foreground="{ThemeResource LcarsRedPurpleBrush}"
+                   HorizontalAlignment="Right"
+                   FontWeight="Light"
+                   FontSize="20"
+                   Text="{x:Bind ViewModel.DateTimeText, Mode=OneWay}"/>
+
+        <RelativePanel x:Name="InventoryPanel" 
+                       Grid.Row="1"
+                       Margin="0 20 0 0">
             <ctls:LcarsHeader x:Name="InventoryHeader" 
                               RelativePanel.AlignTopWithPanel="True"
                               RelativePanel.AlignLeftWithPanel="True"
@@ -176,7 +190,7 @@
                                         <Grid Background="{StaticResource LcarsAccentBrush}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition/>
-                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto" MinWidth="50"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <Border Grid.Column="0"                             
@@ -185,7 +199,9 @@
                                                 <TextBlock Text="{x:Bind Entry.ItemType.Name.ToUpper()}"
                                                            Foreground="Black"                                             
                                                            VerticalAlignment="Center"
-                                                           Style="{ThemeResource LcarsTitleTextBlockStyle}"/>
+                                                           Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                           TextTrimming="Clip"
+                                                           TextWrapping="NoWrap"/>
                                             </Border>
 
                                             <Border Grid.Column="1"
@@ -194,6 +210,7 @@
                                                     Padding="10 0 10 0">
                                                 <TextBlock Text="{x:Bind Entry.ExpiryDates.Count, Mode=OneWay}"
                                                            Foreground="{ThemeResource LcarsBlueGrayBrush}"
+                                                           HorizontalAlignment="Center"
                                                            Style="{ThemeResource LcarsTitleTextBlockStyle}"
                                                            VerticalAlignment="Center"/>
                                             </Border>
@@ -223,8 +240,10 @@
                               Text="{x:Bind ViewModel.InventoryItems.Count, Mode=OneWay}"/>
         </RelativePanel>
 
-        <RelativePanel x:Name="ShoppingPanel"                        
-                       Grid.Column="1">
+        <RelativePanel x:Name="ShoppingPanel" 
+                       Grid.Row="1" 
+                       Grid.Column="1"
+                       Margin="0 20 0 0">
             <ctls:LcarsHeader x:Name="ShoppingListHeader" 
                               RelativePanel.AlignTopWithPanel="True"
                               RelativePanel.AlignLeftWithPanel="True"
@@ -268,27 +287,23 @@
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="ctlVms:ShoppingListEntryViewModel">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        
-                                        <Path x:Name="StartCap"
-                                              Grid.Column="0"
-                                              Data="M22,0
-                                                    A22,22 0 0 0 22,44 z"
-                                              Fill="{ThemeResource LcarsBlueGrayBrush}"
-                                              StrokeThickness="0"/>
-
-                                        <Grid x:Name="ContentGrid" 
-                                              Grid.Column="1"
-                                              Background="{ThemeResource LcarsBlueGrayBrush}">
+                                    <lcarsSlide:LcarsSlidableListItem EndcapBrush="{ThemeResource LcarsBlueGrayBrush}"
+                                                                      ActivationWidth="200"
+                                                                      IsOffsetLimited ="True"
+                                                                      HorizontalAlignment="Stretch"
+                                                                      IsLeftCommandEnabled="False"
+                                                                      IsRightCommandEnabled="True"
+                                                                      RightBackground="{ThemeResource LcarsRedBrush}"
+                                                                      RightCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.DeleteFromShoppingListCommand}"
+                                                                      RightCommandParameter="{x:Bind}"
+                                                                      RightForeground="White"
+                                                                      RightLabel="Delete"
+                                                                      MouseSlidingEnabled="True">
+                                        <Grid Background="{ThemeResource LcarsBlueGrayBrush}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition />
                                                 <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto" MinWidth="50"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
@@ -296,9 +311,11 @@
                                                 Padding="12 0 0 0"
                                                 MinHeight="44">
                                                 <TextBlock Text="{x:Bind Entry.ItemType.Name.ToUpper()}"
-                                                       Foreground="Black"
-                                                       VerticalAlignment="Center"
-                                                       Style="{ThemeResource LcarsTitleTextBlockStyle}"/>
+                                                        Foreground="Black"
+                                                        VerticalAlignment="Center"
+                                                        Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                        TextTrimming="Clip"
+                                                        TextWrapping="NoWrap"/>
                                             </Border>
                                             <Border Grid.Column="1"
                                                     Background="Black"
@@ -315,9 +332,10 @@
                                                 Background="Black"
                                                 Margin="5 0"
                                                 Padding="10 0">
-                                                <TextBlock Text="{x:Bind Entry.ExpiryDates.Count, Mode=OneWay}"
-                                                       Style="{ThemeResource LcarsTitleTextBlockStyle}"
-                                                       VerticalAlignment="Center"/>
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           Text="{x:Bind Entry.Count, Mode=OneWay}"                                                           
+                                                           Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                           VerticalAlignment="Center"/>
                                             </Border>
                                             <Border Grid.Column="3"
                                                     Background="Black"
@@ -332,14 +350,8 @@
                                             </Border>
                                             
                                         </Grid>
+                                    </lcarsSlide:LcarsSlidableListItem>
 
-                                        <Path x:Name="EndCap"
-                                              Grid.Column="2"
-                                              Data="M0,0
-                                                    A22,22 0 0 1 0,44 z"
-                                              Fill="{ThemeResource LcarsBlueGrayBrush}"
-                                              StrokeThickness="0"/>
-                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>

@@ -15,11 +15,11 @@ using Windows.UI.Xaml.Controls;
 
 namespace FridgeShoppingList.ViewModels.ControlViewModels
 {
-    public class AddToInventoryViewModel : BindableBase, IResultDialogViewModel<GroceryEntry>
+    public class AddToInventoryViewModel : BindableBase, IResultDialogViewModel<InventoryEntry>
     {
         private static readonly SettingsService _settings;
 
-        public GroceryEntry Result { get; set; }
+        public InventoryEntry Result { get; set; }
 
         public ObservableCollectionExtended<GroceryItemType> ItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
         public ObservableCollectionExtended<DateTimeOffsetWrapper> ExpiryDates { get; private set; } 
@@ -32,7 +32,11 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
         public GroceryItemType SelectedItemType
         {
             get { return _selectedItemType; }
-            set { Set(ref _selectedItemType, value); }
+            set
+            {
+                Set(ref _selectedItemType, value);
+                RaisePropertyChanged(nameof(IsAddButtonEnabled));
+            }
         }
 
         bool areDatesLinked = default(bool);
@@ -41,6 +45,8 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             get { return areDatesLinked; }
             set { Set(ref areDatesLinked, value); }
         }
+
+        public bool IsAddButtonEnabled => SelectedItemType != null && ItemTypes.Count > 0;
 
         static AddToInventoryViewModel()
         {
@@ -60,44 +66,28 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
                 .Items
                 .OrderBy(x => x.Name)
                 .FirstOrDefault();
+        }               
+
+        public void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int value = Convert.ToInt32(((GridViewItem)e.AddedItems.FirstOrDefault()).Content);
+            var dateTimes = new List<DateTimeOffsetWrapper>(value);
+            for (int i = 0; i < value; i++)
+            {
+                dateTimes.Add(new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Today });
+            }
+
+            using (ExpiryDates.SuspendCount())
+            using (ExpiryDates.SuspendNotifications())
+            {
+                ExpiryDates.Clear();
+                ExpiryDates.AddRange(dateTimes);
+            }
         }        
-
-        public void SubtractOne()
-        {
-            if (ExpiryDates.Count > 1)
-            {
-                ExpiryDates.RemoveAt(ExpiryDates.Count - 1);
-            }
-        }
-
-        public void AddOne()
-        {
-            if (ExpiryDates.Count < int.MaxValue)
-            {
-                ExpiryDates.Add(new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Today });
-            }
-        }
-
-        public void GridView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
-        {
-            //int value = Convert.ToInt32(((GridViewItem)e.AddedItems.FirstOrDefault()).Content);
-            //var dateTimes = new List<DateTimeOffsetWrapper>(value);
-            //for(int i = 0; i < value; i++)
-            //{
-            //    dateTimes.Add(new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Today });
-            //}
-
-            //using (ExpiryDates.SuspendCount())
-            //using (ExpiryDates.SuspendNotifications())
-            //{
-            //    ExpiryDates.Clear();
-            //    ExpiryDates.AddRange(dateTimes);
-            //}
-        }
 
         public void SetResultToCurrentState()
         {
-            Result = new GroceryEntry(SelectedItemType, ExpiryDates.Select(x => x.DateTimeOffset.DateTime));
+            Result = new InventoryEntry(SelectedItemType, ExpiryDates.Select(x => x.DateTimeOffset.DateTime));
         }
     }
 }

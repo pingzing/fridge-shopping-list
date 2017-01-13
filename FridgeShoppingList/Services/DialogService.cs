@@ -18,8 +18,7 @@ namespace FridgeShoppingList.Services
         Task ShowDialog(string message);
         Task ShowDialog(string message, string title);
         Task<IUICommand> ShowDialog(MessageDialog dialog);
-        Task<ContentDialogResult> ShowDialog(ContentDialog dialog);
-        Task<TResult> ShowContentDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>;
+        Task<ContentDialogResult> ShowDialog(ContentDialog dialog);        
         Task<TResult> ShowModalDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>;
     }
 
@@ -61,26 +60,7 @@ namespace FridgeShoppingList.Services
             _semaphore.Release();
 
             return result;
-        }
-
-        public async Task<TResult> ShowContentDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>
-        {
-            IResultDialogViewModel<TResult> vm = GetViewModel<TViewModel, TResult>();
-            ContentDialog dialog = ResolveContentDialogForViewModel(vm);
-
-            _semaphore.Wait();
-            var result = await dialog.ShowAsync();
-            _semaphore.Release();
-
-            if(result == ContentDialogResult.Primary)
-            {
-                return vm.Result;
-            }
-            else
-            {
-                return default(TResult);
-            }
-        }
+        }     
 
         public async Task<TResult> ShowModalDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>
         {
@@ -108,23 +88,7 @@ namespace FridgeShoppingList.Services
             {
                 throw new ArgumentException("No ViewModel registered for the given type.");
             }
-        }
-
-        private static ContentDialog ResolveContentDialogForViewModel<T>(IResultDialogViewModel<T> vm)
-        {
-            if (vm is AddToInventoryViewModel)
-            {
-                return new AddToInventoryDialog((AddToInventoryViewModel)vm);
-            }
-            else if (vm is AddGroceryItemTypeViewModel)
-            {
-                return new AddGroceryItemTypeDialog((AddGroceryItemTypeViewModel)vm);
-            }
-            else
-            {
-                return new ContentDialog();
-            }
-        }
+        }        
 
         private static LcarsModalDialog ResolveModalDialogForViewModel<T>(IResultDialogViewModel<T> vm)
         {

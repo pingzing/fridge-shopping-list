@@ -9,9 +9,9 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
 {
     public class InventoryEntryViewModel : BindableBase
     {
-        public GroceryEntry Entry { get; set; }
+        public InventoryEntry Entry { get; set; }
 
-        public InventoryEntryViewModel(GroceryEntry entry)
+        public InventoryEntryViewModel(InventoryEntry entry)
         {
             Entry = entry;
         }
