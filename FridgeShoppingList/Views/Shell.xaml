@@ -10,6 +10,10 @@
 
     <Grid x:Name="ShellHost">
         <ContentPresenter x:Name="ShellContent"/>
+        <Grid x:Name="CompositionEffectHost"                
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+              Visibility="Collapsed"/>
         <osk:OnScreenKeyBoard x:Name="AppSoftwareKeyboard" 
                               VerticalAlignment="Bottom"/>
     </Grid>

@@ -1,12 +1,18 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+﻿using Microsoft.Graphics.Canvas.Effects;
+using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Template10.Common;
 using Template10.Controls;
 using Windows.Foundation;
+using Windows.UI;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Media;
 
 // The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
@@ -71,13 +77,51 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             _windowClosedTask = new TaskCompletionSource<bool>();
             WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
-                var modal = Window.Current.Content as ModalDialog;
-                var dialog = modal.ModalContent as LcarsModalDialog;
-
-                (modal.Content as FrameworkElement).Blur(6, 0).Start();
-
+                var modal = Window.Current.Content as ModalDialog;                                
+                
                 modal.ModalContent = this;
-                modal.IsModal = true;                
+                modal.IsModal = true;
+
+                var compositionHost = ((FrameworkElement)modal.Content).FindDescendantByName("CompositionEffectHost");
+                Visual visual = ElementCompositionPreview.GetElementVisual(compositionHost);
+                var compositor = visual.Compositor;
+
+                var frostEffect = new GaussianBlurEffect
+                {
+                    BlurAmount = 15.0f,
+                    BorderMode = EffectBorderMode.Hard,
+                    Source = new ArithmeticCompositeEffect
+                    {
+                        MultiplyAmount = 0,
+                        Source1Amount = 0.5f,
+                        Source2Amount = 0.5f,
+                        Source1 = new CompositionEffectSourceParameter("backdropBrush"),
+                        Source2 = new ColorSourceEffect
+                        {
+                            Color = Color.FromArgb(255, 245, 245, 245)
+                        }
+                    }
+                };
+
+                // Create an instance of the effect and set its source to a CompositionBackdropBrush
+                CompositionEffectFactory effectFactory = compositor.CreateEffectFactory(frostEffect);
+                CompositionBackdropBrush backdropBrush = compositor.CreateBackdropBrush();
+                CompositionEffectBrush effectBrush = effectFactory.CreateBrush();
+
+                effectBrush.SetSourceParameter("backdropBrush", backdropBrush);
+
+                // Create a Visual to contain the frosted glass effect
+                SpriteVisual frostVisual = compositor.CreateSpriteVisual();
+                frostVisual.Brush = effectBrush;
+
+                ElementCompositionPreview.SetElementChildVisual(compositionHost, frostVisual);
+
+                // Make sure size of frost host and frost visual always stay in sync
+                var bindSizeAnimation = compositor.CreateExpressionAnimation("hostVisual.Size");
+                bindSizeAnimation.SetReferenceParameter("hostVisual", visual);
+                frostVisual.StartAnimation("Size", bindSizeAnimation);
+
+                compositionHost.Visibility = Visibility.Visible;
             });
             
             await _windowClosedTask.Task.ConfigureAwait(false); //This gets run to completion in Close().
@@ -97,11 +141,10 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
                 WindowWrapper.Current().Dispatcher.Dispatch(() =>
                 {
                     var modal = Window.Current.Content as ModalDialog;
-                    var dialog = modal.ModalContent as LcarsModalDialog;
-
-                    (modal.Content as FrameworkElement).Blur(0, 0).Start();
+                    var compositionHost = ((FrameworkElement)modal.Content).FindDescendantByName("CompositionEffectHost");
 
                     modal.IsModal = false;
+                    compositionHost.Visibility = Visibility.Collapsed;
 
                     _windowClosedTask.SetResult(true);
                 });
