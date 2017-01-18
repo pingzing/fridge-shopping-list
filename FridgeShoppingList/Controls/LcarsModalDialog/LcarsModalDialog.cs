@@ -82,46 +82,11 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
                 modal.ModalContent = this;
                 modal.IsModal = true;
 
-                var compositionHost = ((FrameworkElement)modal.Content).FindDescendantByName("CompositionEffectHost");
-                Visual visual = ElementCompositionPreview.GetElementVisual(compositionHost);
-                var compositor = visual.Compositor;
-
-                var frostEffect = new GaussianBlurEffect
-                {
-                    BlurAmount = 15.0f,
-                    BorderMode = EffectBorderMode.Hard,
-                    Source = new ArithmeticCompositeEffect
-                    {
-                        MultiplyAmount = 0,
-                        Source1Amount = 0.5f,
-                        Source2Amount = 0.5f,
-                        Source1 = new CompositionEffectSourceParameter("backdropBrush"),
-                        Source2 = new ColorSourceEffect
-                        {
-                            Color = Color.FromArgb(255, 245, 245, 245)
-                        }
-                    }
-                };
-
-                // Create an instance of the effect and set its source to a CompositionBackdropBrush
-                CompositionEffectFactory effectFactory = compositor.CreateEffectFactory(frostEffect);
-                CompositionBackdropBrush backdropBrush = compositor.CreateBackdropBrush();
-                CompositionEffectBrush effectBrush = effectFactory.CreateBrush();
-
-                effectBrush.SetSourceParameter("backdropBrush", backdropBrush);
-
-                // Create a Visual to contain the frosted glass effect
-                SpriteVisual frostVisual = compositor.CreateSpriteVisual();
-                frostVisual.Brush = effectBrush;
-
-                ElementCompositionPreview.SetElementChildVisual(compositionHost, frostVisual);
-
-                // Make sure size of frost host and frost visual always stay in sync
-                var bindSizeAnimation = compositor.CreateExpressionAnimation("hostVisual.Size");
-                bindSizeAnimation.SetReferenceParameter("hostVisual", visual);
-                frostVisual.StartAnimation("Size", bindSizeAnimation);
-
+                var compositionHost = (Grid)((FrameworkElement)modal.Content).FindDescendantByName("CompositionEffectHost");
+                compositionHost.Background = new SolidColorBrush { Color = Colors.White, Opacity = 0.3 };
+                compositionHost.Opacity = 0;               
                 compositionHost.Visibility = Visibility.Visible;
+                compositionHost.Fade(1, 350).Start();
             });
             
             await _windowClosedTask.Task.ConfigureAwait(false); //This gets run to completion in Close().
