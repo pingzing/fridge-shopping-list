@@ -105,6 +105,9 @@
     <Compile Include="Controls\AddToInventoryModalDialog.xaml.cs">
       <DependentUpon>AddToInventoryModalDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\InventoryEntryControl.xaml.cs">
+      <DependentUpon>InventoryEntryControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LcarsFooter.xaml.cs">
       <DependentUpon>LcarsFooter.xaml</DependentUpon>
     </Compile>
@@ -151,9 +154,6 @@
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Shell.xaml.cs">
-      <DependentUpon>Shell.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Splash.xaml.cs">
       <DependentUpon>Splash.xaml</DependentUpon>
     </Compile>
@@ -187,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\AddToInventoryModalDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\InventoryEntryControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -241,10 +245,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

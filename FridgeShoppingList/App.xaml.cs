@@ -14,6 +14,8 @@ using FridgeShoppingList.Services;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using Microsoft.Toolkit.Uwp.UI.Animations;
+using Microsoft.Toolkit.Uwp.UI;
+using TCD.Controls.Keyboard;
 
 namespace FridgeShoppingList
 {
@@ -45,13 +47,15 @@ namespace FridgeShoppingList
         public override UIElement CreateRootElement(IActivatedEventArgs e)
         {
             var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);
-            return new ModalDialog
+            var rootElement = new ModalDialog
             {
                 DisableBackButtonWhenModal = true,
-                Content = new Views.Shell(service),
+                Content = service.Frame,
                 ModalContent = new Views.Busy(),
                 ModalBackground = new SolidColorBrush(Colors.Transparent)
-            };
+            };            
+
+            return rootElement;
         }
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)

@@ -22,13 +22,13 @@ namespace FridgeShoppingList.Models
         public InventoryEntry(GroceryItemType item, DateTime singleItemExpiry)
         {
             ItemType = item;
-            ExpiryDates.Add(singleItemExpiry);
+            ExpiryDates.Add(singleItemExpiry); //todo make this do an AddSorted()
         }
 
         public InventoryEntry(GroceryItemType item, IEnumerable<DateTime> expiryTimes)
         {
             ItemType = item;
-            ExpiryDates = new ObservableCollectionExtended<DateTime>(expiryTimes);
+            ExpiryDates = new ObservableCollectionExtended<DateTime>(expiryTimes.OrderBy(x => x));
         }
 
         public bool Equals(InventoryEntry other)

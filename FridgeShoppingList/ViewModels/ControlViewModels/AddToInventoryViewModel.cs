@@ -61,12 +61,17 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
                 .Bind(ItemTypes)
                 .Subscribe();
 
-            SelectedItemType = _settings.GroceryTypes
+            Task.Run(async () => 
+            {
+                await Task.Delay(200);
+
+                SelectedItemType = _settings.GroceryTypes
                 .AsObservableList()
                 .Items
                 .OrderBy(x => x.Name)
                 .FirstOrDefault();
-        }               
+            });            
+        }
 
         public void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -87,7 +92,14 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
 
         public void SetResultToCurrentState()
         {
-            Result = new InventoryEntry(SelectedItemType, ExpiryDates.Select(x => x.DateTimeOffset.DateTime));
+            if (AreDatesLinked)
+            {
+                Result = new InventoryEntry(SelectedItemType, ExpiryDates.First().DateTimeOffset.DateTime);
+            }
+            else
+            {
+                Result = new InventoryEntry(SelectedItemType, ExpiryDates.Select(x => x.DateTimeOffset.DateTime));
+            }
         }
     }
 }

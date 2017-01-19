@@ -26,14 +26,7 @@ namespace FridgeShoppingList.ViewModels
 
         public ObservableCollectionExtended<InventoryEntryViewModel> InventoryItems { get; private set; } = new ObservableCollectionExtended<InventoryEntryViewModel>();
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
-        public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();
-
-        private string _dateTimeText;
-        public string DateTimeText
-        {
-            get { return _dateTimeText; }
-            set { Set(ref _dateTimeText, value); }
-        }
+        public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();        
 
         public RelayCommand<InventoryEntryViewModel> DeleteItemCommand => new RelayCommand<InventoryEntryViewModel>(DeleteItem);
         public RelayCommand<InventoryEntryViewModel> AddToShoppingListCommand => new RelayCommand<InventoryEntryViewModel>(AddToShoppingList);
@@ -60,18 +53,7 @@ namespace FridgeShoppingList.ViewModels
                 .Transform(x => new ShoppingListEntryViewModel(x))
                 .ObserveOnDispatcher()
                 .Bind(ShoppingListItems)
-                .Subscribe();
-
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMinutes(1);
-            timer.Tick += (s, e) =>
-            {
-                var tickNow = DateTime.Now;
-                DateTimeText = tickNow.ToString("dddd, MMMM dd yyyy, hh:mmtt");
-            };
-            timer.Start();
-            var now = DateTime.Now;
-            DateTimeText = now.ToString("dddd, MMMM dd yyyy, hh:mmtt");
+                .Subscribe();           
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)

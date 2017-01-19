@@ -3,7 +3,8 @@
                     xmlns:controls="using:Template10.Controls"
                     xmlns:Behaviors="using:Template10.Behaviors"
                     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
-                    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity">
+                    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+                    xmlns:osk="using:TCD.Controls.Keyboard">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Styles/LcarsColors.xaml"/>
@@ -246,6 +247,49 @@
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Stretch"
                             Visibility="Collapsed" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Style override for the root ModalDialog that can host our Onscreen Keyboard.-->
+    <Style TargetType="controls:ModalDialog">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="ModalBackground">
+            <Setter.Value>
+                <SolidColorBrush Opacity=".8" Color="{ThemeResource SystemAccentColor}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ModalDialog">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Modal">
+                                    <VisualState.Setters>
+                                        <Setter Target="Part_Modal.Visibility" Value="Visible" />
+                                        <Setter Target="Part_Content.IsHitTestVisible" Value="False" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="Part_Content" Content="{TemplateBinding Content}"/>
+                        <Grid x:Name="Part_Modal" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.Background>
+                                <Binding Path="ModalBackground" RelativeSource="{RelativeSource Mode=TemplatedParent}" />
+                            </Grid.Background>
+                            <ContentPresenter Content="{TemplateBinding ModalContent}" ContentTransitions="{TemplateBinding ModalTransitions}" />
+                            <osk:OnScreenKeyBoard x:Name="AppSoftwareKeyboard"
+                                                  Grid.Row="1"
+                                                  VerticalAlignment="Bottom"/>
+                        </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -679,7 +723,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
     <ResourceDictionary.ThemeDictionaries>
 

@@ -26,7 +26,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TCD.Controls.Keyboard"
     mc:Ignorable="d"
-    Height="264" Width="720" d:DesignHeight="264" d:DesignWidth="720" RenderTransformOrigin="0.5,0.5">
+    Height="264" Width="720" d:DesignHeight="264" d:DesignWidth="720" RenderTransformOrigin="0.5,0.5"
+             Visibility="{Binding IsEnabled}">
 
     <UserControl.Resources>
         <local:BoolToSolidBrushConverter x:Key="BoolToSolidBrushConverter" />
@@ -36,7 +37,7 @@
         <CompositeTransform TranslateY="264"/>
     </UserControl.RenderTransform>
 
-    <Grid Name="LayoutRoot" Margin="6,2,6,0">
+    <Grid Name="LayoutRoot" Margin="6,2,6,0" Background="{ThemeResource AppBarBackgroundThemeBrush}">
         <Grid.Resources>
             <Style TargetType="Button">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -164,7 +165,7 @@
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
-            <Button IsEnabled="{Binding IsEnabled}" Content="&#x21EA;" FontSize="28" Command="{Binding CapsLockCommand}" Grid.Column="0" Background="{Binding Path=IsCapsLock, Converter={StaticResource BoolToSolidBrushConverter}}" />
+            <Button IsEnabled="{Binding IsEnabled}" Content="CAPS" FontSize="28" Command="{Binding CapsLockCommand}" Grid.Column="0" Background="{Binding Path=IsCapsLock, Converter={StaticResource BoolToSolidBrushConverter}}" />
             <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_A.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="1"/>
             <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_S.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="2"/>
             <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_D.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="3"/>
@@ -186,27 +187,27 @@
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="6.5*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Button IsEnabled="{Binding IsEnabled}" Content="&#x21E7;" FontSize="28" Command="{Binding ShiftCommand}" Background="{Binding Path=IsShiftLock, Converter={StaticResource BoolToSolidBrushConverter}}"/>
             <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_Z.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="1"/>
             <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_X.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="2"/>
             <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_C.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="3"/>
             <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_V.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="4"/>
-            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_B.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="5"/>
-            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_N.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="6"/>
-            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_M.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="7"/>
-            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_OemComma.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="8"/>
-            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_OemPeriod.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="9"/>
-            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_OemQuestion.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="10"/>
-            <Button IsEnabled="{Binding IsEnabled}" Content="SPACE" Command="{Binding KeyPressedCommand}" CommandParameter=" "  Grid.Column="11" Visibility="{Binding IsShiftLock, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=CollapsedIfTrue}" />
-            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding Layout}" Command="{Binding InvertLayoutCommand}" Grid.Column="11" Visibility="{Binding IsShiftLock, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=VisibleIfTrue}" />
+            <Button IsEnabled="{Binding IsEnabled}" Content="SPACE" Command="{Binding KeyPressedCommand}" CommandParameter=" "  Grid.Column="5" Visibility="{Binding IsShiftLock, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=CollapsedIfTrue}" />
+            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding Layout}" Command="{Binding InvertLayoutCommand}" Grid.Column="5" Visibility="{Binding IsShiftLock, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=VisibleIfTrue}" />
+            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_B.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="6"/>
+            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_N.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="7"/>
+            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_M.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="8"/>
+            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_OemComma.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="9"/>
+            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_OemPeriod.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="10"/>
+            <Button IsEnabled="{Binding IsEnabled}" Content="{Binding KB.KeyVK_OemQuestion.Text}" Command="{Binding KeyPressedCommand}" CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Grid.Column="11"/>
         </Grid>
     </Grid>
 </UserControl>

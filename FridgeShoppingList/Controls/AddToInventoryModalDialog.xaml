@@ -9,7 +9,7 @@
     xmlns:models="using:FridgeShoppingList.Models"
     mc:Ignorable="d"
     d:DesignHeight="440"
-    d:DesignWidth="480"
+    d:DesignWidth="550"
     
     Background="Black"
     BorderBrush="{ThemeResource LcarsRedPurpleBrush}"
@@ -114,7 +114,7 @@
         </CheckBox>
 
         <DatePicker x:Name="SingleExpiryDate"
-                    Grid.Row="3"
+                    Grid.Row="4"
                     Date="{x:Bind ViewModel.ExpiryDates[0].DateTimeOffset, Mode=TwoWay}"
                     HorizontalAlignment="Stretch"
                     Foreground="{StaticResource LcarsRedPurpleBrush}"
@@ -123,8 +123,7 @@
                     Margin="0 10 0 0"
                     MinHeight="44"
                     MinWidth="320"
-                    Padding="12 4 12 0"
-                    VerticalAlignment="Center"
+                    Padding="12 4 12 0"                    
                     Visibility="{x:Bind DatesLinkedCheckbox.IsChecked, Mode=OneWay}"/>
 
         <ListView x:Name="ExpiryDates"
@@ -135,7 +134,7 @@
                   Visibility="{x:Bind DatesLinkedCheckbox.IsChecked, Mode=OneWay, Converter={StaticResource BoolToVisibilityInvertedConverter}}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
@@ -143,7 +142,8 @@
                     <DatePicker Date="{x:Bind DateTimeOffset, Mode=TwoWay}"
                                 Foreground="{StaticResource LcarsRedPurpleBrush}"
                                 FontFamily="{StaticResource LcarsFont}"
-                                FontSize="20"/>
+                                FontSize="20"
+                                HorizontalAlignment="Stretch"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

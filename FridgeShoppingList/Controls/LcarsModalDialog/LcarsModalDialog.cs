@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 
 // The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
@@ -57,36 +58,44 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
         public static readonly DependencyProperty IsSecondaryButtonEnabledProperty =
             DependencyProperty.Register(nameof(IsSecondaryButtonEnabled), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(true));
 
-        private TaskCompletionSource<bool> _windowClosedTask;
-
         private const string PartButton1Host = "Button1Host";
         private const string PartButton2Host = "Button2Host";
+
+        private static SolidColorBrush _backgroundOverlayBrush = new SolidColorBrush { Color = Colors.WhiteSmoke, Opacity = 0.3 };
+        private static SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
+
+        private TaskCompletionSource<bool> _windowClosedTask;
         private Border _button1Host;
-        private Border _button2Host;
+        private Border _button2Host;        
 
         private enum DialogButtonType { Primary, Secondary} ;
         private enum DialogCloseReason { PrimaryClicked, SecondaryClicked, Cancelled, Programmatic };
 
         public LcarsModalDialog()
         {
-            this.DefaultStyleKey = typeof(LcarsModalDialog);                       
+            this.DefaultStyleKey = typeof(LcarsModalDialog);            
         }
 
         public async Task OpenAsync()
         {
             _windowClosedTask = new TaskCompletionSource<bool>();
-            WindowWrapper.Current().Dispatcher.Dispatch(() =>
+            await WindowWrapper.Current().Dispatcher.Dispatch(async () =>
             {
-                var modal = Window.Current.Content as ModalDialog;                                
-                
-                modal.ModalContent = this;
+                var modal = Window.Current.Content as ModalDialog;
+                modal.ModalBackground = _backgroundOverlayBrush;
+
+                await this.Fade(0, 0)
+                    .Scale(1.5f, 1.5f, duration: 0)
+                    .Blur(10, 0)
+                    .StartAsync();
+
+                modal.ModalContent = this;                
                 modal.IsModal = true;
 
-                var compositionHost = (Grid)((FrameworkElement)modal.Content).FindDescendantByName("CompositionEffectHost");
-                compositionHost.Background = new SolidColorBrush { Color = Colors.White, Opacity = 0.3 };
-                compositionHost.Opacity = 0;               
-                compositionHost.Visibility = Visibility.Visible;
-                compositionHost.Fade(1, 350).Start();
+                this.Fade(1, 300)
+                    .Scale(1, 1, duration: 300)
+                    .Blur(0, 300)
+                    .Start();
             });
             
             await _windowClosedTask.Task.ConfigureAwait(false); //This gets run to completion in Close().
@@ -103,13 +112,17 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             if (!closing)
             {
                 closing = true;
-                WindowWrapper.Current().Dispatcher.Dispatch(() =>
+                WindowWrapper.Current().Dispatcher.Dispatch(async () =>
                 {
                     var modal = Window.Current.Content as ModalDialog;
-                    var compositionHost = ((FrameworkElement)modal.Content).FindDescendantByName("CompositionEffectHost");
+                    modal.Background = _transparentBrush;
 
-                    modal.IsModal = false;
-                    compositionHost.Visibility = Visibility.Collapsed;
+                    await this.Fade(0, 150)
+                        .Scale(1.5f, 1.5f, duration: 150)
+                        .Blur(10, 150)
+                        .StartAsync();
+
+                    modal.IsModal = false;                    
 
                     _windowClosedTask.SetResult(true);
                 });
@@ -120,6 +133,9 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
         {
             base.OnApplyTemplate();
 
+            this.Transitions = new TransitionCollection();
+            this.Transitions.Add(new RepositionThemeTransition());
+
             _button1Host = GetTemplateChild(PartButton1Host) as Border;
             _button2Host = GetTemplateChild(PartButton2Host) as Border;
 
@@ -127,9 +143,9 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             {
                 if (_button1Host.Child is Button)
                 {
-                    var oldButton = (Button)_button1Host.Child;
-                    oldButton.Click -= PrimaryButton_Click;
-                    oldButton.Click += PrimaryButton_Click;
+                    var button1 = (Button)_button1Host.Child;
+                    button1.Click -= PrimaryButton_Click;
+                    button1.Click += PrimaryButton_Click;
                 }
                 else
                 {
@@ -141,9 +157,9 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             {
                 if (_button2Host.Child is Button)
                 {
-                    var oldButton = (Button)_button2Host.Child;
-                    oldButton.Click -= SecondaryButton_Click;
-                    oldButton.Click += SecondaryButton_Click;
+                    var button2 = (Button)_button2Host.Child;
+                    button2.Click -= SecondaryButton_Click;
+                    button2.Click += SecondaryButton_Click;
                 }
                 else
                 {

@@ -14,6 +14,7 @@
         <Setter Property="MinHeight" Value="{ThemeResource ContentDialogMinHeight}" />
         <Setter Property="MaxWidth" Value="{ThemeResource ContentDialogMaxWidth}" />
         <Setter Property="MinWidth" Value="{ThemeResource ContentDialogMinWidth}" />
+        <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:LcarsModalDialog">

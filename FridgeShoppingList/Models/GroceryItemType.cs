@@ -20,9 +20,8 @@ namespace FridgeShoppingList.Models
         }
 
         public bool Equals(GroceryItemType other)
-        {
-            return Name == other?.Name
-                && ItemTypeId == other?.ItemTypeId;
+        {            
+            return ItemTypeId == other?.ItemTypeId;
         }
 
         public override bool Equals(object obj)
@@ -47,8 +46,7 @@ namespace FridgeShoppingList.Models
         {
             unchecked
             {
-                int hashCode = 13;
-                if (Name != null) { hashCode = (hashCode * 397) ^ Name.GetHashCode(); }
+                int hashCode = 13;                
                 hashCode = (hashCode * 397) ^ ItemTypeId.GetHashCode();
                 return hashCode;
             }

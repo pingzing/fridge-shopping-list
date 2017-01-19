@@ -60,6 +60,7 @@
                         ContentTemplate="{x:Bind FooterContentTemplate, Mode=OneWay}"
                         Foreground="{x:Bind Foreground, Mode=OneWay}"
                         HorizontalContentAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"
+                        Margin="0 1 0 0"
                         VerticalAlignment="Bottom"/>
 
         <Path x:Name="RoundedFooterCap" 
