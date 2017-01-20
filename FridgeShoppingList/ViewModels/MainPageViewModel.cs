@@ -26,12 +26,12 @@ namespace FridgeShoppingList.ViewModels
 
         public ObservableCollectionExtended<InventoryEntryViewModel> InventoryItems { get; private set; } = new ObservableCollectionExtended<InventoryEntryViewModel>();
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
-        public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();        
+        public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();
 
         public RelayCommand<InventoryEntryViewModel> DeleteItemCommand => new RelayCommand<InventoryEntryViewModel>(DeleteItem);
         public RelayCommand<InventoryEntryViewModel> AddToShoppingListCommand => new RelayCommand<InventoryEntryViewModel>(AddToShoppingList);
-
         public RelayCommand<ShoppingListEntryViewModel> DeleteFromShoppingListCommand => new RelayCommand<ShoppingListEntryViewModel>(DeleteFromShoppingList);
+        public RelayCommand<ShoppingListEntryViewModel> MoveFromShoppingToInventoryCommand => new RelayCommand<ShoppingListEntryViewModel>(MoveFromShoppingToInventory);
 
         public MainPageViewModel(SettingsService settings, IDialogService dialog)
         {
@@ -53,7 +53,7 @@ namespace FridgeShoppingList.ViewModels
                 .Transform(x => new ShoppingListEntryViewModel(x))
                 .ObserveOnDispatcher()
                 .Bind(ShoppingListItems)
-                .Subscribe();           
+                .Subscribe();
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
@@ -89,7 +89,7 @@ namespace FridgeShoppingList.ViewModels
         public async void AddItem()
         {
             InventoryEntry result = await _dialogService.ShowModalDialogAsync<AddToInventoryViewModel, InventoryEntry>();
-            if(result != null)
+            if (result != null)
             {
                 _settings.AddToInventoryItems(result);
             }
@@ -117,6 +117,16 @@ namespace FridgeShoppingList.ViewModels
         private void DeleteFromShoppingList(ShoppingListEntryViewModel obj)
         {
             _settings.RemoveFromShoppingListItems(obj.Entry);
+        }
+
+        private async void MoveFromShoppingToInventory(ShoppingListEntryViewModel entry)
+        {
+            var result = await _dialogService.ShowModalDialogAsync<AddToInventoryViewModel, InventoryEntry>(entry.Entry);
+            if (result != null)
+            {
+                _settings.RemoveFromShoppingListItems(entry.Entry);
+                _settings.AddToInventoryItems(result);
+            }            
         }
     }
 }

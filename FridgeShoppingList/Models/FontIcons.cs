@@ -9,5 +9,6 @@
         public static string Ethernet => "\uE839";
         public static string Power => "\uE7E8";
         public static string BackArrow => "\uE112";
+        public static string WarningTriangle => "\uE814";
     }
 }

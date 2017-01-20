@@ -1,5 +1,6 @@
 ﻿using FridgeShoppingList.Controls;
 using FridgeShoppingList.Controls.LcarsModalDialog;
+using FridgeShoppingList.Models;
 using FridgeShoppingList.ViewModels.ControlViewModels;
 using GalaSoft.MvvmLight.Ioc;
 using System;
@@ -20,6 +21,7 @@ namespace FridgeShoppingList.Services
         Task<IUICommand> ShowDialog(MessageDialog dialog);
         Task<ContentDialogResult> ShowDialog(ContentDialog dialog);        
         Task<TResult> ShowModalDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>;
+        Task<TResult> ShowModalDialogAsync<TViewModel, TResult>(object args) where TViewModel : IResultDialogViewModel<TResult>;
     }
 
     public class DialogService : IDialogService
@@ -74,11 +76,23 @@ namespace FridgeShoppingList.Services
             return vm.Result;
         }
 
-        private static IResultDialogViewModel<TResult> GetViewModel<TViewModel, TResult>()
+        public async Task<TResult> ShowModalDialogAsync<TViewModel, TResult>(object args) where TViewModel : IResultDialogViewModel<TResult>
+        {
+            IResultDialogViewModel<TResult> vm = GetViewModel<TViewModel, TResult>(args);
+            LcarsModalDialog dialog = ResolveModalDialogForViewModel(vm);
+
+            _semaphore.Wait();
+            await dialog.OpenAsync();
+            _semaphore.Release();
+
+            return vm.Result;
+        }
+
+        private static IResultDialogViewModel<TResult> GetViewModel<TViewModel, TResult>(object args = null)
         {
             if (typeof(TViewModel) == typeof(AddToInventoryViewModel))
             {
-                return (IResultDialogViewModel<TResult>)new AddToInventoryViewModel();
+                return (IResultDialogViewModel<TResult>)new AddToInventoryViewModel(args);
             }
             else if (typeof(TViewModel) == typeof(AddGroceryItemTypeViewModel))
             {
@@ -88,7 +102,7 @@ namespace FridgeShoppingList.Services
             {
                 throw new ArgumentException("No ViewModel registered for the given type.");
             }
-        }        
+        }                
 
         private static LcarsModalDialog ResolveModalDialogForViewModel<T>(IResultDialogViewModel<T> vm)
         {

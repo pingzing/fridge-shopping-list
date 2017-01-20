@@ -19,13 +19,19 @@
     <UserControl.Resources>
         <DataTemplate x:Name="DefaultHeaderContentTemplate">
             <Border Background="Black"
-                    Margin="20 -5 20 0"
+                    Height="40"
+                    Margin="20 0 20 0"
                     Padding="20 0 20 0"
-                    Visibility="{Binding ElementName=DefaultTextBlock, Path=Text, Converter={StaticResource StringToVisibilityConverter}}">
+                    Visibility="{Binding ElementName=DefaultTextBlock, Path=Text, Converter={StaticResource StringToVisibilityConverter}}"
+                    VerticalAlignment="Center">
                 <TextBlock x:Name="DefaultTextBlock" 
                            Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}}"                            
                            Style="{StaticResource LcarsHeaderTextBlockStyle}" 
-                           Text="{Binding ElementName=ThisLcarsHeader, Path=Text}"/>
+                           Text="{Binding ElementName=ThisLcarsHeader, Path=Text}"
+                           TextLineBounds="Tight"
+                           TextTrimming="Clip"
+                           TextWrapping="NoWrap"
+                           VerticalAlignment="Center"/>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
@@ -100,7 +106,9 @@
                             Content="{x:Bind HeaderContent, Mode=OneWay}"
                             ContentTemplate="{x:Bind HeaderContentTemplate, Mode=OneWay}"
                             Foreground="{x:Bind Foreground, Mode=OneWay}"
-                            HorizontalContentAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"/>
+                            HorizontalContentAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"
+                            VerticalAlignment="Center"
+                            VerticalContentAlignment="Center"/>
 
         </Grid>
         <Path x:Name="RoundedHeaderCap" 

@@ -13,13 +13,19 @@
     <UserControl.Resources>
         <DataTemplate x:Name="DefaultFooterContentTemplate">
             <Border Background="Black"
-                    Margin="20 -5 20 0"
+                    Height="20"
+                    Margin="20 0 20 0"
                     Padding="20 0 20 0"
-                    Visibility="{Binding ElementName=DefaultTextBlock, Path=Text, Converter={StaticResource StringToVisibilityConverter}}">
+                    Visibility="{Binding ElementName=DefaultTextBlock, Path=Text, Converter={StaticResource StringToVisibilityConverter}}"
+                    VerticalAlignment="Center">
                 <TextBlock x:Name="DefaultTextBlock"                            
                            Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}}" 
                            Style="{StaticResource LcarsCaptionTextBlockStyle}" 
-                           Text="{Binding ElementName=ThisLcarsFooter, Path=Text}"/>
+                           Text="{Binding ElementName=ThisLcarsFooter, Path=Text}"
+                           TextTrimming="Clip"
+                           TextWrapping="NoWrap"
+                           TextLineBounds="Tight"
+                           VerticalAlignment="Center"/>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
@@ -60,6 +66,7 @@
                         ContentTemplate="{x:Bind FooterContentTemplate, Mode=OneWay}"
                         Foreground="{x:Bind Foreground, Mode=OneWay}"
                         HorizontalContentAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"
+                        VerticalContentAlignment="Center"
                         Margin="0 1 0 0"
                         VerticalAlignment="Bottom"/>
 

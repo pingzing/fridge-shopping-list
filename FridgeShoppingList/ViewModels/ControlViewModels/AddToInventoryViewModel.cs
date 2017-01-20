@@ -3,6 +3,7 @@ using DynamicData.Binding;
 using FridgeShoppingList.Models;
 using FridgeShoppingList.Services.SettingsServices;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Toolkit.Uwp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,6 +40,13 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             }
         }
 
+        private int _selectedCountIndex = 0;
+        public int SelectedCountIndex
+        {
+            get { return _selectedCountIndex; }
+            set { Set(ref _selectedCountIndex, value); }
+        }
+
         bool areDatesLinked = default(bool);
         public bool AreDatesLinked
         {
@@ -53,7 +61,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             _settings = SimpleIoc.Default.GetInstance<SettingsService>();
         }
 
-        public AddToInventoryViewModel()
+        public AddToInventoryViewModel(object args)
         {
             _settings.GroceryTypes           
                 .Sort(SortExpressionComparer<GroceryItemType>.Ascending(x => x.Name))
@@ -61,15 +69,29 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
                 .Bind(ItemTypes)
                 .Subscribe();
 
-            Task.Run(async () => 
+            DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
             {
-                await Task.Delay(200);
+            await Task.Delay(200);
 
+            ShoppingListEntry entry = args as ShoppingListEntry;
+            if (entry == null)
+            {
                 SelectedItemType = _settings.GroceryTypes
-                .AsObservableList()
-                .Items
-                .OrderBy(x => x.Name)
-                .FirstOrDefault();
+                    .AsObservableList()
+                    .Items
+                    .OrderBy(x => x.Name)
+                    .FirstOrDefault();
+            }
+            else
+            {
+                SelectedItemType = _settings.GroceryTypes
+                    .AsObservableList()
+                    .Items
+                    .Where(x => x.ItemTypeId == entry.ItemType.ItemTypeId)
+                    .FirstOrDefault();
+                
+                    SelectedCountIndex = entry.Count < 12 ? (int)entry.Count - 1 : 11;
+                }
             });            
         }
 

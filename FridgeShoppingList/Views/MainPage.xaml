@@ -172,11 +172,74 @@
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="ctlVms:InventoryEntryViewModel">
-                                    <ctls:InventoryEntryControl DataContext="{x:Bind}" 
-                                                                LeftCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.AddToShoppingListCommand}"
-                                                                LeftCommandParameter="{x:Bind}"
-                                                                RightCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.DeleteItemCommand}"
-                                                                RightCommandParameter="{x:Bind}"/>
+                                    <lcarsSlide:LcarsSlidableListItem EndcapBrush="{ThemeResource LcarsAccentBrush}" 
+                                                                      ActivationWidth="200"
+                                                                      IsOffsetLimited="True"
+                                                                      HorizontalAlignment="Stretch"                                               
+                                                                      IsLeftCommandEnabled="True"                                                                      
+                                                                      LeftBackground="{ThemeResource LcarsBlueGrayBrush}"
+                                                                      LeftCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.AddToShoppingListCommand}"
+                                                                      LeftCommandParameter="{x:Bind}"
+                                                                      LeftForeground="White"
+                                                                      LeftLabel="Add to Shopping List"                                               
+                                                                      IsRightCommandEnabled="True"                                     
+                                                                      RightBackground="{ThemeResource LcarsRedBrush}"
+                                                                      RightCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.DeleteItemCommand}"
+                                                                      RightCommandParameter="{x:Bind}"
+                                                                      RightForeground="White"
+                                                                      RightLabel="Delete"
+                                                                      MouseSlidingEnabled="True">
+                                        <Grid Background="{StaticResource LcarsAccentBrush}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="Auto" MinWidth="50"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0"                             
+                                                    Padding="12 0 0 0"
+                                                    MinHeight="44">
+                                                <TextBlock Text="{x:Bind Entry.ItemType.Name.ToUpper()}"
+                                                           Foreground="Black"                                             
+                                                           VerticalAlignment="Center"
+                                                           Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                           TextTrimming="Clip"
+                                                           TextWrapping="NoWrap"/>
+                                            </Border>
+
+                                            <Border Grid.Column="1"
+                                                    Background="Black"
+                                                    Margin="5 0"
+                                                    Padding="10 0 10 0">
+                                                <TextBlock Text="{x:Bind Entry.ExpiryDates.Count, Mode=OneWay}"
+                                                           Foreground="{ThemeResource LcarsBlueGrayBrush}"
+                                                           HorizontalAlignment="Center"
+                                                           Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <Border Grid.Column="2"
+                                                    Background="Black"
+                                                    Margin="5 0">
+                                                <Border x:Name="ExpiryBackground"
+                                                        Background="{x:Bind ExpirationDateBackground, Mode=OneWay}"
+                                                        Padding="5 0 5 0">
+                                                    <Grid>
+                                                        <FontIcon Foreground="White" 
+                                                                  FontSize="40"
+                                                                  FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                                  Glyph="{Binding Source={StaticResource FontIcons}, Path=WarningTriangle}"
+                                                                  HorizontalAlignment="Center"
+                                                                  Opacity=".6"
+                                                                  VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{x:Bind Entry.ExpiryDates[0], Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:MMM dd}'}"
+                                                                   Foreground="{x:Bind ExpirationDateForeground, Mode=OneWay}"
+                                                                   Style="{ThemeResource LcarsTitleTextBlockStyle}"
+                                                                   VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </Border>
+                                        </Grid>
+                                    </lcarsSlide:LcarsSlidableListItem>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
@@ -189,6 +252,7 @@
                               RelativePanel.AlignLeftWithPanel="True"
                               RelativePanel.AlignRightWithPanel="True"
                               Text="{x:Bind ViewModel.InventoryItems.Count, Mode=OneWay}"/>
+
         </RelativePanel>
 
         <RelativePanel x:Name="ShoppingPanel" 
@@ -241,7 +305,11 @@
                                                                       ActivationWidth="200"
                                                                       IsOffsetLimited ="True"
                                                                       HorizontalAlignment="Stretch"
-                                                                      IsLeftCommandEnabled="False"
+                                                                      IsLeftCommandEnabled="True"
+                                                                      LeftLabel="Add to Inventory"
+                                                                      LeftBackground="{ThemeResource LcarsAccentBrush}"
+                                                                      LeftCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.MoveFromShoppingToInventoryCommand}"
+                                                                      LeftCommandParameter="{x:Bind}"
                                                                       IsRightCommandEnabled="True"
                                                                       RightBackground="{ThemeResource LcarsRedBrush}"
                                                                       RightCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.DeleteFromShoppingListCommand}"

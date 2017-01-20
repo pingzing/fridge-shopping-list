@@ -80,7 +80,7 @@
                   Grid.Row="2"                   
                   HorizontalAlignment="Stretch" 
                   Margin="0 0 30 0"
-                  SelectedIndex="0"
+                  SelectedIndex="{x:Bind ViewModel.SelectedCountIndex, Mode=TwoWay}"
                   SelectionMode="Single"
                   SelectionChanged="{x:Bind ViewModel.GridView_SelectionChanged}"
                   ScrollViewer.HorizontalScrollMode="Auto"
