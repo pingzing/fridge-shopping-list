@@ -106,9 +106,6 @@
       <DependentUpon>AddToInventoryModalDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\InventoryEntry\InventoryEntry.cs" />
-    <Compile Include="Controls\InventoryEntry_Prototype.xaml.cs">
-      <DependentUpon>InventoryEntry_Prototype.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\LcarsFooter.xaml.cs">
       <DependentUpon>LcarsFooter.xaml</DependentUpon>
     </Compile>
@@ -196,10 +193,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Controls\InventoryEntry_Prototype.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\LcarsFooter.xaml">
       <SubType>Designer</SubType>
