@@ -6,5 +6,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Controls/LcarsSlidableListItem/LcarsSlidableListItem.xaml"/>
         <ResourceDictionary Source="ms-appx:///Controls/LcarsModalDialog/LcarsModalDialog.xaml"/>
+        <ResourceDictionary Source="ms-appx:///Controls/InventoryEntry/InventoryEntry.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

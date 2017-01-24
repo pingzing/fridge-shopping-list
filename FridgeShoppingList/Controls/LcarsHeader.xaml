@@ -47,11 +47,11 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Path x:Name="LcarsTopLeftCorner" 
-              Data="M90.0,0.0                     
-                    L44.0,0.0                     
-                    C44.0,0.0 0,0.0 0,65.0                     
-                    L70.0,65.0                     
-                    C70.0,65.0 70.0,40.0 90.0,40.0" 
+              Data="M90.0,0.0
+                    L44.0,0.0
+                    C44.0,0.0 0,0.0 0,65.0
+                    L70.0,65.0
+                    C70.0,65.0 70.0,40.0 90.0,40.0"
               Fill="{x:Bind Foreground, Mode=OneWay}" 
               Stretch="Fill" 
               Stroke="Transparent" 

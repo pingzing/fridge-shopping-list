@@ -27,7 +27,7 @@ namespace FridgeShoppingList.ViewModels
         public ObservableCollectionExtended<InventoryEntryViewModel> InventoryItems { get; private set; } = new ObservableCollectionExtended<InventoryEntryViewModel>();
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
         public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();
-
+        
         public RelayCommand<InventoryEntryViewModel> DeleteItemCommand => new RelayCommand<InventoryEntryViewModel>(DeleteItem);
         public RelayCommand<InventoryEntryViewModel> AddToShoppingListCommand => new RelayCommand<InventoryEntryViewModel>(AddToShoppingList);
         public RelayCommand<ShoppingListEntryViewModel> DeleteFromShoppingListCommand => new RelayCommand<ShoppingListEntryViewModel>(DeleteFromShoppingList);

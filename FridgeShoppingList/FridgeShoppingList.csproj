@@ -105,6 +105,10 @@
     <Compile Include="Controls\AddToInventoryModalDialog.xaml.cs">
       <DependentUpon>AddToInventoryModalDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\InventoryEntry\InventoryEntry.cs" />
+    <Compile Include="Controls\InventoryEntry_Prototype.xaml.cs">
+      <DependentUpon>InventoryEntry_Prototype.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LcarsFooter.xaml.cs">
       <DependentUpon>LcarsFooter.xaml</DependentUpon>
     </Compile>
@@ -119,6 +123,7 @@
     <Compile Include="Converters\EmptyNullToVis.cs" />
     <Compile Include="Converters\SignalBarsToIconConverter.cs" />
     <Compile Include="Converters\StringFormatConverter.cs" />
+    <Compile Include="Converters\StringToUpperConverter.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DateTimeOffsetWrapper.cs" />
     <Compile Include="Models\FontIcons.cs" />
@@ -184,6 +189,15 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\AddToInventoryModalDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\InventoryEntry\InventoryEntry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Controls\InventoryEntry_Prototype.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

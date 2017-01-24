@@ -15,6 +15,13 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
     {
         public InventoryEntry Entry { get; set; }
 
+        private DateTime _soonestExpiryDate;
+        public DateTime SoonestExpiryDate
+        {
+            get { return _soonestExpiryDate; }
+            set { Set(ref _soonestExpiryDate, value); }
+        }
+
         private SolidColorBrush _expirationDateBackground;
         public SolidColorBrush ExpirationDateBackground
         {
@@ -29,11 +36,11 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             set { Set(ref _expirationDateForeground, value); }
         }
 
-        private bool _isExpiredAnimationPlaying;
-        public bool IsExpiredAnimationPlaying
+        private bool _isExpired;
+        public bool IsExpired
         {
-            get { return _isExpiredAnimationPlaying; }
-            set { Set(ref _isExpiredAnimationPlaying, value); }
+            get { return _isExpired; }
+            set { Set(ref _isExpired, value); }
         }
 
         private DispatcherTimer _backgroundUpdateTimer = new DispatcherTimer();
@@ -43,6 +50,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
         public InventoryEntryViewModel(InventoryEntry entry)
         {
             Entry = entry;
+            SoonestExpiryDate = Entry.ExpiryDates.Min();
             _backgroundUpdateTimer.Interval = TimeSpan.FromHours(4);
             _backgroundUpdateTimer.Tick += UpdateExpirationsColors;
             _backgroundUpdateTimer.Start();
@@ -60,7 +68,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             {
                 ExpirationDateBackground = new SolidColorBrush(Colors.Red);
                 ExpirationDateForeground = new SolidColorBrush(Colors.Black);
-                IsExpiredAnimationPlaying = true;
+                IsExpired = true;
             }
             else if (timeTillExpiry <= _expiryShadingBaseline)
             {

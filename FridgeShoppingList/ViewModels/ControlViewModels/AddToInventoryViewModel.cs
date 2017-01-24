@@ -116,7 +116,8 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
         {
             if (AreDatesLinked)
             {
-                Result = new InventoryEntry(SelectedItemType, ExpiryDates.First().DateTimeOffset.DateTime);
+                Result = new InventoryEntry(SelectedItemType, 
+                    Enumerable.Repeat(ExpiryDates.First().DateTimeOffset.DateTime, SelectedCountIndex + 1));
             }
             else
             {
