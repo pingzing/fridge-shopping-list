@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Input;
+using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -15,7 +16,7 @@ using Windows.UI.Xaml.Media;
 namespace FridgeShoppingList.Controls.InventoryEntry
 {
     [TemplatePart(Name = ControlRootKey, Type = typeof(Grid))]
-    [TemplatePart(Name = StateGroupKey, Type = typeof(VisualStateGroup))]
+    [TemplatePart(Name = StateGroupKey, Type = typeof(VisualStateGroup))]    
     public sealed class InventoryEntry : Control
     {
         /// <summary>
@@ -43,14 +44,14 @@ namespace FridgeShoppingList.Controls.InventoryEntry
             DependencyProperty.Register(nameof(RightCommandParameter), typeof(object), typeof(InventoryEntry), new PropertyMetadata(null));
 
         private const string ControlRootKey = "Part_ControlRoot";
-        private const string StateGroupKey = "Part_Common";
+        private const string StateGroupKey = "Part_Common";        
 
         private const string MinimizedStateName = "Minimized";
         private const string MaximizedStateName = "Maximized";
 
-
         private VisualStateGroup _commonStateGroup;
-        private Grid _controlRoot;                
+        private Grid _controlRoot;
+        private ItemsControl _expiryDates;     
 
         public InventoryEntry()
         {
@@ -72,7 +73,7 @@ namespace FridgeShoppingList.Controls.InventoryEntry
             if (_commonStateGroup != null)
             {
                 bool success = VisualStateManager.GoToState(this, MinimizedStateName, false);
-            }
+            }           
         }
 
         private void ControlRoot_Tapped(object sender, TappedRoutedEventArgs e)
