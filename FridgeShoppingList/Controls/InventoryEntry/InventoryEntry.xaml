@@ -237,6 +237,7 @@
                                                           LeftCommandParameter="{TemplateBinding LeftCommandParameter}"
                                                           LeftForeground="White"
                                                           LeftLabel="Add to Shopping List"                                               
+                                                          MaxHeight="40"
                                                           IsRightCommandEnabled="True"                                     
                                                           RightBackground="{ThemeResource LcarsRedBrush}"
                                                           RightCommand="{TemplateBinding RightCommand}"

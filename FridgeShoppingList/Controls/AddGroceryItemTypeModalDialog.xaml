@@ -8,6 +8,8 @@
     xmlns:lcarsDialog="using:FridgeShoppingList.Controls.LcarsModalDialog"
     xmlns:osk="using:TCD.Controls.Keyboard"
     mc:Ignorable="d"
+    d:DesignHeight="180"
+    d:DesignWidth="420"
     
     Background="Black"
     BorderBrush="{ThemeResource LcarsRedPurpleBrush}"
