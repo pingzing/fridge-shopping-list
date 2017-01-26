@@ -1,4 +1,6 @@
 ﻿using FridgeShoppingList.Models;
+using FridgeShoppingList.Services.SettingsServices;
+using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +15,8 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
 {
     public class InventoryEntryViewModel : BindableBase
     {
+        private readonly SettingsService _settings;
+
         public InventoryEntry Entry { get; set; }
 
         private DateTime _soonestExpiryDate;
@@ -43,12 +47,18 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             set { Set(ref _isExpired, value); }
         }
 
+        public RelayCommand<DateTime> DeleteIndividualCommand => new RelayCommand<DateTime>(DeleteIndividual);
+        public RelayCommand DeleteItemCommand => new RelayCommand(DeleteItem);
+        public RelayCommand AddToShoppingListCommand => new RelayCommand(AddToShoppingList);
+
         private DispatcherTimer _backgroundUpdateTimer = new DispatcherTimer();
         private TimeSpan _expiryShadingBaseline = TimeSpan.FromDays(3);
         private Color _baselineForegroundColor = (Color)App.Current.Resources["LcarsBlueGray"];
 
-        public InventoryEntryViewModel(InventoryEntry entry)
+        public InventoryEntryViewModel(InventoryEntry entry, SettingsService settings)
         {
+            _settings = settings;
+
             Entry = entry;
             SoonestExpiryDate = Entry.ExpiryDates.Min();
             _backgroundUpdateTimer.Interval = TimeSpan.FromHours(4);
@@ -81,6 +91,28 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
                 ExpirationDateBackground = new SolidColorBrush(Colors.Transparent);
                 ExpirationDateForeground = new SolidColorBrush(_baselineForegroundColor);
             }
-        }                     
+        }
+
+        private void DeleteItem()
+        {
+            _settings.RemoveFromInventoryItems(Entry);
+        }
+
+        private void AddToShoppingList()
+        {
+            _settings.AddToShoppingList(Entry);
+        }
+
+        private void DeleteIndividual(DateTime toDelete)
+        {
+            if (Entry.ExpiryDates.Count > 1)
+            {
+                Entry.ExpiryDates.Remove(toDelete);
+            }
+            else
+            {
+                DeleteItem();
+            }
+        }
     }
 }

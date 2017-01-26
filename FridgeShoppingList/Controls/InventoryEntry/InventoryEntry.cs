@@ -14,44 +14,26 @@ using Windows.UI.Xaml.Media;
 // The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
 namespace FridgeShoppingList.Controls.InventoryEntry
-{
-    [TemplatePart(Name = ControlRootKey, Type = typeof(Grid))]
+{    
     [TemplatePart(Name = StateGroupKey, Type = typeof(VisualStateGroup))]    
+    [TemplatePart(Name = MinimizedContainerKey, Type = typeof(LcarsSlidableListItem.LcarsSlidableListItem))]
+    [TemplatePart(Name = TopContentHostKey, Type = typeof(Grid))]
+    [TemplatePart(Name = MaximizedContainerKey, Type = typeof(Grid))]
+    [TemplateVisualState(GroupName = StateGroupKey, Name = MinimizedStateName)]
+    [TemplateVisualState(GroupName = StateGroupKey, Name = MaximizedStateName)]
     public sealed class InventoryEntry : Control
-    {
-        /// <summary>
-        /// Identifies the <see cref="LeftCommand"/> property
-        /// </summary>
-        public static readonly DependencyProperty LeftCommandProperty =
-            DependencyProperty.Register(nameof(LeftCommand), typeof(ICommand), typeof(InventoryEntry), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="RightCommand"/> property
-        /// </summary>
-        public static readonly DependencyProperty RightCommandProperty =
-            DependencyProperty.Register(nameof(RightCommand), typeof(ICommand), typeof(InventoryEntry), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="LeftCommandParameter"/> property
-        /// </summary>
-        public static readonly DependencyProperty LeftCommandParameterProperty =
-            DependencyProperty.Register(nameof(LeftCommandParameter), typeof(object), typeof(InventoryEntry), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="RightCommandParameter"/> property
-        /// </summary>
-        public static readonly DependencyProperty RightCommandParameterProperty =
-            DependencyProperty.Register(nameof(RightCommandParameter), typeof(object), typeof(InventoryEntry), new PropertyMetadata(null));
-
-        private const string ControlRootKey = "Part_ControlRoot";
-        private const string StateGroupKey = "Part_Common";        
-
+    {                
+        private const string StateGroupKey = "Part_CommonStateGroup";
+        private const string MinimizedContainerKey = "Part_MinimizedContainer";
+        private const string TopContentHostKey = "Part_TopContentHost";
+        private const string MaximizedContainerKey = "Part_MaximizedContainer";
         private const string MinimizedStateName = "Minimized";
-        private const string MaximizedStateName = "Maximized";
+        private const string MaximizedStateName = "Maximized";        
 
         private VisualStateGroup _commonStateGroup;
         private Grid _controlRoot;
-        private ItemsControl _expiryDates;     
+        private LcarsSlidableListItem.LcarsSlidableListItem _minimizedContainer;
+        private Grid _topContentHost;        
 
         public InventoryEntry()
         {
@@ -60,71 +42,36 @@ namespace FridgeShoppingList.Controls.InventoryEntry
 
         protected override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-
-            _controlRoot = GetTemplateChild(ControlRootKey) as Grid;
-            if (_controlRoot != null)
-            {
-                _controlRoot.Tapped -= ControlRoot_Tapped;
-                _controlRoot.Tapped += ControlRoot_Tapped;
-            }
+            base.OnApplyTemplate();           
 
             _commonStateGroup = GetTemplateChild(StateGroupKey) as VisualStateGroup;
             if (_commonStateGroup != null)
             {
                 bool success = VisualStateManager.GoToState(this, MinimizedStateName, false);
-            }           
-        }
+            }
 
-        private void ControlRoot_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (_commonStateGroup != null)
+            _minimizedContainer = GetTemplateChild(MinimizedContainerKey) as LcarsSlidableListItem.LcarsSlidableListItem;
+            if (_minimizedContainer != null)
             {
-                if (_commonStateGroup.CurrentState.Name == MinimizedStateName)
-                {
-                    VisualStateManager.GoToState(this, MaximizedStateName, true);
-                }
-                else
-                {
-                    VisualStateManager.GoToState(this, MinimizedStateName, true);
-                }
+                _minimizedContainer.Tapped -= MinimizedContainer_Tapped;
+                _minimizedContainer.Tapped += MinimizedContainer_Tapped;
+            }                        
+        }       
+
+        private void MinimizedContainer_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, MaximizedStateName, true);
+            _topContentHost = GetTemplateChild(TopContentHostKey) as Grid;
+            if (_topContentHost != null)
+            {
+                _topContentHost.Tapped -= TopContentHost_Tapped;
+                _topContentHost.Tapped += TopContentHost_Tapped;
             }
         }
 
-        /// <summary>
-        /// Gets or sets the ICommand for left command request
-        /// </summary>
-        public ICommand LeftCommand
+        private void TopContentHost_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            get { return (ICommand)GetValue(LeftCommandProperty); }
-            set { SetValue(LeftCommandProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the ICommand for right command request
-        /// </summary>
-        public ICommand RightCommand
-        {
-            get { return (ICommand)GetValue(RightCommandProperty); }
-            set { SetValue(RightCommandProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the CommandParameter for left command request
-        /// </summary>
-        public object LeftCommandParameter
-        {
-            get { return GetValue(LeftCommandParameterProperty); }
-            set { SetValue(LeftCommandParameterProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the CommandParameter for right command request
-        /// </summary>
-        public object RightCommandParameter
-        {
-            get { return GetValue(RightCommandParameterProperty); }
-            set { SetValue(RightCommandParameterProperty, value); }
-        }
+            VisualStateManager.GoToState(this, MinimizedStateName, true);
+        }               
     }
 }

@@ -27,9 +27,7 @@ namespace FridgeShoppingList.ViewModels
         public ObservableCollectionExtended<InventoryEntryViewModel> InventoryItems { get; private set; } = new ObservableCollectionExtended<InventoryEntryViewModel>();
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
         public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();
-        
-        public RelayCommand<InventoryEntryViewModel> DeleteItemCommand => new RelayCommand<InventoryEntryViewModel>(DeleteItem);
-        public RelayCommand<InventoryEntryViewModel> AddToShoppingListCommand => new RelayCommand<InventoryEntryViewModel>(AddToShoppingList);
+                
         public RelayCommand<ShoppingListEntryViewModel> DeleteFromShoppingListCommand => new RelayCommand<ShoppingListEntryViewModel>(DeleteFromShoppingList);
         public RelayCommand<ShoppingListEntryViewModel> MoveFromShoppingToInventoryCommand => new RelayCommand<ShoppingListEntryViewModel>(MoveFromShoppingToInventory);
 
@@ -39,7 +37,7 @@ namespace FridgeShoppingList.ViewModels
             _dialogService = dialog;
 
             _settings.InventoryItems
-                .Transform(x => new InventoryEntryViewModel(x))
+                .Transform(x => new InventoryEntryViewModel(x, _settings))
                 .ObserveOnDispatcher()
                 .Bind(InventoryItems)
                 .Subscribe();
@@ -93,12 +91,7 @@ namespace FridgeShoppingList.ViewModels
             {
                 _settings.AddToInventoryItems(result);
             }
-        }
-
-        private void DeleteItem(InventoryEntryViewModel obj)
-        {
-            _settings.RemoveFromInventoryItems(obj.Entry);
-        }
+        }       
 
         public async void AddItemType()
         {
@@ -107,12 +100,7 @@ namespace FridgeShoppingList.ViewModels
             {
                 _settings.AddToGroceryTypes(result);
             }
-        }
-
-        private void AddToShoppingList(InventoryEntryViewModel obj)
-        {
-            _settings.AddToShoppingList(obj.Entry);
-        }
+        }       
 
         private void DeleteFromShoppingList(ShoppingListEntryViewModel obj)
         {
