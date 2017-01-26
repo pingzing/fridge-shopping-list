@@ -178,10 +178,7 @@
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="ctlVms:InventoryEntryViewModel">
-                                    <invEnt:InventoryEntry LeftCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.AddToShoppingListCommand}"
-                                                           LeftCommandParameter="{x:Bind}"
-                                                           RightCommand="{Binding ElementName=FridgeItemsList, Path=DataContext.DeleteItemCommand}"
-                                                           RightCommandParameter="{x:Bind}"/>
+                                    <invEnt:InventoryEntry/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
@@ -229,6 +226,11 @@
                                   RelativePanel.AlignBottomWithPanel="True"
                                   ItemsSource="{x:Bind ViewModel.ShoppingListItems, Mode=OneWay}"
                                   SelectionMode="None">
+                            <ListView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </ListView.ItemContainerTransitions>
                             <ListView.Header>
                                 <TextBlock Foreground="{ThemeResource LcarsRedBrush}"
                                            HorizontalAlignment="Center"

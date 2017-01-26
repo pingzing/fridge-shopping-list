@@ -16,12 +16,12 @@
                 <ControlTemplate TargetType="local:InventoryEntry">
                     <Grid x:Name="Part_ControlRoot">
                         <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="Part_Common">
+                            <VisualStateGroup x:Name="Part_CommonStateGroup">
                                 <VisualState x:Name="Minimized"/>
                                 <VisualState x:Name="Maximized">
                                     <VisualState.Setters>
-                                        <Setter Target="MinimizedContainer.Visibility" Value="Collapsed"/>
-                                        <Setter Target="MaximizedContainer.Visibility" Value="Visible"/>
+                                        <Setter Target="Part_MinimizedContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="Part_MaximizedContainer.Visibility" Value="Visible"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualStateGroup.Transitions>
@@ -149,21 +149,21 @@
                                             </ObjectAnimationUsingKeyFrames>
 
                                             <!--Swap out Minimized frame for Maximized frame-->
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="MinimizedContainer">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Part_MinimizedContainer">
                                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <Visibility>Collapsed</Visibility>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="MaximizedContainer">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Part_MaximizedContainer">
                                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
                                                     <DiscreteObjectKeyFrame.Value>
                                                         <Visibility>Visible</Visibility>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ExpiryDates">
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Part_ExpiryDates">
                                                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
                                                 <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="0"/>
                                                 <EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="1"/>
@@ -226,22 +226,20 @@
                                 </VisualStateGroup.Transitions>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <lcarsSlide:LcarsSlidableListItem x:Name="MinimizedContainer" 
+                        <lcarsSlide:LcarsSlidableListItem x:Name="Part_MinimizedContainer" 
                                                           EndcapBrush="{ThemeResource LcarsAccentBrush}" 
                                                           ActivationWidth="200"
                                                           IsOffsetLimited="True"
                                                           HorizontalAlignment="Stretch"                                               
                                                           IsLeftCommandEnabled="True"                                                                      
                                                           LeftBackground="{ThemeResource LcarsBlueGrayBrush}"
-                                                          LeftCommand="{TemplateBinding LeftCommand}"
-                                                          LeftCommandParameter="{TemplateBinding LeftCommandParameter}"
+                                                          LeftCommand="{Binding AddToShoppingListCommand}"                                                          
                                                           LeftForeground="White"
                                                           LeftLabel="Add to Shopping List"                                               
                                                           MaxHeight="40"
                                                           IsRightCommandEnabled="True"                                     
                                                           RightBackground="{ThemeResource LcarsRedBrush}"
-                                                          RightCommand="{TemplateBinding RightCommand}"
-                                                          RightCommandParameter="{TemplateBinding RightCommandParameter}"
+                                                          RightCommand="{Binding DeleteItemCommand}"                                                          
                                                           RightForeground="White"
                                                           RightLabel="Delete"
                                                           MouseSlidingEnabled="True">
@@ -277,6 +275,7 @@
                                         Padding="10 0 10 0">
                                     <TextBlock x:Name="EntryCountTextBlock" 
                                                Text="{Binding Entry.ExpiryDates.Count, Mode=OneWay}"
+                                               TextWrapping="NoWrap"
                                                Foreground="{ThemeResource LcarsBlueGrayBrush}"
                                                HorizontalAlignment="Center"
                                                RenderTransformOrigin="0.5,0.5"
@@ -307,6 +306,7 @@
                                                       Visibility="{Binding IsExpired, Mode=OneWay}"/>
                                             <TextBlock x:Name="SoonestExpiryDateTextBlock" 
                                                        Text="{Binding SoonestExpiryDate, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:MMM dd}'}"
+                                                       TextWrapping="NoWrap"
                                                        Foreground="{Binding ExpirationDateForeground, Mode=OneWay}"
                                                        Style="{ThemeResource LcarsTitleTextBlockStyle}"
                                                        VerticalAlignment="Center"/>
@@ -315,7 +315,9 @@
                                 </Border>
                             </Grid>
                         </lcarsSlide:LcarsSlidableListItem>
-                        <Grid x:Name="MaximizedContainer"
+                        
+                        <Grid x:Name="Part_MaximizedContainer"
+                              x:DeferLoadStrategy="Lazy"
                               Visibility="Collapsed">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -330,11 +332,11 @@
                             <Path x:Name="TopLeftCorner" 
                                   Grid.Row="0" 
                                   Grid.Column="0"
-                                  Data="M45,0
-                                        L22,0
-                                        C22,0 0,0 0,55
-                                        L10,55
-                                        C10,55 10,40 45,40"
+                                  Data="M35,0
+                                        L30,0
+                                        C30,0 0,0 0,70
+                                        L10,70
+                                        C10,70 10,40 35,40"
                                   Stretch="Fill"
                                   StrokeThickness="0"
                                   Fill="{ThemeResource LcarsAccentBrush}"/>
@@ -348,7 +350,7 @@
                                     <CompositeTransform/>
                                 </Rectangle.RenderTransform>
                             </Rectangle>
-                            <Grid x:Name="TopContentHost" 
+                            <Grid x:Name="Part_TopContentHost" 
                                   Grid.Row="0" 
                                   Grid.Column="1"
                                   Background="{ThemeResource LcarsAccentBrush}"                                  
@@ -395,15 +397,43 @@
                                     <CompositeTransform/>
                                 </Rectangle.RenderTransform>
                             </Rectangle>
-                            <ItemsControl x:Name="ExpiryDates" 
+                            <ItemsControl x:Name="Part_ExpiryDates" 
                                           Grid.Row="1" 
                                           Grid.Column="1" 
                                           Grid.ColumnSpan="2"
-                                          ItemsSource="{Binding Entry.ExpiryDates}"
-                                          Margin="0 0 0 -20">
+                                          ItemsSource="{Binding Entry.ExpiryDates}"                                          
+                                          Margin="0 -15 0 -30"
+                                          VerticalAlignment="Center">
+                                <ItemsControl.ItemContainerTransitions>
+                                    <TransitionCollection>
+                                        <AddDeleteThemeTransition />
+                                        <ContentThemeTransition />
+                                        <ReorderThemeTransition />
+                                        <EntranceThemeTransition IsStaggeringEnabled="True" />
+                                    </TransitionCollection>
+                                </ItemsControl.ItemContainerTransitions>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:MMM dd}'}"/>
+                                        <RelativePanel HorizontalAlignment="Stretch" Margin="0 2.5 0 2.5">
+                                            <TextBlock RelativePanel.AlignVerticalCenterWithPanel="True"  
+                                                       Text="{Binding Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:MMM dd}'}"/>
+                                            <Button x:Name="AddToShoppingListButton" 
+                                                    RelativePanel.LeftOf="DeleteButton" 
+                                                    RelativePanel.AlignVerticalCenterWithPanel="True"
+                                                    Background="{ThemeResource LcarsBlueGrayBrush}" 
+                                                    Command="{Binding ElementName=Part_ExpiryDates, Path=DataContext.AddToShoppingListCommand}"                                                    
+                                                    Content="ADD TO SHOPPING LIST"
+                                                    Margin="0 0 10 0"
+                                                    Style="{StaticResource LcarsButtonStyle}"/>
+                                            <Button x:Name="DeleteButton" 
+                                                    RelativePanel.AlignRightWithPanel="True"  
+                                                    RelativePanel.AlignVerticalCenterWithPanel="True"
+                                                    Background="{ThemeResource LcarsRedBrush}" 
+                                                    Command="{Binding ElementName=Part_ExpiryDates, Path=DataContext.DeleteIndividualCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="DELETE"                                                    
+                                                    Style="{StaticResource LcarsButtonStyle}"/>
+                                        </RelativePanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
@@ -411,11 +441,11 @@
                             <Path x:Name="BottomLeftCorner" 
                                   Grid.Row="2" 
                                   Grid.Column="0"
-                                  Data="M45,0
-                                        L22,0
-                                        C22,0 0,0 0,55
-                                        L10,55
-                                        C10,55 10,20 45,20"
+                                  Data="M35,0
+                                        L30,0
+                                        C30.5,0 0,0 0,70
+                                        L10,70
+                                        C10,70 10,20 35,20"
                                   Fill="{ThemeResource LcarsAccentBrush}"
                                   RenderTransformOrigin="0.5,0.5"
                                   Stretch="None"
