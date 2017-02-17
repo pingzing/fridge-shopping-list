@@ -284,23 +284,31 @@ namespace FridgeShoppingList.Services
                     return false;
                 }
 
-                await adapter.ScanAsync();
-
-                if (adapter.NetworkReport == null)
+                try
                 {
-                    continue;
-                }
+                    await adapter.ScanAsync();
 
-                foreach (var network in adapter.NetworkReport.AvailableNetworks)
-                {
-                    if (!HasSsid(_networkNameToInfo, network.Ssid))
+                    if (adapter.NetworkReport == null)
                     {
-                        _networkNameToInfo[network] = adapter;
+                        continue;
                     }
-                }
-            }
 
-            return true;
+                    foreach (var network in adapter.NetworkReport.AvailableNetworks)
+                    {
+                        if (!HasSsid(_networkNameToInfo, network.Ssid))
+                        {
+                            _networkNameToInfo[network] = adapter;
+                        }
+                    }
+
+                    return true;
+                }
+                catch (OperationCanceledException)
+                {
+                    return false;
+                }                
+            }
+            return false;
         }
 
         private bool HasSsid(Dictionary<WiFiAvailableNetwork, WiFiAdapter> resultCollection, string ssid)

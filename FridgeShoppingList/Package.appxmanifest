@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" IgnorableNamespaces="uap mp iot">
-  <Identity Name="235282ab-5836-41ba-ae47-5c6edd0dcada" Publisher="CN=nmca" Version="1.0.0.0" />
+  <Identity Name="10707NeilApps.FOODDIoTShoppingList" Publisher="CN=B458EF9C-1F3A-4DD2-AB1A-76FB5056CF30" Version="1.1.0.0" />
   <mp:PhoneIdentity PhoneProductId="235282ab-5836-41ba-ae47-5c6edd0dcada" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>FridgeShoppingList</DisplayName>
-    <PublisherDisplayName>nmca</PublisherDisplayName>
+    <DisplayName>FOODD IoT Shopping List</DisplayName>
+    <PublisherDisplayName>NeilApps</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>

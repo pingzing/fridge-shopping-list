@@ -109,6 +109,7 @@
                               HorizontalContentAlignment="Left"
                               VerticalScrollBarVisibility="Auto">
                     <RelativePanel HorizontalAlignment="Left">
+                        <Button Content="Try OneNote Request" Click="Button_Click"/>
                     </RelativePanel>
 
                 </ScrollViewer>

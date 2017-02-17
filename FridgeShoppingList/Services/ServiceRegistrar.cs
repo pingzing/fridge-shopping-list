@@ -22,6 +22,7 @@ namespace FridgeShoppingList.Services
                 SimpleIoc.Default.Register<INetworkService>(() => new NetworkService());
                 SimpleIoc.Default.Register(() => SettingsServices.SettingsService.Instance);
                 SimpleIoc.Default.Register<IDialogService>(() => new DialogService());
+                SimpleIoc.Default.Register<IOneNoteService>(() => new OneNoteService());
             }
             SimpleIoc.Default.Register<MainPageViewModel>();
             SimpleIoc.Default.Register<SettingsPageViewModel>();
