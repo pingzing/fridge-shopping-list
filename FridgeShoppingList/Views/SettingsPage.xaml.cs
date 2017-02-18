@@ -29,12 +29,6 @@ namespace FridgeShoppingList.Views
         private void WifiButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             (DataContext as SettingsPageViewModel)?.OpenNetworkConfigCommand?.Execute(null);
-        }
-
-        private async void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            IOneNoteService onenote = ServiceLocator.Current.GetInstance<IOneNoteService>();            
-            await onenote.GetPages(); 
-        }
+        }        
     }
 }

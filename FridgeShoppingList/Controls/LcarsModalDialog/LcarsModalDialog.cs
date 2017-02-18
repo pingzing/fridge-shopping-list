@@ -85,16 +85,14 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
                 modal.ModalBackground = _backgroundOverlayBrush;
 
                 await this.Fade(0, 0)
-                    .Scale(1.5f, 1.5f, duration: 0)
-                    .Blur(10, 0)
+                    .Scale(1.5f, 1.5f, duration: 0)                    
                     .StartAsync();
 
                 modal.ModalContent = this;                
                 modal.IsModal = true;
 
                 this.Fade(1, 300)
-                    .Scale(1, 1, duration: 300)
-                    .Blur(0, 300)
+                    .Scale(1, 1, duration: 300)                    
                     .Start();
             });
             

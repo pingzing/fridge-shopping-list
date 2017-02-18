@@ -1,16 +1,17 @@
 <Page x:Class="FridgeShoppingList.Views.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:Behaviors="using:Template10.Behaviors"
       xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
       xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
       xmlns:controls="using:Template10.Controls"
-      xmlns:converter="using:Template10.Converters"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="using:FridgeShoppingList.Views"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:converter="using:Template10.Converters"      
+      xmlns:local="using:FridgeShoppingList.Views"      
       xmlns:vm="using:FridgeShoppingList.ViewModels"
       xmlns:ctls="using:FridgeShoppingList.Controls"
+      xmlns:uctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -104,19 +105,36 @@
                HeaderFocusVisualPlacement="SelectedItemHeader">
 
             <!--  settings  -->
-            <PivotItem DataContext="{Binding SettingsPartViewModel}" Header="Settings">
+            <PivotItem DataContext="{Binding SettingsPartViewModel}" Header="OneNote">
                 <ScrollViewer Margin="0,12,-12,0"
                               HorizontalContentAlignment="Left"
                               VerticalScrollBarVisibility="Auto">
-                    <RelativePanel HorizontalAlignment="Left">
-                        <Button Content="Try OneNote Request" Click="Button_Click"/>
+                    <RelativePanel HorizontalAlignment="Stretch">
+                        <uctCtls:HeaderedTextBlock x:Name="StatusHeader" 
+                                                   Header="OneNote Connection Status"                                                    
+                                                   Text="{x:Bind ViewModel.SettingsPartViewModel.OneNoteStatusText, Mode=OneWay}"
+                                                   TextStyle="{StaticResource LcarsBaseTextBlockStyle}">
+                            <uctCtls:HeaderedTextBlock.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Style="{StaticResource LcarsHeaderControlTextBlockStyle}"/>
+                                </DataTemplate>
+                            </uctCtls:HeaderedTextBlock.HeaderTemplate>
+                        </uctCtls:HeaderedTextBlock>
+                        <Button RelativePanel.Below="StatusHeader" 
+                                Content="Connect"
+                                Click="{x:Bind ViewModel.SettingsPartViewModel.ConnectToOneNote}"
+                                Visibility="{x:Bind ViewModel.SettingsPartViewModel.IsConnected, Mode=OneWay, Converter={StaticResource BoolToVisibilityInvertedConverter}}"/>
+                        <Button RelativePanel.Below="StatusHeader"
+                                Content="Disconnect"
+                                Click="{x:Bind ViewModel.SettingsPartViewModel.DisconnectFromOneNote}"
+                                Visibility="{x:Bind ViewModel.SettingsPartViewModel.IsConnected, Mode=OneWay}"/>
                     </RelativePanel>
 
                 </ScrollViewer>
             </PivotItem>
 
             <!--  about  -->
-            <PivotItem Header="About">
+            <PivotItem Header="Status">
                 <RelativePanel DataContext="{Binding AboutPartViewModel}">
 
                     <Border x:Name="LogoImage"

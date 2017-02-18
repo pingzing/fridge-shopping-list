@@ -17,18 +17,21 @@ namespace FridgeShoppingList.ViewModels
     public class SettingsPageViewModel : ViewModelBase
     {
         private INetworkService _networkService;
+        private IOneNoteService _oneNote;
 
-        public SettingsPartViewModel SettingsPartViewModel { get; } = new SettingsPartViewModel();
+        public SettingsPartViewModel SettingsPartViewModel { get; }
         public AboutPartViewModel AboutPartViewModel { get; private set; }
 
         public RelayCommand ShutdownCommand => new RelayCommand(ShutdownDevice);
         public RelayCommand RestartCommand => new RelayCommand(RestartDevice);
         public RelayCommand OpenNetworkConfigCommand => new RelayCommand(OpenNetworkConfig);
 
-        public SettingsPageViewModel(INetworkService networkService)
+        public SettingsPageViewModel(INetworkService networkService, IOneNoteService oneNote)
         {
             _networkService = networkService;
+            _oneNote = oneNote;
             AboutPartViewModel = new AboutPartViewModel(_networkService);
+            SettingsPartViewModel = new SettingsPartViewModel(_oneNote);
         }
 
         private void ShutdownDevice()
@@ -68,18 +71,52 @@ namespace FridgeShoppingList.ViewModels
 
     public class SettingsPartViewModel : ViewModelBase
     {
-        Services.SettingsServices.SettingsService _settings;
+        //public for bindability
+        public readonly IOneNoteService _oneNoteService;
 
-        public SettingsPartViewModel()
+        string oneNotestatusText = "Not connected";
+        public string OneNoteStatusText
+        {
+            get { return oneNotestatusText; }
+            set { Set(ref oneNotestatusText, value); }
+        }
+
+        public bool IsConnected => _oneNoteService.ConnectedStatus;
+
+        public SettingsPartViewModel(IOneNoteService oneNote)
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 // designtime
             }
             else
-            {                
+            {
+                _oneNoteService = oneNote;
+                _oneNoteService.ConnectedStatusChanged += (s, newConnected) =>
+                {
+                    if (newConnected)
+                    {
+                        OneNoteStatusText = "Connected";
+                        RaisePropertyChanged(nameof(IsConnected));
+                    }
+                    else
+                    {
+                        OneNoteStatusText = "Not connected";
+                        RaisePropertyChanged(nameof(IsConnected));
+                    }
+                };
             }
-        }        
+        }       
+        
+        public async void ConnectToOneNote()
+        {
+            await _oneNoteService.GetShoppingListPageContent();
+        } 
+
+        public async void DisconnectFromOneNote()
+        {
+            //nothing yet
+        }
     }
 
     public class AboutPartViewModel : ViewModelBase

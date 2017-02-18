@@ -123,11 +123,14 @@
     <Compile Include="Converters\SignalBarsToIconConverter.cs" />
     <Compile Include="Converters\StringFormatConverter.cs" />
     <Compile Include="Converters\StringToUpperConverter.cs" />
+    <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DateTimeOffsetWrapper.cs" />
     <Compile Include="Models\FontIcons.cs" />
     <Compile Include="Models\InventoryEntry.cs" />
     <Compile Include="Models\GroceryItemType.cs" />
+    <Compile Include="Models\OneNoteCheckboxNode.cs" />
+    <Compile Include="Models\OneNoteOdataResponse.cs" />
     <Compile Include="Models\ShoppingListEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DialogService.cs" />

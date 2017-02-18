@@ -1,6 +1,7 @@
 ﻿{
   "dependencies": {
     "DynamicData": "5.0.6.2090",
+    "HtmlAgilityPack": "1.4.9.5",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.OneDriveSDK": "2.0.6",
     "Microsoft.OneDriveSDK.Authentication": "1.0.8",
