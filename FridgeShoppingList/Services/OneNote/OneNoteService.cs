@@ -1,5 +1,4 @@
 ﻿using FridgeShoppingList.Models;
-using OD = Microsoft.OneDrive.Sdk;
 using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json;
 using System;
@@ -11,6 +10,8 @@ using Windows.Web.Http.Headers;
 using Windows.Storage.Streams;
 using FridgeShoppingList.Helpers;
 using HtmlAgilityPack;
+using FridgeShoppingList.ViewModels.ControlViewModels;
+using Microsoft.OneDrive.Sdk;
 
 namespace FridgeShoppingList.Services
 {
@@ -24,12 +25,16 @@ namespace FridgeShoppingList.Services
     public class OneNoteService : IOneNoteService
     {
         private const string OneNoteBaseUrl = "https://www.onenote.com/api/v1.0/me/";
+        private const string GetAccessTokenUrl = "https://login.live.com/oauth20_token.srf";
         private const string ShoppingListPageSearchString = OneNoteBaseUrl + "notes/pages?filter=tolower(title)%20eq%20'shopping%20list'%20and%20tolower(parentSection%2Fname)%20eq%20'foodd'";
-        private const string ControlAppPagesScope = "office.onenote_update_by_app";
+        private const string OneDriveRedirectUri = "https://login.live.com/oauth20_desktop.srf";
+        private const string ControlAppPagesScopes = "office.onenote_update_by_app%20wl.offline_access";
+        private const string _oneDriveClientId = "00000000481CBFE3";
 
+        private readonly IDialogService _dialogService;
         private readonly HttpClient _httpClient;
         private Task _initTask;
-        private OD.OnlineIdAuthenticationProvider _msaAuthProvider;
+        
         private string _fooddPageId;
 
         private bool _connectedStatus;
@@ -47,29 +52,32 @@ namespace FridgeShoppingList.Services
         }
         public event EventHandler<bool> ConnectedStatusChanged;
 
-        public OneNoteService()
+        public OneNoteService(IDialogService dialogService)
         {
+            _dialogService = dialogService;
             _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue(Constants.JsonApplicationMediaType));
-            _initTask = InitializeAsync();
+            _httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue(Constants.JsonApplicationMediaType));            
         }
 
-        bool _initialized;
-        private async Task InitializeAsync()
+        bool _initialized;        
+        private async Task Initialize()
         {
+
             if (!_initialized)
-            {                
-                _msaAuthProvider = new OD.OnlineIdAuthenticationProvider(new string[] { ControlAppPagesScope });
-                await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
-                    await _msaAuthProvider.RestoreMostRecentFromCacheOrAuthenticateUserAsync());
-                if (!_msaAuthProvider.IsAuthenticated)
-                {
-                    return;
-                }
+            {
+                string authUrl = $"https://login.live.com/oauth20_authorize.srf?response_type=code&client_id={_oneDriveClientId}&redirect_uri={OneDriveRedirectUri}&scope={ControlAppPagesScopes}";
+                string redemptionCode = await _dialogService.ShowModalDialogAsync<LoginToOneNoteViewModel, string>(authUrl);
+                var response = await _httpClient.PostAsync(
+                    new Uri(GetAccessTokenUrl),
+                    new HttpStringContent(
+                        $"grant_type=authorization_code&client_id={_oneDriveClientId}&client_secret=<FIND A SECURE WAY TO BRING IN THE CLIENT SECRET HERE YO>&code={redemptionCode}&redirect_uri={OneDriveRedirectUri}",
+                        UnicodeEncoding.Utf8,
+                        Constants.UrlEncodedFormMediaType)
+                    );
+
                 ConnectedStatus = true;
-                _httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Bearer", _msaAuthProvider.CurrentAccountSession.AccessToken);
-                bool success = await CreateShoppingListPage();
-                _initialized = true;
+                _httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Bearer", "");
+                _initialized = await CreateShoppingListPage();
             }
         }
 
@@ -115,7 +123,7 @@ namespace FridgeShoppingList.Services
         /// <returns></returns>
         public async Task<List<OneNoteCheckboxNode>> GetShoppingListPageContent()
         {
-            await _initTask;
+            await Initialize();
 
             var response = await _httpClient.GetAsync(new Uri($"{OneNoteBaseUrl}notes/pages/{_fooddPageId}/content?includeIDs=true"));
             if (response.IsSuccessStatusCode)

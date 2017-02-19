@@ -85,12 +85,14 @@
                                         <Border x:Name="Button1Host"
                                                 Margin="{ThemeResource ContentDialogButton1HostMargin}"
                                                 MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
-                                                MinHeight="{ThemeResource ContentDialogButtonMinHeight}" />
+                                                MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
+                                                Visibility="{TemplateBinding PrimaryButtonVisibility}"/>
                                         <Border x:Name="Button2Host"
                                                 Margin="{ThemeResource ContentDialogButton2HostMargin}"
                                                 MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
                                                 MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
-                                                Grid.Column="1" />
+                                                Grid.Column="1" 
+                                                Visibility="{TemplateBinding SecondaryButtonVisibility}"/>
                                     </Grid>
                                     <Path x:Name="LcarsTopLeftCorner"
                                           Grid.Row="0" Grid.Column="0"

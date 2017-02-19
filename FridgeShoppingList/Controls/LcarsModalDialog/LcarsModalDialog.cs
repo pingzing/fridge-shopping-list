@@ -46,6 +46,9 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
         public static readonly DependencyProperty IsPrimaryButtonEnabledProperty =
             DependencyProperty.Register(nameof(IsPrimaryButtonEnabled), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(true));
 
+        public static readonly DependencyProperty PrimaryButtonVisibilityProperty =
+            DependencyProperty.Register(nameof(PrimaryButtonVisibility), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(Visibility.Visible));
+
         public static readonly DependencyProperty SecondaryButtonTextProperty =
            DependencyProperty.Register(nameof(SecondaryButtonText), typeof(string), typeof(LcarsModalDialog), new PropertyMetadata("Ok"));
 
@@ -57,6 +60,9 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
 
         public static readonly DependencyProperty IsSecondaryButtonEnabledProperty =
             DependencyProperty.Register(nameof(IsSecondaryButtonEnabled), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty SecondaryButtonVisibilityProperty =
+            DependencyProperty.Register(nameof(SecondaryButtonVisibility), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(Visibility.Visible));
 
         private const string PartButton1Host = "Button1Host";
         private const string PartButton2Host = "Button2Host";
@@ -271,6 +277,12 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             set { SetValue(IsPrimaryButtonEnabledProperty, value); }
         }
 
+        public Visibility PrimaryButtonVisibility
+        {
+            get { return (Visibility)GetValue(PrimaryButtonVisibilityProperty); }
+            set { SetValue(PrimaryButtonVisibilityProperty, value); }
+        }
+
         public string SecondaryButtonText
         {
             get { return (string)GetValue(SecondaryButtonTextProperty); }
@@ -293,6 +305,12 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
         {
             get { return (bool)GetValue(IsSecondaryButtonEnabledProperty); }
             set { SetValue(IsSecondaryButtonEnabledProperty, value); }
+        }
+
+        public Visibility SecondaryButtonVisibility
+        {
+            get { return (Visibility)GetValue(SecondaryButtonVisibilityProperty); }
+            set { SetValue(SecondaryButtonVisibilityProperty, value); }
         }
     }
 }

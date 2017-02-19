@@ -10,5 +10,6 @@ namespace FridgeShoppingList.Helpers
     {
         public const string HtmlTextMediaType = "text/html";
         public const string JsonApplicationMediaType = "application/json";
+        public const string UrlEncodedFormMediaType = "application/x-www-form-urlencoded";
     }
 }
