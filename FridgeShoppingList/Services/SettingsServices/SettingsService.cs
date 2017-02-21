@@ -24,7 +24,7 @@ namespace FridgeShoppingList.Services.SettingsServices
         public IObservable<IChangeSet<InventoryEntry>> InventoryItems { get; }
 
         private SourceList<ShoppingListEntry> _shoppingListItems { get; set; } = new SourceList<ShoppingListEntry>();
-        public IObservable<IChangeSet<ShoppingListEntry>> ShoppingListItems { get; }        
+        public IObservable<IChangeSet<ShoppingListEntry>> ShoppingListItems { get; }       
 
         public TimeSpan CacheMaxDuration
         {
@@ -133,7 +133,7 @@ namespace FridgeShoppingList.Services.SettingsServices
         public void RemoveFromShoppingListItems(ShoppingListEntry itemToRemove)
         {
             _shoppingListItems.Remove(itemToRemove);
-        }
+        }       
     }
 }
 

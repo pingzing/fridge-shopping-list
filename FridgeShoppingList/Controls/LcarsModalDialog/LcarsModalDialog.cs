@@ -35,7 +35,7 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             DependencyProperty.Register(nameof(TitleTemplate), typeof(DataTemplate), typeof(LcarsModalDialog), new PropertyMetadata(null));        
         
         public static readonly DependencyProperty PrimaryButtonTextProperty =
-            DependencyProperty.Register(nameof(PrimaryButtonText), typeof(string), typeof(LcarsModalDialog), new PropertyMetadata("Ok"));        
+            DependencyProperty.Register(nameof(PrimaryButtonText), typeof(string), typeof(LcarsModalDialog), new PropertyMetadata("OK"));        
         
         public static readonly DependencyProperty PrimaryButtonCommandProperty =
             DependencyProperty.Register(nameof(PrimaryButtonCommand), typeof(ICommand), typeof(LcarsModalDialog), new PropertyMetadata(null));
@@ -47,10 +47,10 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             DependencyProperty.Register(nameof(IsPrimaryButtonEnabled), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(true));
 
         public static readonly DependencyProperty PrimaryButtonVisibilityProperty =
-            DependencyProperty.Register(nameof(PrimaryButtonVisibility), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(Visibility.Visible));
+            DependencyProperty.Register(nameof(PrimaryButtonVisibility), typeof(Visibility), typeof(LcarsModalDialog), new PropertyMetadata(Visibility.Visible));
 
         public static readonly DependencyProperty SecondaryButtonTextProperty =
-           DependencyProperty.Register(nameof(SecondaryButtonText), typeof(string), typeof(LcarsModalDialog), new PropertyMetadata("Ok"));
+           DependencyProperty.Register(nameof(SecondaryButtonText), typeof(string), typeof(LcarsModalDialog), new PropertyMetadata("OK"));
 
         public static readonly DependencyProperty SecondaryButtonCommandProperty =
             DependencyProperty.Register(nameof(SecondaryButtonCommand), typeof(ICommand), typeof(LcarsModalDialog), new PropertyMetadata(null));
@@ -62,7 +62,7 @@ namespace FridgeShoppingList.Controls.LcarsModalDialog
             DependencyProperty.Register(nameof(IsSecondaryButtonEnabled), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(true));
 
         public static readonly DependencyProperty SecondaryButtonVisibilityProperty =
-            DependencyProperty.Register(nameof(SecondaryButtonVisibility), typeof(bool), typeof(LcarsModalDialog), new PropertyMetadata(Visibility.Visible));
+            DependencyProperty.Register(nameof(SecondaryButtonVisibility), typeof(Visibility), typeof(LcarsModalDialog), new PropertyMetadata(Visibility.Visible));
 
         private const string PartButton1Host = "Button1Host";
         private const string PartButton2Host = "Button2Host";

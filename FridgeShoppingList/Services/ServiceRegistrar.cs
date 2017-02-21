@@ -20,10 +20,9 @@ namespace FridgeShoppingList.Services
             {
                 SimpleIoc.Default.Register<IMessenger>(() => Messenger.Default);
                 SimpleIoc.Default.Register<INetworkService>(() => new NetworkService());
-                SimpleIoc.Default.Register(() => SettingsServices.SettingsService.Instance);
-                IDialogService dialog = new DialogService();
-                SimpleIoc.Default.Register<IDialogService>(() => dialog);
-                SimpleIoc.Default.Register<IOneNoteService>(() => new OneNoteService(dialog));
+                SimpleIoc.Default.Register(() => SettingsServices.SettingsService.Instance);                
+                SimpleIoc.Default.Register<IDialogService>(() => new DialogService());
+                SimpleIoc.Default.Register<IOneNoteService>(() => new OneNoteService());
             }
             SimpleIoc.Default.Register<MainPageViewModel>();
             SimpleIoc.Default.Register<SettingsPageViewModel>();

@@ -55,7 +55,7 @@ namespace FridgeShoppingList.Views
                     DateTimeTextPartColon.Foreground = _fadedRedPurpleBrush;
                 }                
             };
-            blinkTimer.Start();         
+            blinkTimer.Start();
         }
     }
 }

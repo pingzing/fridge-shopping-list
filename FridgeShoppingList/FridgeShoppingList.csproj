@@ -118,14 +118,12 @@
     <Compile Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatus.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatusChangedEventArgs.cs" />
-    <Compile Include="Controls\LoginToOneNoteDialog.xaml.cs">
-      <DependentUpon>LoginToOneNoteDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Converters\EmptyNullToBoolConverter.cs" />
     <Compile Include="Converters\EmptyNullToVis.cs" />
     <Compile Include="Converters\SignalBarsToIconConverter.cs" />
     <Compile Include="Converters\StringFormatConverter.cs" />
     <Compile Include="Converters\StringToUpperConverter.cs" />
+    <Compile Include="Extensions\PasswordVaultExtensions.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DateTimeOffsetWrapper.cs" />
@@ -145,7 +143,6 @@
     <Compile Include="ViewModels\ControlViewModels\AddToInventoryViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\InventoryEntryViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\IResultDialogViewModel.cs" />
-    <Compile Include="ViewModels\ControlViewModels\LoginToOneNoteViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\ShoppingListEntryViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\WifiItemViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
@@ -222,10 +219,6 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="Controls\LoginToOneNoteDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Properties\DesignTimeResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -277,6 +270,14 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\libs\onedrive-auth\src\OneDrive.Sdk.Authentication.UWP\OneDrive.Sdk.Authentication.UWP.csproj">
+      <Project>{07ee71e1-1bec-409a-b497-3a9e3ef16ee6}</Project>
+      <Name>OneDrive.Sdk.Authentication.UWP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libs\onedrive-auth\src\OneDrive.Sdk.Authentication.WinStore\OneDrive.Sdk.Authentication.WinStore.csproj">
+      <Project>{a8c54259-542c-40ac-aeb6-eefc3aa79859}</Project>
+      <Name>OneDrive.Sdk.Authentication.WinStore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\libs\TCD.Controls.Keyboard\TCD.Controls.Keyboard.csproj">
       <Project>{9e8b0d12-8145-4247-821c-4a603fa683f2}</Project>
       <Name>TCD.Controls.Keyboard</Name>

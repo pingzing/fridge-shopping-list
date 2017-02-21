@@ -113,9 +113,9 @@ namespace FridgeShoppingList.ViewModels
             await _oneNoteService.GetShoppingListPageContent();
         } 
 
-        public async void DisconnectFromOneNote()
+        public void DisconnectFromOneNote()
         {
-            //nothing yet
+            _oneNoteService.Logout();
         }
     }
 

@@ -97,11 +97,7 @@ namespace FridgeShoppingList.Services
             else if (typeof(TViewModel) == typeof(AddGroceryItemTypeViewModel))
             {
                 return (IResultDialogViewModel<TResult>)new AddGroceryItemTypeViewModel();
-            }
-            else if (typeof(TViewModel) == typeof(LoginToOneNoteViewModel))
-            {
-                return (IResultDialogViewModel<TResult>) new LoginToOneNoteViewModel(args);
-            }
+            }          
             else
             {
                 throw new ArgumentException("No ViewModel registered for the given type.");
@@ -117,11 +113,7 @@ namespace FridgeShoppingList.Services
             else if(vm is AddGroceryItemTypeViewModel)
             {
                 return new AddGroceryItemTypeModalDialog((AddGroceryItemTypeViewModel)vm);
-            }
-            else if (vm is LoginToOneNoteViewModel)
-            {
-                return new LoginToOneNoteDialog((LoginToOneNoteViewModel)vm);
-            }
+            }           
             else
             {
                 return new LcarsModalDialog();
