@@ -39,7 +39,8 @@ namespace FridgeShoppingList.Services
         private const string ShoppingListPageSearchString = OneNoteBaseUrl + "notes/pages?filter=tolower(title)%20eq%20'shopping%20list'%20and%20tolower(parentSection%2Fname)%20eq%20'foodd'";
         private const string OneDriveRedirectUri = "https://login.live.com/oauth20_desktop.srf";
         private static readonly string[] ControlAppPagesScopes = new string[] { "office.onenote_update_by_app", "wl.offline_access" };
-        private const string OneDriveClientId = "00000000481CBFE3";                
+        private const string OneDriveClientId = "00000000481CBFE3";
+        private const string CheckboxDivId = "checkbox-div";
 
         private static readonly HttpClient _httpClient;                                
 
@@ -125,7 +126,11 @@ namespace FridgeShoppingList.Services
         <title>Shopping List</title>
         <meta name=""created"" content=" + DateTime.Now.ToString("o") + @" />
     </head>
-    <body></body>
+    <body>
+        <div data-id=""" + CheckboxDivId + @""">
+            <p>Checklist</p>
+        </div>
+    </body>
 </html>");
                 var createResponse = await _httpClient.PostAsync(new Uri($"{OneNoteBaseUrl}notes/pages?sectionName=FOODD"),
                     new HttpStringContent(shoppingListPageHtml, UnicodeEncoding.Utf8, Constants.HtmlTextMediaType));
@@ -134,6 +139,7 @@ namespace FridgeShoppingList.Services
                     return false;
                 }
 
+                //TODO: Grab the ID of the newly-created page and save it in _fooddPageId here
                 return true;
             }
         }
@@ -155,6 +161,7 @@ namespace FridgeShoppingList.Services
             {
                 var responseHtml = new HtmlDocument();
                 responseHtml.LoadHtml(await response.Content.ReadAsStringAsync());
+                var meta = responseHtml.DocumentNode.Descendants("meta");
                 var firstDiv = responseHtml.DocumentNode.Descendants("div").FirstOrDefault();
                 if (firstDiv != null)
                 {
@@ -174,30 +181,119 @@ namespace FridgeShoppingList.Services
             }
         }
 
+        public async Task<bool> UpdateShoppingListContent(List<OneNoteCheckboxNode> updatedNodes)
+        {
+            await Initialize();
+            if (!_initialized)
+            {
+                return false;
+            }
+
+            var latestNodes = (await GetShoppingListPageContent())
+                .Match(
+                    x => x,
+                    () => null
+                );
+
+            if (latestNodes == null)
+            {
+                return false;
+            }
+
+            List<OneNoteChangeObject> processedList = ProcessUploadList(updatedNodes, latestNodes);
+            string listAsJson = JsonConvert.SerializeObject(processedList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            var response = await MakeOneNoteRequest(
+                $"{OneNoteBaseUrl}/notes/pages/pages/{_fooddPageId}/content?includeIDs=true", 
+                HttpMethod.Patch, 
+                new HttpStringContent(listAsJson, UnicodeEncoding.Utf8, Constants.JsonApplicationMediaType));
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Disconnects from the OneNote API, and deletes all cached keys from the credential vault.
         /// </summary>
         /// <returns></returns>
         public async Task Logout()
         {
+            _fooddPageId = null;
             await _msaAuthProvider.SignOutAsync();
             ConnectedStatus = false;            
         }
 
-        private async Task<HttpResponseMessage> MakeOneNoteRequest(string url, HttpMethod method)
+        private async Task<HttpResponseMessage> MakeOneNoteRequest(string url, HttpMethod method, IHttpContent content = null)
         {                  
             var message = new HttpRequestMessage(method, new Uri(url));
+            message.Content = content;
             var response = await _httpClient.SendRequestAsync(message);
 
             // For now, if we get an auth failure, only try to re-auth and make a new request once. 
             // If this starts happening a lot, maybe we can add exponential back-off or something.
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                await _msaAuthProvider.RestoreMostRecentFromCacheOrAuthenticateUserAsync();                               
+                await _msaAuthProvider.AuthenticateUserAsync();                               
                 response = await _httpClient.SendRequestAsync(message);
             }
             return response;
+        }
 
-        }                
+        private static List<OneNoteChangeObject> ProcessUploadList(List<OneNoteCheckboxNode> updatedNodes, List<OneNoteCheckboxNode> latestCheckboxNodes)
+        {
+            List<OneNoteChangeObject> nodesToSend = new List<OneNoteChangeObject>();            
+
+            foreach(OneNoteCheckboxNode uploadingNode in updatedNodes)
+            {
+                var latestNode = latestCheckboxNodes.FirstOrDefault(x => x.DataId == uploadingNode.DataId && uploadingNode.DataId != null);
+
+                // Item exists in both lists, and has a data-id
+                if (latestNode != null)
+                {
+                    uploadingNode.IsChecked = false;
+                    uploadingNode.GeneratedId = latestNode.GeneratedId;
+                    nodesToSend.Add(new OneNoteChangeObject
+                    {
+                        Target = OneNoteChangeTarget.DataId(uploadingNode.DataId),
+                        Action = OneNoteChangeAction.Replace,
+                        HtmlContent = uploadingNode.ToHtmlContent()
+                    });
+                }
+                else
+                {
+                    // Item not found. Check to see if we can do a name-match.
+                    var stringMatchedLatest = latestCheckboxNodes.FirstOrDefault(x => x.Content == uploadingNode.Content);
+                    if (stringMatchedLatest != null)
+                    {
+                        uploadingNode.IsChecked = false;
+                        uploadingNode.GeneratedId = stringMatchedLatest.GeneratedId;
+                        nodesToSend.Add(new OneNoteChangeObject
+                        {
+                            Target = OneNoteChangeTarget.GeneratedId(uploadingNode.GeneratedId),
+                            Action = OneNoteChangeAction.Replace,
+                            HtmlContent = uploadingNode.ToHtmlContent()                            
+                        });
+                    }
+                    else
+                    {
+                        // No item with a matching data-id OR name was found. Safe to just append it.
+                        nodesToSend.Add(new OneNoteChangeObject
+                        {
+                            Target = OneNoteChangeTarget.DataId(CheckboxDivId),
+                            Action = OneNoteChangeAction.Append,
+                            Position = OneNoteChangePosition.After,
+                            HtmlContent = uploadingNode.ToHtmlContent()
+                        });
+                    }
+                }                
+            }
+            return nodesToSend;
+        }
     }
 }

@@ -26,6 +26,11 @@ namespace FridgeShoppingList.Models
             }
         }
 
+        public OneNoteCheckboxNode AsOneNoteTodoItem()
+        {
+            return new OneNoteCheckboxNode(this);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged([CallerMemberName]string property = "")
         {

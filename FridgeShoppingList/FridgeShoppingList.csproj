@@ -130,6 +130,7 @@
     <Compile Include="Models\FontIcons.cs" />
     <Compile Include="Models\InventoryEntry.cs" />
     <Compile Include="Models\GroceryItemType.cs" />
+    <Compile Include="Models\OneNoteChangeObject.cs" />
     <Compile Include="Models\OneNoteCheckboxNode.cs" />
     <Compile Include="Models\OneNoteOdataResponse.cs" />
     <Compile Include="Models\ShoppingListEntry.cs" />
