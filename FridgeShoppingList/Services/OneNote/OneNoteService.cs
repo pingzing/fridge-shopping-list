@@ -116,7 +116,7 @@ namespace FridgeShoppingList.Services
             var deserializedResponse = JsonConvert.DeserializeObject<OneNoteODataResponse>(await pagesResponse.Content.ReadAsStringAsync());
             if (deserializedResponse.Data.Any())
             {
-                _fooddPageId = deserializedResponse.Data.First().Id;
+                _fooddPageId = deserializedResponse.Data.OrderBy(x => x.CreatedTime).First().Id;
                 return true;
             }
             else

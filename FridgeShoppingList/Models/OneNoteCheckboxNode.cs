@@ -7,10 +7,12 @@ using DynamicData;
 using System.Linq;
 using System.Collections.Generic;
 using Optional;
+using Windows.Foundation;
+using System.Net;
 
 namespace FridgeShoppingList.Models
 {
-    [DebuggerDisplay("{Content}, IsChecked: {IsChecked}, Id: {Id}")]
+    [DebuggerDisplay("{Content}, IsChecked: {IsChecked}, DataId: {DataId}, GeneratedId: {GeneratedId}")]
     public class OneNoteCheckboxNode
     {
         private static Lazy<SettingsService> _settingsService = new Lazy<SettingsService>(
@@ -41,7 +43,7 @@ namespace FridgeShoppingList.Models
                 DataId = html.Attributes["data-id"].Value;
             }
 
-            Content = html.InnerText;
+            Content = WebUtility.UrlDecode(html.InnerText);
         }
 
         public OneNoteCheckboxNode(ShoppingListEntry entry)
@@ -59,7 +61,7 @@ namespace FridgeShoppingList.Models
 
             GroceryItemType itemType = itemTypes.FirstOrDefault(x => x.ItemTypeId.ToString() == this.DataId);
             if (itemType == null)
-            {
+            {                
                 itemType = itemTypes.FirstOrDefault(x => x.Name == this.Content);
             }
 
