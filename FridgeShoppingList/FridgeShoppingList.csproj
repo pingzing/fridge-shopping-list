@@ -271,11 +271,11 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libs\onedrive-auth\src\OneDrive.Sdk.Authentication.UWP\OneDrive.Sdk.Authentication.UWP.csproj">
+    <ProjectReference Include="..\libs\onedrive-sdk-dotnet-msa-auth-adapter\src\OneDrive.Sdk.Authentication.UWP\OneDrive.Sdk.Authentication.UWP.csproj">
       <Project>{07ee71e1-1bec-409a-b497-3a9e3ef16ee6}</Project>
       <Name>OneDrive.Sdk.Authentication.UWP</Name>
     </ProjectReference>
-    <ProjectReference Include="..\libs\onedrive-auth\src\OneDrive.Sdk.Authentication.WinStore\OneDrive.Sdk.Authentication.WinStore.csproj">
+    <ProjectReference Include="..\libs\onedrive-sdk-dotnet-msa-auth-adapter\src\OneDrive.Sdk.Authentication.WinStore\OneDrive.Sdk.Authentication.WinStore.csproj">
       <Project>{a8c54259-542c-40ac-aeb6-eefc3aa79859}</Project>
       <Name>OneDrive.Sdk.Authentication.WinStore</Name>
     </ProjectReference>

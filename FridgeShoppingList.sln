@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCD.Controls.Keyboard", "li
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LocalLibs", "LocalLibs", "{1A3EB053-B23A-4614-90DC-D4366FAAF941}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDrive.Sdk.Authentication.WinStore", "libs\onedrive-auth\src\OneDrive.Sdk.Authentication.WinStore\OneDrive.Sdk.Authentication.WinStore.csproj", "{A8C54259-542C-40AC-AEB6-EEFC3AA79859}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDrive.Sdk.Authentication.WinStore", "libs\onedrive-sdk-dotnet-msa-auth-adapter\src\OneDrive.Sdk.Authentication.WinStore\OneDrive.Sdk.Authentication.WinStore.csproj", "{A8C54259-542C-40AC-AEB6-EEFC3AA79859}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDrive.Sdk.Authentication.UWP", "libs\onedrive-auth\src\OneDrive.Sdk.Authentication.UWP\OneDrive.Sdk.Authentication.UWP.csproj", "{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDrive.Sdk.Authentication.UWP", "libs\onedrive-sdk-dotnet-msa-auth-adapter\src\OneDrive.Sdk.Authentication.UWP\OneDrive.Sdk.Authentication.UWP.csproj", "{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
