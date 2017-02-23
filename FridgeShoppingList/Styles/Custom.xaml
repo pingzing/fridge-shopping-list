@@ -72,6 +72,7 @@
 
     <Style x:Key="LcarsCaptionTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource LcarsBaseTextBlockStyle}">
         <Setter Property="FontSize" Value="17"/>
+        <Setter Property="FontFamily" Value="{StaticResource LcarsFont}"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Foreground" Value="{ThemeResource LcarsCaptionTextBlockBrush}"/>
     </Style>

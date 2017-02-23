@@ -74,11 +74,7 @@ namespace FridgeShoppingList
             else if(page is SettingsPage)
             {
                 return SimpleIoc.Default.GetInstance<SettingsPageViewModel>();
-            }
-            else if(page is NetworkConfigPage)
-            {
-                return SimpleIoc.Default.GetInstance<NetworkConfigPageViewModel>();
-            }
+            }            
             else
             {
                 return base.ResolveForPage(page, navigationService);

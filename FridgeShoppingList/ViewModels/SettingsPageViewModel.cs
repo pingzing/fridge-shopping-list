@@ -15,23 +15,20 @@ using FridgeShoppingList.Views;
 namespace FridgeShoppingList.ViewModels
 {
     public class SettingsPageViewModel : ViewModelBase
-    {
-        private INetworkService _networkService;
+    {        
         private IOneNoteService _oneNote;
 
-        public SettingsPartViewModel SettingsPartViewModel { get; }
-        public AboutPartViewModel AboutPartViewModel { get; private set; }
+        public OneNotePartViewModel OneNotePartViewModel { get; }
+        public StatusPartViewModel StatusPartViewModel { get; private set; }
 
         public RelayCommand ShutdownCommand => new RelayCommand(ShutdownDevice);
-        public RelayCommand RestartCommand => new RelayCommand(RestartDevice);
-        public RelayCommand OpenNetworkConfigCommand => new RelayCommand(OpenNetworkConfig);
+        public RelayCommand RestartCommand => new RelayCommand(RestartDevice);        
 
-        public SettingsPageViewModel(INetworkService networkService, IOneNoteService oneNote)
-        {
-            _networkService = networkService;
+        public SettingsPageViewModel(IOneNoteService oneNote)
+        {            
             _oneNote = oneNote;
-            AboutPartViewModel = new AboutPartViewModel(_networkService);
-            SettingsPartViewModel = new SettingsPartViewModel(_oneNote);
+            StatusPartViewModel = new StatusPartViewModel();
+            OneNotePartViewModel = new OneNotePartViewModel(_oneNote);
         }
 
         private void ShutdownDevice()
@@ -42,34 +39,24 @@ namespace FridgeShoppingList.ViewModels
         private void RestartDevice()
         {
             ShutdownManager.BeginShutdown(ShutdownKind.Restart, TimeSpan.FromSeconds(5));
-        }
-
-        private void OpenNetworkConfig()
-        {
-            NavigationService.NavigateAsync(typeof(NetworkConfigPage), new NetworkInfo
-            {
-                IsWired = AboutPartViewModel.NetworkIconGlyph == FontIcons.Ethernet,
-                NetworkIpv4 = AboutPartViewModel.IpAddress,
-                NetworkName = AboutPartViewModel.NetworkName
-            });
-        }
+        }      
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            SettingsPartViewModel.OnNavigatedToAsync(parameter, mode, state);
-            AboutPartViewModel.OnNavigatedToAsync(parameter, mode, state);
+            OneNotePartViewModel.OnNavigatedToAsync(parameter, mode, state);
+            StatusPartViewModel.OnNavigatedToAsync(parameter, mode, state);
             return base.OnNavigatedToAsync(parameter, mode, state);
         }
 
         public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
-            SettingsPartViewModel.OnNavigatedFromAsync(pageState, suspending);
-            AboutPartViewModel.OnNavigatedFromAsync(pageState, suspending);
+            OneNotePartViewModel.OnNavigatedFromAsync(pageState, suspending);
+            StatusPartViewModel.OnNavigatedFromAsync(pageState, suspending);
             return base.OnNavigatedFromAsync(pageState, suspending);
         }
     }
 
-    public class SettingsPartViewModel : ViewModelBase
+    public class OneNotePartViewModel : ViewModelBase
     {
         //public for bindability
         public readonly IOneNoteService _oneNoteService;
@@ -83,7 +70,7 @@ namespace FridgeShoppingList.ViewModels
 
         public bool IsConnected => _oneNoteService.ConnectedStatus;
 
-        public SettingsPartViewModel(IOneNoteService oneNote)
+        public OneNotePartViewModel(IOneNoteService oneNote)
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
@@ -119,16 +106,11 @@ namespace FridgeShoppingList.ViewModels
         }
     }
 
-    public class AboutPartViewModel : ViewModelBase
-    {
-        private readonly INetworkService _networkService;
-
-        private bool _networkInfoFirstLoaded = false;
-
+    public class StatusPartViewModel : ViewModelBase
+    {        
         private DispatcherTimer _updateInfoTimer;
 
         public Uri Logo => Windows.ApplicationModel.Package.Current.Logo;
-
         public string DisplayName => Windows.ApplicationModel.Package.Current.DisplayName;
 
         public string Version
@@ -166,53 +148,38 @@ namespace FridgeShoppingList.ViewModels
         {
             get { return _ipAddress; }
             set { Set(ref _ipAddress, value); }
-        }
+        }        
 
-        private bool _isNetworkInfoLoading;
-        public bool IsNetworkInfoLoading
+        public StatusPartViewModel()
         {
-            get { return _isNetworkInfoLoading; }
-            set { Set(ref _isNetworkInfoLoading, value); }
-        }       
-
-        public AboutPartViewModel(INetworkService networkService)
-        {
-            _networkService = networkService;
             _updateInfoTimer = new DispatcherTimer();
+            _updateInfoTimer.Interval = TimeSpan.FromSeconds(3);
             _updateInfoTimer.Tick += UpdateInfo;
-            _updateInfoTimer.Interval = TimeSpan.FromSeconds(5);
-            //Start is triggered in OnNavigatedTo            
         }
 
-        private async void UpdateInfo(object sender, object e)
+        private void UpdateInfo(object sender, object e)
         {
             AvailableMemory = $"{SystemInformation.AvailableMemory.ToString("F")}MB";
-
-            if (!_networkInfoFirstLoaded)
+            
+            if (Microsoft.Toolkit.Uwp.ConnectionHelper.ConnectionType == Microsoft.Toolkit.Uwp.ConnectionType.Ethernet)
             {
-                _networkInfoFirstLoaded = true;
-                IsNetworkInfoLoading = true;
-            }
-            if (_networkService.IsOnWiredConnection())
-            {
-                NetworkName = _networkService.GetCurrentNetworkName();
+                NetworkName = NetworkHelper.GetCurrentNetworkName();
                 NetworkIconGlyph = FontIcons.Ethernet;
             }
-            else if (await _networkService.IsWifiAvailable())
+            else if (Microsoft.Toolkit.Uwp.ConnectionHelper.ConnectionType == Microsoft.Toolkit.Uwp.ConnectionType.WiFi)
             {
-                await _networkService.GetAvailableWifiNetworks();
-                var wifi = _networkService.GetCurrentWifiNetwork();
+                var wifi = NetworkHelper.GetCurrentWifiNetwork();                                
                 if (wifi != null)
                 {
-                    NetworkName = wifi.Ssid;
-                    NetworkIconGlyph = wifi.SignalBars == 4 ? FontIcons.WifiFourBars
-                        : wifi.SignalBars == 3 ? FontIcons.WifiThreeBars
-                        : wifi.SignalBars == 2 ? FontIcons.WifiTwoBars
+                    NetworkName = wifi.WlanConnectionProfileDetails.GetConnectedSsid();
+                    byte? signalBars = wifi.GetSignalBars();
+                    NetworkIconGlyph = signalBars == 4 ? FontIcons.WifiFourBars
+                        : signalBars == 3 ? FontIcons.WifiThreeBars
+                        : signalBars == 2 ? FontIcons.WifiTwoBars
                         : FontIcons.WifiOneBar;
                 }
             }
-            IpAddress = _networkService.GetCurrentIpv4Address();
-            IsNetworkInfoLoading = false;
+            IpAddress = NetworkHelper.GetCurrentIpv4Address();            
         }
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)

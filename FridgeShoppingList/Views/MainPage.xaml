@@ -90,40 +90,11 @@
                         <StackPanel x:Name="TopItems" 
                                     Grid.Row="0" 
                                     Background="{ThemeResource LcarsAccentBrush}">
-                            <ListViewItem BorderBrush="Black" 
-                                          BorderThickness="0 2 0 2" 
-                                          Height="64"
-                                          HorizontalContentAlignment="Stretch"
-                                          VerticalContentAlignment="Stretch"
-                                          MinWidth="70"
-                                          Padding="2"
-                                          Tapped="{x:Bind ViewModel.AddItem}">
-                                <TextBlock Foreground="Black"
-                                           FontSize="22"
-                                           FontWeight="SemiLight"
-                                           HorizontalAlignment="Right"
-                                           Style="{ThemeResource LcarsBaseTextBlockStyle}"
-                                           Text="ADD ITEM"
-                                           VerticalAlignment="Bottom"/>
-                            </ListViewItem>
-                            <ListViewItem BorderBrush="Black" 
-                                          BorderThickness="0 2 0 2" 
-                                          Height="64"
-                                          MinWidth="70"
-                                          Margin="0 5 0 0"
-                                          HorizontalContentAlignment="Stretch"
-                                          VerticalContentAlignment="Stretch"                                          
-                                          Padding="2"
-                                          Tapped="{x:Bind ViewModel.AddItemType}">
-                                <TextBlock Foreground="Black"
-                                           FontSize="22"
-                                           FontWeight="SemiLight"
-                                           HorizontalAlignment="Right"
-                                           TextAlignment="Right"
-                                           Style="{ThemeResource LcarsBaseTextBlockStyle}"
-                                           Text="ADD ITEM TYPE"
-                                           VerticalAlignment="Bottom"/>
-                            </ListViewItem>
+                            <ctls:LcarsSideProgressButton Command="{x:Bind ViewModel.AddItemCommand}" 
+                                                          Label="ADD ITEM"/>
+                            <ctls:LcarsSideProgressButton Command="{x:Bind ViewModel.AddItemTypeCommand}" 
+                                                          Label="ADD ITEM TYPE"
+                                                          Margin="0 5 0 0"/>
                         </StackPanel>
                         <StackPanel x:Name="BottomItems" 
                                     Grid.Row="1" 
@@ -213,7 +184,11 @@
                        OpenPaneLength="70">
                 <SplitView.Pane>
                     <Grid Background="Black">
-                        <StackPanel Background="{ThemeResource LcarsBlueGrayBrush}"/>
+                        <StackPanel Background="{ThemeResource LcarsBlueGrayBrush}">
+                            <ctls:LcarsSideProgressButton Command="{x:Bind ViewModel.SyncShoppingListCommand}" 
+                                                          Label="Sync"
+                                                          IsProgressing="{x:Bind ViewModel.IsSyncInProgress, Mode=OneWay}"/>
+                        </StackPanel>
                     </Grid>
                 </SplitView.Pane>
 

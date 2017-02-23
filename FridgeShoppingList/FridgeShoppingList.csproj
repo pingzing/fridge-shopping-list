@@ -115,6 +115,9 @@
       <DependentUpon>LcarsHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LcarsModalDialog\LcarsModalDialog.cs" />
+    <Compile Include="Controls\LcarsSideProgressButton.xaml.cs">
+      <DependentUpon>LcarsSideProgressButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatus.cs" />
     <Compile Include="Controls\LcarsSlidableListItem\SwipeStatusChangedEventArgs.cs" />
@@ -145,18 +148,13 @@
     <Compile Include="ViewModels\ControlViewModels\InventoryEntryViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\IResultDialogViewModel.cs" />
     <Compile Include="ViewModels\ControlViewModels\ShoppingListEntryViewModel.cs" />
-    <Compile Include="ViewModels\ControlViewModels\WifiItemViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
-    <Compile Include="ViewModels\NetworkConfigPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="Views\Busy.xaml.cs">
       <DependentUpon>Busy.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\NetworkConfigPage.xaml.cs">
-      <DependentUpon>NetworkConfigPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -215,6 +213,10 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
+    <Page Include="Controls\LcarsSideProgressButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\LcarsSlidableListItem\LcarsSlidableListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -247,10 +249,6 @@
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\NetworkConfigPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsPage.xaml">
       <SubType>Designer</SubType>

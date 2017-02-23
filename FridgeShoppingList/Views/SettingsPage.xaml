@@ -93,141 +93,148 @@
                 </Button>
             </StackPanel>
         </ctls:LcarsHeader>
-        
-        <!--  content  -->
-        <Pivot x:Name="MyPivot"
-               Grid.Row="1"
-               EntranceNavigationTransitionInfo.IsTargetElement="True"
-               RelativePanel.AlignBottomWithPanel="True"
-               RelativePanel.AlignLeftWithPanel="True"
-               RelativePanel.AlignRightWithPanel="True"
-               RelativePanel.Below="pageHeader"
-               HeaderFocusVisualPlacement="SelectedItemHeader">
 
-            <!--  settings  -->
-            <PivotItem DataContext="{Binding SettingsPartViewModel}" Header="OneNote">
-                <ScrollViewer Margin="0,12,-12,0"
-                              HorizontalContentAlignment="Left"
-                              VerticalScrollBarVisibility="Auto">
-                    <RelativePanel HorizontalAlignment="Stretch">
-                        <uctCtls:HeaderedTextBlock x:Name="StatusHeader" 
-                                                   Header="OneNote Connection Status"                                                    
-                                                   Text="{x:Bind ViewModel.SettingsPartViewModel.OneNoteStatusText, Mode=OneWay}"
-                                                   TextStyle="{StaticResource LcarsBaseTextBlockStyle}">
-                            <uctCtls:HeaderedTextBlock.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}" Style="{StaticResource LcarsHeaderControlTextBlockStyle}"/>
-                                </DataTemplate>
-                            </uctCtls:HeaderedTextBlock.HeaderTemplate>
-                        </uctCtls:HeaderedTextBlock>
-                        <Button RelativePanel.Below="StatusHeader" 
-                                Content="Connect"
-                                Click="{x:Bind ViewModel.SettingsPartViewModel.ConnectToOneNote}"
-                                Visibility="{x:Bind ViewModel.SettingsPartViewModel.IsConnected, Mode=OneWay, Converter={StaticResource BoolToVisibilityInvertedConverter}}"/>
-                        <Button RelativePanel.Below="StatusHeader"
-                                Content="Disconnect"
-                                Click="{x:Bind ViewModel.SettingsPartViewModel.DisconnectFromOneNote}"
-                                Visibility="{x:Bind ViewModel.SettingsPartViewModel.IsConnected, Mode=OneWay}"/>
-                    </RelativePanel>
+        <Grid x:Name="PageMiddle"               
+              RelativePanel.AlignLeftWithPanel="True"
+              RelativePanel.AlignRightWithPanel="True"
+              RelativePanel.Below="pageHeader"
+              RelativePanel.Above="Footer">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                </ScrollViewer>
-            </PivotItem>
+            <Rectangle Grid.Column="0"
+                       Fill="{StaticResource LcarsAccentBrush}"
+                       Margin="0 2 0 2"
+                       StrokeThickness="0"
+                       VerticalAlignment="Stretch"
+                       Width="70"/>
 
-            <!--  about  -->
-            <PivotItem Header="Status">
-                <RelativePanel DataContext="{Binding AboutPartViewModel}">
+                <!--  content  -->
+            <Pivot x:Name="MyPivot"
+                   Grid.Column="1"
+                   EntranceNavigationTransitionInfo.IsTargetElement="True"               
+                   HeaderFocusVisualPlacement="SelectedItemHeader"
+                   HorizontalAlignment="Center">
 
-                    <Border x:Name="LogoImage"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            BorderBrush="DimGray"
-                            BorderThickness="1"
-                            IsHitTestVisible="False"
-                            RelativePanel.AlignRightWithPanel="True"
-                            RelativePanel.AlignTopWithPanel="True">
-                        <Border.Background>
-                            <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
-                        </Border.Background>
-                        <Image Margin="12"
-                               Source="{Binding Logo}"
-                               Stretch="None" />
-                    </Border>
+                <!--  settings  -->
+                <PivotItem DataContext="{Binding OneNotePartViewModel}" Header="OneNote">
+                    <ScrollViewer Margin="0,12,-12,0"
+                                      HorizontalContentAlignment="Left"
+                                      VerticalScrollBarVisibility="Auto">
+                        <RelativePanel HorizontalAlignment="Stretch">
+                            <uctCtls:HeaderedTextBlock x:Name="StatusHeader" 
+                                                           Header="OneNote Connection Status"                                                    
+                                                           Text="{x:Bind ViewModel.OneNotePartViewModel.OneNoteStatusText, Mode=OneWay}"
+                                                           TextStyle="{StaticResource LcarsHeaderControlTextBlockStyle}">
+                                <uctCtls:HeaderedTextBlock.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Style="{StaticResource LcarsSubtitleTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </uctCtls:HeaderedTextBlock.HeaderTemplate>
+                            </uctCtls:HeaderedTextBlock>
+                            <Button RelativePanel.Below="StatusHeader" 
+                                        Background="{StaticResource LcarsLavenderBrush}"
+                                        Content="CONNECT"
+                                        Click="{x:Bind ViewModel.OneNotePartViewModel.ConnectToOneNote}"                                    
+                                        Foreground="White"
+                                        Visibility="{x:Bind ViewModel.OneNotePartViewModel.IsConnected, Mode=OneWay, Converter={StaticResource BoolToVisibilityInvertedConverter}}"
+                                        Style="{StaticResource LcarsButtonStyle}"/>
+                            <Button RelativePanel.Below="StatusHeader"
+                                        Background="{ThemeResource LcarsRedBrush}"
+                                        Content="DISCONNECT"
+                                        Click="{x:Bind ViewModel.OneNotePartViewModel.DisconnectFromOneNote}"                                    
+                                        Foreground="White"
+                                        Visibility="{x:Bind ViewModel.OneNotePartViewModel.IsConnected, Mode=OneWay}"
+                                        Style="{StaticResource LcarsButtonStyle}"/>
+                        </RelativePanel>
 
-                    <TextBlock x:Name="DisplayNameTextBlock"                                                              
-                               RelativePanel.AlignLeftWithPanel="True"                               
-                               RelativePanel.AlignTopWithPanel="True"
-                               Margin="0 0 0 10"
-                               Text="{x:Bind ViewModel.AboutPartViewModel.DisplayName}" 
-                               Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
+                    </ScrollViewer>
+                </PivotItem>
 
-                    <TextBlock x:Name="VersionTextBlock"
-                               RelativePanel.AlignLeftWithPanel="True"
-                               RelativePanel.Below="DisplayNameTextBlock"
-                               Text="Version"
-                               Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
+                <!--  about  -->
+                <PivotItem Header="Status">
+                    <RelativePanel DataContext="{Binding StatusPartViewModel}">
 
-                    <TextBlock x:Name="VersionNumberTextBlock"
-                               RelativePanel.AlignLeftWithPanel="True"
-                               RelativePanel.Below="VersionTextBlock"
-                               Margin="10 0 0 0"
-                               Text="{x:Bind ViewModel.AboutPartViewModel.Version}"/>
+                        <TextBlock x:Name="DisplayNameTextBlock"                                                              
+                                   RelativePanel.AlignLeftWithPanel="True"                               
+                                   RelativePanel.AlignTopWithPanel="True"
+                                   Margin="0 0 0 10"
+                                   Text="{x:Bind ViewModel.StatusPartViewModel.DisplayName}" 
+                                   Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
 
-                    <TextBlock x:Name="AvailableMemoryHeader"
-                               RelativePanel.AlignLeftWithPanel="True"
-                               RelativePanel.Below="VersionNumberTextBlock"
-                               Margin="0 10 0 0"
-                               Text="Available memory"
-                               Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
-                    <TextBlock x:Name="AvailableMemoryNumber"
-                               RelativePanel.AlignLeftWithPanel="True"
-                               RelativePanel.Below="AvailableMemoryHeader"
-                               Margin="10 0 0 0"
-                               Text="{x:Bind ViewModel.AboutPartViewModel.AvailableMemory, Mode=OneWay}"/>
-                    <TextBlock x:Name="NetworkHeader"
-                               RelativePanel.AlignLeftWithPanel="True"
-                               RelativePanel.Below="AvailableMemoryNumber"
-                               Margin="0 10 0 0"
-                               Text="Network"
-                               Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
-                    <ProgressBar x:Name="NetworkLoadingIndicator"
-                                         RelativePanel.AlignLeftWithPanel="True"
-                                         RelativePanel.Below="NetworkHeader"
-                                         RelativePanel.AlignRightWith="DisplayNameTextBlock"
-                                         IsIndeterminate="True"
-                                         Visibility="{x:Bind ViewModel.AboutPartViewModel.IsNetworkInfoLoading, Mode=OneWay}"/>
-                    <ListViewItem x:Name="WifiButton" 
-                                  RelativePanel.Below="NetworkHeader"
-                                  RelativePanel.AlignLeftWithPanel="True"
-                                  Tapped="WifiButton_Tapped"
-                                  MinWidth="150"
-                                  Padding="10">
-                        <RelativePanel>
-                            <Border x:Name="NetworkIcon"                                     
+                        <TextBlock x:Name="VersionTextBlock"
+                                   RelativePanel.AlignLeftWithPanel="True"
+                                   RelativePanel.Below="DisplayNameTextBlock"
+                                   Text="Version"
+                                   Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
+
+                        <TextBlock x:Name="VersionNumberTextBlock"
+                                   RelativePanel.AlignLeftWithPanel="True"
+                                   RelativePanel.Below="VersionTextBlock"                                   
+                                   Text="{x:Bind ViewModel.StatusPartViewModel.Version}"
+                                   Style="{StaticResource LcarsCaptionTextBlockStyle}"/>
+
+                        <TextBlock x:Name="AvailableMemoryHeader"
+                                   RelativePanel.Below="VersionNumberTextBlock"
+                                   RelativePanel.AlignLeftWithPanel="True"
+                                   Margin="0 10 0 0"
+                                   Text="Available memory"
+                                   Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
+                        <TextBlock x:Name="AvailableMemoryNumber"
+                                   RelativePanel.AlignLeftWithPanel="True"
+                                   RelativePanel.Below="AvailableMemoryHeader"                                   
+                                   Text="{x:Bind ViewModel.StatusPartViewModel.AvailableMemory, Mode=OneWay}"
+                                   Style="{StaticResource LcarsCaptionTextBlockStyle}"/>
+                        <TextBlock x:Name="NetworkHeader"
+                                   RelativePanel.AlignLeftWithPanel="True"
+                                   RelativePanel.Below="AvailableMemoryNumber"
+                                   Margin="0 10 0 0"
+                                   Text="Network"
+                                   Style="{ThemeResource LcarsSubtitleTextBlockStyle}"/>
+                        <Grid x:Name="WifiInfoPanel" 
+                              RelativePanel.Below="NetworkHeader"
+                              RelativePanel.AlignLeftWithPanel="True"                                  
+                              MinWidth="150">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="NetworkIcon"                    
+                                    Grid.Row="0" Grid.RowSpan="2"
+                                    Grid.Column="0"
                                     Background="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                    Padding="5">
+                                    Padding="5"
+                                    VerticalAlignment="Center">
                                 <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
                                           FontSize="30"
-                                          Glyph="{x:Bind ViewModel.AboutPartViewModel.NetworkIconGlyph, Mode=OneWay}"/>
+                                          Glyph="{x:Bind ViewModel.StatusPartViewModel.NetworkIconGlyph, Mode=OneWay}"/>
                             </Border>
-                            <TextBlock x:Name="NetworkNameBlock"
-                                       RelativePanel.RightOf="NetworkIcon"
-                                       RelativePanel.Above="IpAddressBlock"
+                            <TextBlock x:Name="NetworkNameBlock"                                   
+                                       Grid.Row="0"
+                                       Grid.Column="1"
                                        Margin="5 0 0 0"
-                                       Text="{x:Bind ViewModel.AboutPartViewModel.NetworkName, Mode=OneWay}"/>
-                            <TextBlock x:Name="IpAddressBlock"
-                                       RelativePanel.RightOf="NetworkIcon"
-                                       RelativePanel.AlignBottomWith="NetworkIcon"
+                                       Text="{x:Bind ViewModel.StatusPartViewModel.NetworkName, Mode=OneWay}"/>
+                            <TextBlock x:Name="IpAddressBlock"                                   
+                                       Grid.Row="1"
+                                       Grid.Column="1"
                                        Margin="5 0 0 0"
-                                       Text="{x:Bind ViewModel.AboutPartViewModel.IpAddress, Mode=OneWay}"/>
-                        </RelativePanel>
-                    </ListViewItem>
-
-
-                </RelativePanel>
-            </PivotItem>
-        </Pivot>
-
+                                       Text="{x:Bind ViewModel.StatusPartViewModel.IpAddress, Mode=OneWay}"
+                                       Style="{StaticResource LcarsCaptionTextBlockStyle}"/>
+                        </Grid>
+                    </RelativePanel>
+                </PivotItem>
+            </Pivot>
+        </Grid>
+        <ctls:LcarsFooter x:Name="Footer"
+                          RelativePanel.AlignBottomWithPanel="True"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"/>
     </RelativePanel>
-
 </Page>
 

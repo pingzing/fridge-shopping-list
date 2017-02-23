@@ -28,7 +28,8 @@ namespace FridgeShoppingList.Services
     {
         event EventHandler<bool> ConnectedStatusChanged;
         bool ConnectedStatus { get; }
-        Task<Option<List<OneNoteCheckboxNode>>> GetShoppingListPageContent();
+        Task<Option<IEnumerable<OneNoteCheckboxNode>>> GetShoppingListPageContent();
+        Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> localList);
         Task Logout();
     }
 
@@ -46,6 +47,7 @@ namespace FridgeShoppingList.Services
 
         private string _fooddPageId;
         private MsaAuthenticationProvider _msaAuthProvider;
+        private CredentialVault _credentials = new CredentialVault(OneDriveClientId);
 
         private bool _connectedStatus;
         public bool ConnectedStatus
@@ -77,7 +79,7 @@ namespace FridgeShoppingList.Services
         {
             if (!_initialized)
             {               
-                _msaAuthProvider = new MsaAuthenticationProvider(OneDriveClientId, OneDriveRedirectUri, ControlAppPagesScopes);
+                _msaAuthProvider = new MsaAuthenticationProvider(OneDriveClientId, OneDriveRedirectUri, ControlAppPagesScopes, _credentials);
                 bool success = await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
                 {
                     try
@@ -148,12 +150,12 @@ namespace FridgeShoppingList.Services
         /// Retrieves the HTML content of the shopping list page, if successful. If unsuccessful, returns None.
         /// </summary>
         /// <returns></returns>
-        public async Task<Option<List<OneNoteCheckboxNode>>> GetShoppingListPageContent()
+        public async Task<Option<IEnumerable<OneNoteCheckboxNode>>> GetShoppingListPageContent()
         {
             await Initialize();
             if (!_initialized)
             {
-                return Option.None<List<OneNoteCheckboxNode>>();
+                return Option.None<IEnumerable<OneNoteCheckboxNode>>();
             }
 
             var response = await MakeOneNoteRequest(($"{OneNoteBaseUrl}notes/pages/{_fooddPageId}/content?includeIDs=true"), HttpMethod.Get);
@@ -169,30 +171,35 @@ namespace FridgeShoppingList.Services
                         .Descendants("p")
                         .Where(x => x.Attributes["data-tag"]?.Value == "to-do"
                                     || x.Attributes["data-tag"]?.Value == "to-do:completed")
-                        .Select(x => new OneNoteCheckboxNode(x))
-                        .ToList()
+                        .Select(x => new OneNoteCheckboxNode(x))                        
                         .Some();
                 }
-                return Option.None<List<OneNoteCheckboxNode>>();
+                return Option.None<IEnumerable<OneNoteCheckboxNode>>();
             }
             else
             {
-                return Option.None<List<OneNoteCheckboxNode>>();
+                return Option.None<IEnumerable<OneNoteCheckboxNode>>();
             }
         }
 
-        public async Task<bool> UpdateShoppingListContent(List<OneNoteCheckboxNode> updatedNodes)
+        public async Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> updatedNodes)
         {
             await Initialize();
             if (!_initialized)
             {
                 return false;
             }
+            
+            // If we have nothing locally, updating the remote list should always be considered a success
+            if (updatedNodes.Count() == 0)
+            {
+                return true;
+            }            
 
             var latestNodes = (await GetShoppingListPageContent())
                 .Match(
-                    x => x,
-                    () => null
+                    some:x => x, 
+                    none: () => null
                 );
 
             if (latestNodes == null)
@@ -200,11 +207,11 @@ namespace FridgeShoppingList.Services
                 return false;
             }
 
-            List<OneNoteChangeObject> processedList = ProcessUploadList(updatedNodes, latestNodes);
+            List<OneNoteChangeObject> processedList = ProcessUploadList(updatedNodes, latestNodes).ToList();
             string listAsJson = JsonConvert.SerializeObject(processedList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             var response = await MakeOneNoteRequest(
-                $"{OneNoteBaseUrl}/notes/pages/pages/{_fooddPageId}/content?includeIDs=true", 
+                $"{OneNoteBaseUrl}notes/pages/{_fooddPageId}/content", 
                 HttpMethod.Patch, 
                 new HttpStringContent(listAsJson, UnicodeEncoding.Utf8, Constants.JsonApplicationMediaType));
 
@@ -226,7 +233,8 @@ namespace FridgeShoppingList.Services
         {
             _fooddPageId = null;
             await _msaAuthProvider.SignOutAsync();
-            ConnectedStatus = false;            
+            ConnectedStatus = false;
+            _initialized = false;         
         }
 
         private async Task<HttpResponseMessage> MakeOneNoteRequest(string url, HttpMethod method, IHttpContent content = null)
@@ -245,10 +253,8 @@ namespace FridgeShoppingList.Services
             return response;
         }
 
-        private static List<OneNoteChangeObject> ProcessUploadList(List<OneNoteCheckboxNode> updatedNodes, List<OneNoteCheckboxNode> latestCheckboxNodes)
+        private static IEnumerable<OneNoteChangeObject> ProcessUploadList(IEnumerable<OneNoteCheckboxNode> updatedNodes, IEnumerable<OneNoteCheckboxNode> latestCheckboxNodes)
         {
-            List<OneNoteChangeObject> nodesToSend = new List<OneNoteChangeObject>();            
-
             foreach(OneNoteCheckboxNode uploadingNode in updatedNodes)
             {
                 var latestNode = latestCheckboxNodes.FirstOrDefault(x => x.DataId == uploadingNode.DataId && uploadingNode.DataId != null);
@@ -258,12 +264,12 @@ namespace FridgeShoppingList.Services
                 {
                     uploadingNode.IsChecked = false;
                     uploadingNode.GeneratedId = latestNode.GeneratedId;
-                    nodesToSend.Add(new OneNoteChangeObject
+                    yield return new OneNoteChangeObject
                     {
-                        Target = OneNoteChangeTarget.DataId(uploadingNode.DataId),
-                        Action = OneNoteChangeAction.Replace,
+                        Target = OneNoteChangeTarget.GeneratedId(latestNode.GeneratedId),
+                        Action = OneNoteChangeAction.replace,
                         HtmlContent = uploadingNode.ToHtmlContent()
-                    });
+                    };
                 }
                 else
                 {
@@ -273,27 +279,26 @@ namespace FridgeShoppingList.Services
                     {
                         uploadingNode.IsChecked = false;
                         uploadingNode.GeneratedId = stringMatchedLatest.GeneratedId;
-                        nodesToSend.Add(new OneNoteChangeObject
+                        yield return new OneNoteChangeObject
                         {
-                            Target = OneNoteChangeTarget.GeneratedId(uploadingNode.GeneratedId),
-                            Action = OneNoteChangeAction.Replace,
-                            HtmlContent = uploadingNode.ToHtmlContent()                            
-                        });
+                            Target = OneNoteChangeTarget.GeneratedId(stringMatchedLatest.GeneratedId),
+                            Action = OneNoteChangeAction.replace,
+                            HtmlContent = uploadingNode.ToHtmlContent()
+                        };
                     }
                     else
                     {
                         // No item with a matching data-id OR name was found. Safe to just append it.
-                        nodesToSend.Add(new OneNoteChangeObject
+                        yield return new OneNoteChangeObject
                         {
                             Target = OneNoteChangeTarget.DataId(CheckboxDivId),
                             Action = OneNoteChangeAction.Append,
                             Position = OneNoteChangePosition.After,
                             HtmlContent = uploadingNode.ToHtmlContent()
-                        });
+                        };
                     }
                 }                
-            }
-            return nodesToSend;
+            }            
         }
     }
 }

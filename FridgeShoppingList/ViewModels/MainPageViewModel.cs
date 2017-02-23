@@ -16,6 +16,7 @@ using DynamicData.Binding;
 using FridgeShoppingList.Services;
 using Template10.Mvvm;
 using Windows.UI.Xaml;
+using Optional;
 
 namespace FridgeShoppingList.ViewModels
 {
@@ -23,18 +24,30 @@ namespace FridgeShoppingList.ViewModels
     {
         private readonly SettingsService _settings;
         private readonly IDialogService _dialogService;
+        private readonly IOneNoteService _oneNoteService;
 
         public ObservableCollectionExtended<InventoryEntryViewModel> InventoryItems { get; private set; } = new ObservableCollectionExtended<InventoryEntryViewModel>();
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
         public ObservableCollectionExtended<ShoppingListEntryViewModel> ShoppingListItems { get; private set; } = new ObservableCollectionExtended<ShoppingListEntryViewModel>();
-                
+
+        private bool _isSyncInProgress = false;
+        public bool IsSyncInProgress
+        {
+            get { return _isSyncInProgress; }
+            set { Set(ref _isSyncInProgress, value); }
+        }
+
+        public RelayCommand AddItemCommand => new RelayCommand(AddItem);
+        public RelayCommand AddItemTypeCommand => new RelayCommand(AddItemType);
         public RelayCommand<ShoppingListEntryViewModel> DeleteFromShoppingListCommand => new RelayCommand<ShoppingListEntryViewModel>(DeleteFromShoppingList);
         public RelayCommand<ShoppingListEntryViewModel> MoveFromShoppingToInventoryCommand => new RelayCommand<ShoppingListEntryViewModel>(MoveFromShoppingToInventory);
+        public RelayCommand SyncShoppingListCommand => new RelayCommand(SyncShoppingList);
 
-        public MainPageViewModel(SettingsService settings, IDialogService dialog)
+        public MainPageViewModel(SettingsService settings, IDialogService dialog, IOneNoteService oneNote)
         {
             _settings = settings;
             _dialogService = dialog;
+            _oneNoteService = oneNote;
 
             _settings.InventoryItems
                 .Transform(x => new InventoryEntryViewModel(x, _settings))
@@ -115,6 +128,32 @@ namespace FridgeShoppingList.ViewModels
                 _settings.RemoveFromShoppingListItems(entry.Entry);
                 _settings.AddToInventoryItems(result);
             }            
+        }
+
+        public async void SyncShoppingList()
+        {
+            IsSyncInProgress = true;
+
+            var currentShoppingList = _settings.ShoppingListItems.AsObservableList().Items;
+            bool success = await _oneNoteService.UpdateShoppingListContent(currentShoppingList.Select(x => x.AsOneNoteTodoItem()));
+            if (success)
+            {
+                // Not truly a for-loop--just an easy way to match against a Some() value. Should only ever "loop" once.
+                foreach(IEnumerable<OneNoteCheckboxNode> someValue in (await _oneNoteService.GetShoppingListPageContent()))
+                {
+                    // TODO: Handle getting item types that we don't have locally
+
+                    var newList = someValue
+                        .Select(x => x.AsShoppingListEntry())
+                        .Select(x => x.ValueOr(alternative: null))
+                        .Where(x => x != null);
+
+                    _settings.ClearShoppingListItems();
+                    _settings.AddToShoppingList(newList);
+                }
+            }
+
+            IsSyncInProgress = false;
         }
     }
 }

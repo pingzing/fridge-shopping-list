@@ -130,10 +130,20 @@ namespace FridgeShoppingList.Services.SettingsServices
             }
         }
 
+        public void AddToShoppingList(IEnumerable<ShoppingListEntry> entries)
+        {            
+            _shoppingListItems.AddRange(entries);
+        }
+
         public void RemoveFromShoppingListItems(ShoppingListEntry itemToRemove)
         {
             _shoppingListItems.Remove(itemToRemove);
-        }       
+        }
+
+        public void ClearShoppingListItems()
+        {
+            _shoppingListItems.Clear();
+        }        
     }
 }
 

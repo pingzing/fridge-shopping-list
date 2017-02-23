@@ -2,8 +2,7 @@
 using Newtonsoft.Json.Converters;
 
 namespace FridgeShoppingList.Models
-{
-    [JsonConverter(typeof(StringEnumConverter))]
+{    
     public class OneNoteChangeObject
     {
         [JsonProperty("target")]
@@ -35,17 +34,29 @@ namespace FridgeShoppingList.Models
         public static string Title => "title";
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum OneNoteChangeAction
     {
+        [JsonProperty("append")]
         Append,
+
+        [JsonProperty("insert")]
         Insert,
+
+        [JsonProperty("prepend")]
         Prepend,
-        Replace
+
+        [JsonProperty("replace")]
+        replace
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum OneNoteChangePosition
     {
+        [JsonProperty("after")]
         After,
+
+        [JsonProperty("before")]
         Before
     }
 }

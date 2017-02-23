@@ -24,11 +24,6 @@ namespace FridgeShoppingList.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-        }
-
-        private void WifiButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            (DataContext as SettingsPageViewModel)?.OpenNetworkConfigCommand?.Execute(null);
         }        
     }
 }
