@@ -1,0 +1,3 @@
+[submodule "libs/onedrive-sdk-dotnet-msa-auth-adapter"]
+	path = libs/onedrive-sdk-dotnet-msa-auth-adapter
+	url = git@github.com:pingzing/onedrive-sdk-dotnet-msa-auth-adapter.git
