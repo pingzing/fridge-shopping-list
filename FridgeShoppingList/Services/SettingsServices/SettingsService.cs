@@ -42,6 +42,12 @@ namespace FridgeShoppingList.Services.SettingsServices
             set { _helper.Write(nameof(SsidToAutoConnect), value); }
         }
 
+        public string OneNotePageId
+        {
+            get { return _helper.Read<string>(nameof(OneNotePageId), null); }
+            set { _helper.Write(nameof(OneNotePageId), value); }
+        }
+
         private SettingsService()
         {
             _helper = new Template10.Services.SettingsService.SettingsHelper();

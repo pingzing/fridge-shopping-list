@@ -106,7 +106,7 @@
 
             <Rectangle Grid.Column="0"
                        Fill="{StaticResource LcarsAccentBrush}"
-                       Margin="0 2 0 2"
+                       Margin="0 2 0 3"
                        StrokeThickness="0"
                        VerticalAlignment="Stretch"
                        Width="70"/>
@@ -134,20 +134,34 @@
                                     </DataTemplate>
                                 </uctCtls:HeaderedTextBlock.HeaderTemplate>
                             </uctCtls:HeaderedTextBlock>
-                            <Button RelativePanel.Below="StatusHeader" 
-                                        Background="{StaticResource LcarsLavenderBrush}"
-                                        Content="CONNECT"
-                                        Click="{x:Bind ViewModel.OneNotePartViewModel.ConnectToOneNote}"                                    
-                                        Foreground="White"
-                                        Visibility="{x:Bind ViewModel.OneNotePartViewModel.IsConnected, Mode=OneWay, Converter={StaticResource BoolToVisibilityInvertedConverter}}"
-                                        Style="{StaticResource LcarsButtonStyle}"/>
-                            <Button RelativePanel.Below="StatusHeader"
-                                        Background="{ThemeResource LcarsRedBrush}"
-                                        Content="DISCONNECT"
-                                        Click="{x:Bind ViewModel.OneNotePartViewModel.DisconnectFromOneNote}"                                    
-                                        Foreground="White"
-                                        Visibility="{x:Bind ViewModel.OneNotePartViewModel.IsConnected, Mode=OneWay}"
-                                        Style="{StaticResource LcarsButtonStyle}"/>
+                            <Button x:Name="ConnectButton" 
+                                    RelativePanel.Below="StatusHeader" 
+                                    Background="{StaticResource LcarsLavenderBrush}"
+                                    Content="CONNECT"
+                                    Click="{x:Bind ViewModel.OneNotePartViewModel.ConnectToOneNote}"                                                                            
+                                    Margin="0 10 0 0"
+                                    Visibility="{x:Bind ViewModel.OneNotePartViewModel.IsConnected, Mode=OneWay, Converter={StaticResource BoolToVisibilityInvertedConverter}}"
+                                    Style="{StaticResource LcarsButtonStyle}"/>
+                            <Button x:Name="DisconnectButton" 
+                                    RelativePanel.Below="StatusHeader"
+                                    Background="{ThemeResource LcarsRedPurpleBrush}"
+                                    Content="DISCONNECT"
+                                    Click="{x:Bind ViewModel.OneNotePartViewModel.DisconnectFromOneNote}"                                                                            
+                                    Margin="0 10 0 0"
+                                    Visibility="{x:Bind ViewModel.OneNotePartViewModel.IsConnected, Mode=OneWay}"
+                                    Style="{StaticResource LcarsButtonStyle}"/>
+                            <TextBlock x:Name="DangerousHeader"
+                                       RelativePanel.Above="DeleteAllPagesButton"
+                                       Foreground="Red"
+                                       Text="DANGEROUS STUFF"
+                                       Style="{StaticResource LcarsHeaderControlTextBlockStyle}"/>
+                            <Button x:Name="DeleteAllPagesButton" 
+                                    RelativePanel.AlignBottomWithPanel="True"
+                                    Background="{ThemeResource LcarsRedBrush}"
+                                    Content="DELETE ALL ONENOTE SHOPPING LIST PAGES"
+                                    Click="{x:Bind ViewModel.OneNotePartViewModel.DeleteShoppingListPages}"                                    
+                                    Visibility="{x:Bind ViewModel.OneNotePartViewModel.IsConnected, Mode=OneWay}"
+                                    Style="{StaticResource LcarsButtonStyle}"/>
                         </RelativePanel>
 
                     </ScrollViewer>

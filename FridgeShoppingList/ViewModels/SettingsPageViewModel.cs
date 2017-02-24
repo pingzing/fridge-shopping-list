@@ -57,11 +57,12 @@ namespace FridgeShoppingList.ViewModels
     }
 
     public class OneNotePartViewModel : ViewModelBase
-    {
-        //public for bindability
-        public readonly IOneNoteService _oneNoteService;
+    {        
+        private readonly IOneNoteService _oneNoteService;
+        private const string NotConnectedString = "Not connected";
+        private const string ConnectedString = "Connected";
 
-        string oneNotestatusText = "Not connected";
+        string oneNotestatusText = NotConnectedString;
         public string OneNoteStatusText
         {
             get { return oneNotestatusText; }
@@ -83,18 +84,24 @@ namespace FridgeShoppingList.ViewModels
                 {
                     if (newConnected)
                     {
-                        OneNoteStatusText = "Connected";
+                        OneNoteStatusText = ConnectedString;
                         RaisePropertyChanged(nameof(IsConnected));
                     }
                     else
                     {
-                        OneNoteStatusText = "Not connected";
+                        OneNoteStatusText = NotConnectedString;
                         RaisePropertyChanged(nameof(IsConnected));
                     }
                 };
             }
-        }       
-        
+        }
+
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            RaisePropertyChanged(nameof(IsConnected));
+            return Task.CompletedTask;
+        }
+
         public async void ConnectToOneNote()
         {
             await _oneNoteService.GetShoppingListPageContent();
@@ -103,6 +110,11 @@ namespace FridgeShoppingList.ViewModels
         public void DisconnectFromOneNote()
         {
             _oneNoteService.Logout();
+        }
+
+        public async void DeleteShoppingListPages()
+        {
+            await _oneNoteService.DeleteShoppingListPages();
         }
     }
 

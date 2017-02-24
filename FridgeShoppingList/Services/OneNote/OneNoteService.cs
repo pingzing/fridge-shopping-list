@@ -21,6 +21,8 @@ using Microsoft.Practices.ServiceLocation;
 using Optional;
 using Microsoft.OneDrive.Sdk.Authentication;
 using Graph = Microsoft.Graph;
+using Windows.Web.Http.Filters;
+using Optional.Unsafe;
 
 namespace FridgeShoppingList.Services
 {
@@ -30,6 +32,7 @@ namespace FridgeShoppingList.Services
         bool ConnectedStatus { get; }
         Task<Option<IEnumerable<OneNoteCheckboxNode>>> GetShoppingListPageContent();
         Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> localList);
+        Task<Option<IEnumerable<DeletePageResult>>> DeleteShoppingListPages();
         Task Logout();
     }
 
@@ -43,11 +46,12 @@ namespace FridgeShoppingList.Services
         private const string OneDriveClientId = "00000000481CBFE3";
         private const string CheckboxDivId = "checkbox-div";
 
-        private static readonly HttpClient _httpClient;                                
-
-        private string _fooddPageId;
+        private static readonly HttpClient _httpClient;
+        private readonly SettingsService _settingsService;                             
+        
         private MsaAuthenticationProvider _msaAuthProvider;
         private CredentialVault _credentials = new CredentialVault(OneDriveClientId);
+        private string CachedPageId => _settingsService.OneNotePageId;
 
         private bool _connectedStatus;
         public bool ConnectedStatus
@@ -66,12 +70,15 @@ namespace FridgeShoppingList.Services
 
         static OneNoteService()
         {
-            _httpClient = new HttpClient();
+            var httpBaseFilter = new HttpBaseProtocolFilter();
+            httpBaseFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.MostRecent;            
+            _httpClient = new HttpClient(httpBaseFilter);
         }
 
-        public OneNoteService()
+        public OneNoteService(SettingsService settings)
         {            
             _httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue(Constants.JsonApplicationMediaType));
+            _settingsService = settings;
         }
 
         bool _initialized;
@@ -100,30 +107,59 @@ namespace FridgeShoppingList.Services
                 }
                 _httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Bearer", _msaAuthProvider.CurrentAccountSession.AccessToken);
 
-                ConnectedStatus = true;                
-                _initialized = await CreateShoppingListPage();
+                ConnectedStatus = true;
+                var validatedPageId = await ValidatePageId(_settingsService.OneNotePageId);
+                _settingsService.OneNotePageId = validatedPageId.ValueOr(_settingsService.OneNotePageId);
+                if (validatedPageId.HasValue)
+                {
+                    _initialized = true;
+                }                
+            }
+        }
+
+        /// <summary>
+        /// Returns the shopping list page ID if it exists. If not, it creates the page and returns the ID.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<Option<string>> ValidatePageId(string pageId)
+        {
+            string cachedPageId = _settingsService.OneNotePageId;
+
+            // Validate the ID. If we get a 404, it's a dud, and the cache should be cleared.
+            //TODO: To correctly get 404s for deleted pages, we might need to hit the /content endpoint
+            var getResponse = await MakeOneNoteRequest($"{OneNoteBaseUrl}notes/pages/{cachedPageId}", HttpMethod.Get, validatesPageId: false); 
+            if (getResponse == null)
+            {
+                return Option.None<string>();
+            }
+
+            if (getResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+                return await CreateShoppingListPage();
+            }
+            else if (getResponse.IsSuccessStatusCode)
+            {
+                var deserializedGetResponse = JsonConvert.DeserializeObject<OneNoteGetPageMetadataResponse>
+                    (await getResponse.Content.ReadAsStringAsync());
+                return deserializedGetResponse.Id.Some();
+            }
+            else // Any other failure status code
+            {
+                return Option.None<string>();
             }
         }
 
         //Return false if we're unable to create the page, and it either doesn't exist, or we don't know if it exists.
-        private async Task<bool> CreateShoppingListPage()
+        private async Task<Option<string>> CreateShoppingListPage()
         {
             var pagesResponse = await _httpClient.GetAsync(new Uri(ShoppingListPageSearchString));
             if (pagesResponse == null || !pagesResponse.IsSuccessStatusCode)
             {
-                return false;
+                return Option.None<string>();
             }
-            var deserializedResponse = JsonConvert.DeserializeObject<OneNoteODataResponse>(await pagesResponse.Content.ReadAsStringAsync());
-            if (deserializedResponse.Data.Any())
-            {
-                _fooddPageId = deserializedResponse.Data.OrderBy(x => x.CreatedTime).First().Id;
-                return true;
-            }
-            else
-            {
-
-                string shoppingListPageHtml = (@"<!DOCTYPE html>
-<html>
+            
+            string shoppingListPageHtml = (@"<!DOCTYPE html>
+    <html>
     <head>
         <title>Shopping List</title>
         <meta name=""created"" content=" + DateTime.Now.ToString("o") + @" />
@@ -133,17 +169,17 @@ namespace FridgeShoppingList.Services
             <p>Checklist</p>
         </div>
     </body>
-</html>");
-                var createResponse = await _httpClient.PostAsync(new Uri($"{OneNoteBaseUrl}notes/pages?sectionName=FOODD"),
-                    new HttpStringContent(shoppingListPageHtml, UnicodeEncoding.Utf8, Constants.HtmlTextMediaType));
-                if (createResponse == null || !createResponse.IsSuccessStatusCode)
-                {
-                    return false;
-                }
-
-                //TODO: Grab the ID of the newly-created page and save it in _fooddPageId here
-                return true;
+    </html>");
+            var createResponse = await _httpClient.PostAsync(new Uri($"{OneNoteBaseUrl}notes/pages?sectionName=FOODD"),
+                new HttpStringContent(shoppingListPageHtml, UnicodeEncoding.Utf8, Constants.HtmlTextMediaType));
+            if (createResponse == null || !createResponse.IsSuccessStatusCode)
+            {
+                return Option.None<string>();
             }
+
+            //TODO: Grab the ID of the newly-created page and save it in _fooddPageId here
+            var deserializedCreateResponse = JsonConvert.DeserializeObject<OneNotePostPageResponse>(await createResponse.Content.ReadAsStringAsync());            
+            return deserializedCreateResponse.Id.Some();
         }
 
         /// <summary>
@@ -158,7 +194,7 @@ namespace FridgeShoppingList.Services
                 return Option.None<IEnumerable<OneNoteCheckboxNode>>();
             }
 
-            var response = await MakeOneNoteRequest(($"{OneNoteBaseUrl}notes/pages/{_fooddPageId}/content?includeIDs=true"), HttpMethod.Get);
+            var response = await MakeOneNoteRequest(($"{OneNoteBaseUrl}notes/pages/{CachedPageId}/content?includeIDs=true"), HttpMethod.Get);
             if (response.IsSuccessStatusCode)
             {
                 var responseHtml = new HtmlDocument();
@@ -211,7 +247,7 @@ namespace FridgeShoppingList.Services
             string listAsJson = JsonConvert.SerializeObject(processedList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             var response = await MakeOneNoteRequest(
-                $"{OneNoteBaseUrl}notes/pages/{_fooddPageId}/content", 
+                $"{OneNoteBaseUrl}notes/pages/{CachedPageId}/content", 
                 HttpMethod.Patch, 
                 new HttpStringContent(listAsJson, UnicodeEncoding.Utf8, Constants.JsonApplicationMediaType));
 
@@ -226,26 +262,90 @@ namespace FridgeShoppingList.Services
         }
 
         /// <summary>
+        /// Attempt to delete all pages named "Shopping List" under the FOODD section in OneNote.
+        /// Returns true if successful or if no pages were found to be deleted.
+        /// True should be interpreted as "no Shopping List pages remain".
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Option<IEnumerable<DeletePageResult>>> DeleteShoppingListPages()
+        {
+            var pagesResponse = await _httpClient.GetAsync(new Uri(ShoppingListPageSearchString));
+            if (pagesResponse == null || !pagesResponse.IsSuccessStatusCode)
+            {
+                return Option.None<IEnumerable<DeletePageResult>>(); ;
+            }
+
+            List<DeletePageResult> deletionResults = new List<DeletePageResult>();
+            var deserializedResponse = JsonConvert.DeserializeObject<OneNoteGetPagesResponse>(await pagesResponse.Content.ReadAsStringAsync());
+            if (deserializedResponse.Data.Any())
+            {
+                foreach(var page in deserializedResponse.Data)
+                {
+                    string pageId = page.Id;
+                    var response = await MakeOneNoteRequest($"{OneNoteBaseUrl}notes/pages/{pageId}", HttpMethod.Delete, validatesPageId: false);
+                    if (response == null || !response.IsSuccessStatusCode)
+                    {
+                        deletionResults.Add(new DeletePageResult { PageId = pageId, Result = DeleteResult.Success });
+                    }
+                    else
+                    {
+                        DeleteResult result = response == null ? DeleteResult.FailureByNetwork
+                                            : response.StatusCode == HttpStatusCode.NotFound ? DeleteResult.FailureBy404
+                                            : DeleteResult.FailureUnspecified;
+                        deletionResults.Add(new DeletePageResult { PageId = pageId, Result = result });
+                    }
+                }
+                return deletionResults.AsEnumerable().Some();
+            }
+            else
+            {
+                return Option.None<IEnumerable<DeletePageResult>>(); ;
+            }
+        }
+
+        /// <summary>
         /// Disconnects from the OneNote API, and deletes all cached keys from the credential vault.
         /// </summary>
         /// <returns></returns>
         public async Task Logout()
         {
-            _fooddPageId = null;
+            _settingsService.OneNotePageId = null;
             await _msaAuthProvider.SignOutAsync();
             ConnectedStatus = false;
             _initialized = false;         
         }
 
-        private async Task<HttpResponseMessage> MakeOneNoteRequest(string url, HttpMethod method, IHttpContent content = null)
-        {                  
+        private async Task<HttpResponseMessage> MakeOneNoteRequest(string url, HttpMethod method, IHttpContent content = null, bool validatesPageId = true)
+        {                              
+            if (validatesPageId)
+            {
+                // Making the assumption that the ID this method got passed is the same as the one in the cache.
+                // If this turns out to be an invalid assumption, we'll have to do some string parsing, or pass 
+                // in the ID separately or something.
+                string oldId = CachedPageId;
+                var validatedPageId = await ValidatePageId(CachedPageId);                    
+                if (!validatedPageId.HasValue)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                }
+                string newId = validatedPageId.ValueOrFailure();
+                if (newId != oldId)
+                {
+                    // Hopefully we never have a scenario where the oldId isn't actually in the request URL...
+                    // If we DO, that's two reasons to parse out the ID
+                    url = url.Replace(oldId, newId); 
+                }
+
+            }
+
             var message = new HttpRequestMessage(method, new Uri(url));
             message.Content = content;
+
             var response = await _httpClient.SendRequestAsync(message);
 
             // For now, if we get an auth failure, only try to re-auth and make a new request once. 
             // If this starts happening a lot, maybe we can add exponential back-off or something.
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            if (response?.StatusCode == HttpStatusCode.Unauthorized)
             {
                 await _msaAuthProvider.AuthenticateUserAsync();                               
                 response = await _httpClient.SendRequestAsync(message);

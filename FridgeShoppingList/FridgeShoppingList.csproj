@@ -130,12 +130,15 @@
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DateTimeOffsetWrapper.cs" />
+    <Compile Include="Models\DeletePageResult.cs" />
     <Compile Include="Models\FontIcons.cs" />
     <Compile Include="Models\InventoryEntry.cs" />
     <Compile Include="Models\GroceryItemType.cs" />
     <Compile Include="Models\OneNoteChangeObject.cs" />
     <Compile Include="Models\OneNoteCheckboxNode.cs" />
-    <Compile Include="Models\OneNoteOdataResponse.cs" />
+    <Compile Include="Models\OneNoteGetPageMetadataResponse.cs" />
+    <Compile Include="Models\OneNoteGetPagesResponse.cs" />
+    <Compile Include="Models\OneNotePostPageResponse.cs" />
     <Compile Include="Models\ShoppingListEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DialogService.cs" />
