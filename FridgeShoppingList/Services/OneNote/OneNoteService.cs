@@ -47,8 +47,8 @@ namespace FridgeShoppingList.Services
         private const string CheckboxDivId = "checkbox-div";
 
         private static readonly HttpClient _httpClient;
-        private readonly SettingsService _settingsService;                             
-        
+        private readonly SettingsService _settingsService;
+
         private MsaAuthenticationProvider _msaAuthProvider;
         private CredentialVault _credentials = new CredentialVault(OneDriveClientId);
         private string CachedPageId => _settingsService.OneNotePageId;
@@ -71,12 +71,12 @@ namespace FridgeShoppingList.Services
         static OneNoteService()
         {
             var httpBaseFilter = new HttpBaseProtocolFilter();
-            httpBaseFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.MostRecent;            
+            httpBaseFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.MostRecent;
             _httpClient = new HttpClient(httpBaseFilter);
         }
 
         public OneNoteService(SettingsService settings)
-        {            
+        {
             _httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue(Constants.JsonApplicationMediaType));
             _settingsService = settings;
         }
@@ -85,7 +85,7 @@ namespace FridgeShoppingList.Services
         private async Task Initialize()
         {
             if (!_initialized)
-            {               
+            {
                 _msaAuthProvider = new MsaAuthenticationProvider(OneDriveClientId, OneDriveRedirectUri, ControlAppPagesScopes, _credentials);
                 bool success = await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
                 {
@@ -113,7 +113,7 @@ namespace FridgeShoppingList.Services
                 if (validatedPageId.HasValue)
                 {
                     _initialized = true;
-                }                
+                }
             }
         }
 
@@ -127,7 +127,7 @@ namespace FridgeShoppingList.Services
 
             // Validate the ID. If we get a 404, it's a dud, and the cache should be cleared.
             //TODO: To correctly get 404s for deleted pages, we might need to hit the /content endpoint
-            var getResponse = await MakeOneNoteRequest($"{OneNoteBaseUrl}notes/pages/{cachedPageId}", HttpMethod.Get, validatesPageId: false); 
+            var getResponse = await MakeOneNoteRequest($"{OneNoteBaseUrl}notes/pages/{cachedPageId}", HttpMethod.Get, validatesPageId: false);
             if (getResponse == null)
             {
                 return Option.None<string>();
@@ -157,7 +157,7 @@ namespace FridgeShoppingList.Services
             {
                 return Option.None<string>();
             }
-            
+
             string shoppingListPageHtml = (@"<!DOCTYPE html>
     <html>
     <head>
@@ -178,7 +178,7 @@ namespace FridgeShoppingList.Services
             }
 
             //TODO: Grab the ID of the newly-created page and save it in _fooddPageId here
-            var deserializedCreateResponse = JsonConvert.DeserializeObject<OneNotePostPageResponse>(await createResponse.Content.ReadAsStringAsync());            
+            var deserializedCreateResponse = JsonConvert.DeserializeObject<OneNotePostPageResponse>(await createResponse.Content.ReadAsStringAsync());
             return deserializedCreateResponse.Id.Some();
         }
 
@@ -207,7 +207,7 @@ namespace FridgeShoppingList.Services
                         .Descendants("p")
                         .Where(x => x.Attributes["data-tag"]?.Value == "to-do"
                                     || x.Attributes["data-tag"]?.Value == "to-do:completed")
-                        .Select(x => new OneNoteCheckboxNode(x))                        
+                        .Select(x => new OneNoteCheckboxNode(x))
                         .Some();
                 }
                 return Option.None<IEnumerable<OneNoteCheckboxNode>>();
@@ -218,37 +218,37 @@ namespace FridgeShoppingList.Services
             }
         }
 
-        public async Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> updatedNodes)
+        public async Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> nodesToSend)
         {
             await Initialize();
             if (!_initialized)
             {
                 return false;
             }
-            
+
             // If we have nothing locally, updating the remote list should always be considered a success
-            if (updatedNodes.Count() == 0)
+            if (nodesToSend.Count() == 0)
             {
                 return true;
-            }            
+            }
 
             var latestNodes = (await GetShoppingListPageContent())
-                .Match(
-                    some:x => x, 
-                    none: () => null
-                );
+                   .Match(
+                       some: x => x,
+                       none: () => null
+                   );
 
             if (latestNodes == null)
             {
                 return false;
             }
 
-            List<OneNoteChangeObject> processedList = ProcessUploadList(updatedNodes, latestNodes).ToList();
+            List<OneNoteChangeObject> processedList = ProcessUploadList(nodesToSend, latestNodes).ToList();
             string listAsJson = JsonConvert.SerializeObject(processedList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             var response = await MakeOneNoteRequest(
-                $"{OneNoteBaseUrl}notes/pages/{CachedPageId}/content", 
-                HttpMethod.Patch, 
+                $"{OneNoteBaseUrl}notes/pages/{CachedPageId}/content",
+                HttpMethod.Patch,
                 new HttpStringContent(listAsJson, UnicodeEncoding.Utf8, Constants.JsonApplicationMediaType));
 
             if (response.IsSuccessStatusCode)
@@ -279,7 +279,7 @@ namespace FridgeShoppingList.Services
             var deserializedResponse = JsonConvert.DeserializeObject<OneNoteGetPagesResponse>(await pagesResponse.Content.ReadAsStringAsync());
             if (deserializedResponse.Data.Any())
             {
-                foreach(var page in deserializedResponse.Data)
+                foreach (var page in deserializedResponse.Data)
                 {
                     string pageId = page.Id;
                     var response = await MakeOneNoteRequest($"{OneNoteBaseUrl}notes/pages/{pageId}", HttpMethod.Delete, validatesPageId: false);
@@ -312,18 +312,18 @@ namespace FridgeShoppingList.Services
             _settingsService.OneNotePageId = null;
             await _msaAuthProvider.SignOutAsync();
             ConnectedStatus = false;
-            _initialized = false;         
+            _initialized = false;
         }
 
         private async Task<HttpResponseMessage> MakeOneNoteRequest(string url, HttpMethod method, IHttpContent content = null, bool validatesPageId = true)
-        {                              
+        {
             if (validatesPageId)
             {
                 // Making the assumption that the ID this method got passed is the same as the one in the cache.
                 // If this turns out to be an invalid assumption, we'll have to do some string parsing, or pass 
                 // in the ID separately or something.
                 string oldId = CachedPageId;
-                var validatedPageId = await ValidatePageId(CachedPageId);                    
+                var validatedPageId = await ValidatePageId(CachedPageId);
                 if (!validatedPageId.HasValue)
                 {
                     return new HttpResponseMessage(HttpStatusCode.BadRequest);
@@ -333,9 +333,8 @@ namespace FridgeShoppingList.Services
                 {
                     // Hopefully we never have a scenario where the oldId isn't actually in the request URL...
                     // If we DO, that's two reasons to parse out the ID
-                    url = url.Replace(oldId, newId); 
+                    url = url.Replace(oldId, newId);
                 }
-
             }
 
             var message = new HttpRequestMessage(method, new Uri(url));
@@ -347,27 +346,33 @@ namespace FridgeShoppingList.Services
             // If this starts happening a lot, maybe we can add exponential back-off or something.
             if (response?.StatusCode == HttpStatusCode.Unauthorized)
             {
-                await _msaAuthProvider.AuthenticateUserAsync();                               
+                await _msaAuthProvider.AuthenticateUserAsync();
                 response = await _httpClient.SendRequestAsync(message);
+                return response;
             }
-            return response;
+            else
+            {
+                return response;
+            }
         }
 
-        private static IEnumerable<OneNoteChangeObject> ProcessUploadList(IEnumerable<OneNoteCheckboxNode> updatedNodes, IEnumerable<OneNoteCheckboxNode> latestCheckboxNodes)
+        //TODO: Where we match on content, parse out the item number counts.
+        private static IEnumerable<OneNoteChangeObject> ProcessUploadList(IEnumerable<OneNoteCheckboxNode> localNodes, IEnumerable<OneNoteCheckboxNode> latestCheckboxNodes)
         {
-            foreach(OneNoteCheckboxNode uploadingNode in updatedNodes)
+            // Process local nodes and append or replace as necessary
+            foreach (OneNoteCheckboxNode uploadingNode in localNodes)
             {
                 var latestNode = latestCheckboxNodes.FirstOrDefault(x => x.DataId == uploadingNode.DataId && uploadingNode.DataId != null);
 
                 // Item exists in both lists, and has a data-id
                 if (latestNode != null)
                 {
-                    uploadingNode.IsChecked = false;
+                    uploadingNode.IsChecked = latestNode.IsChecked;
                     uploadingNode.GeneratedId = latestNode.GeneratedId;
                     yield return new OneNoteChangeObject
                     {
                         Target = OneNoteChangeTarget.GeneratedId(latestNode.GeneratedId),
-                        Action = OneNoteChangeAction.replace,
+                        Action = OneNoteChangeAction.Replace,
                         HtmlContent = uploadingNode.ToHtmlContent()
                     };
                 }
@@ -377,12 +382,12 @@ namespace FridgeShoppingList.Services
                     var stringMatchedLatest = latestCheckboxNodes.FirstOrDefault(x => x.Content == uploadingNode.Content);
                     if (stringMatchedLatest != null)
                     {
-                        uploadingNode.IsChecked = false;
+                        uploadingNode.IsChecked = stringMatchedLatest.IsChecked;
                         uploadingNode.GeneratedId = stringMatchedLatest.GeneratedId;
                         yield return new OneNoteChangeObject
                         {
                             Target = OneNoteChangeTarget.GeneratedId(stringMatchedLatest.GeneratedId),
-                            Action = OneNoteChangeAction.replace,
+                            Action = OneNoteChangeAction.Replace,
                             HtmlContent = uploadingNode.ToHtmlContent()
                         };
                     }
@@ -397,8 +402,25 @@ namespace FridgeShoppingList.Services
                             HtmlContent = uploadingNode.ToHtmlContent()
                         };
                     }
-                }                
-            }            
+                }
+            }
+
+            // Look for any nodes we have serverside that we don't have locally. Mark those as deleted nodes in the list we're about to upload.
+            foreach (var latestServerNode in latestCheckboxNodes)
+            {
+                bool hasLocalCounterpart = localNodes.Any(
+                    x => (x.DataId == latestServerNode.DataId && latestServerNode.DataId != null)
+                        || (x.Content == latestServerNode.Content));
+                if (!hasLocalCounterpart)
+                {
+                    yield return new OneNoteChangeObject
+                    {
+                        Target = OneNoteChangeTarget.GeneratedId(latestServerNode.GeneratedId),
+                        Action = OneNoteChangeAction.Replace,
+                        HtmlContent = "<!-- Undocumented trick: a REPLACE command to OneNote with an HTML comment as the content effectively deletes that element.-->"
+                    };
+                }
+            }
         }
     }
 }

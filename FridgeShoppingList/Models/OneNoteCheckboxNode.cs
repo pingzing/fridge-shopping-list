@@ -51,7 +51,7 @@ namespace FridgeShoppingList.Models
             GeneratedId = null;
             DataId = entry.ItemType.ItemTypeId.ToString();
             IsChecked = false;
-            Content = entry.ItemType.Name;
+            Content = $"{entry.ItemType.Name} x{entry.Count}";
         }
 
         public Option<ShoppingListEntry> AsShoppingListEntry()
@@ -70,10 +70,13 @@ namespace FridgeShoppingList.Models
                 return Option.None<ShoppingListEntry>();
             }
 
+            uint itemCount;
+            bool parseItemCountSuccess = UInt32.TryParse(this.Content.Substring(this.Content.LastIndexOf('x') + 1), out itemCount);
+
             return new ShoppingListEntry
             {
                 ItemType = itemType,
-                Count = 1
+                Count = parseItemCountSuccess ? itemCount : 1
             }.Some();
         }
 

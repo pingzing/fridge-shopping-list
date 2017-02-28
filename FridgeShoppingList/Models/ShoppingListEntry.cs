@@ -26,7 +26,7 @@ namespace FridgeShoppingList.Models
             }
         }
 
-        public OneNoteCheckboxNode AsOneNoteTodoItem()
+        public OneNoteCheckboxNode AsOneNoteCheckboxNode()
         {
             return new OneNoteCheckboxNode(this);
         }

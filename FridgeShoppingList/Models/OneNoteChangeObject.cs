@@ -47,7 +47,7 @@ namespace FridgeShoppingList.Models
         Prepend,
 
         [JsonProperty("replace")]
-        replace
+        Replace
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
