@@ -125,6 +125,12 @@ namespace FridgeShoppingList.Services
         {
             string cachedPageId = _settingsService.OneNotePageId;
 
+            // If we don't have a cached PageId saved in settings
+            if (String.IsNullOrEmpty(cachedPageId))
+            {
+                return await CreateShoppingListPage();
+            }
+
             // Validate the ID. If we get a 404, it's a dud, and the cache should be cleared.
             //TODO: To correctly get 404s for deleted pages, we might need to hit the /content endpoint
             var getResponse = await MakeOneNoteRequest($"{OneNoteBaseUrl}notes/pages/{cachedPageId}", HttpMethod.Get, validatesPageId: false);

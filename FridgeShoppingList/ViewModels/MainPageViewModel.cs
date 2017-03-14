@@ -4,19 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
 using FridgeShoppingList.Models;
 using FridgeShoppingList.ViewModels.ControlViewModels;
 using FridgeShoppingList.Services.SettingsServices;
 using System.Reactive.Linq;
-using System.Collections.Specialized;
 using GalaSoft.MvvmLight.Command;
 using DynamicData;
 using DynamicData.Binding;
 using FridgeShoppingList.Services;
 using Template10.Mvvm;
-using Windows.UI.Xaml;
-using Optional;
 
 namespace FridgeShoppingList.ViewModels
 {

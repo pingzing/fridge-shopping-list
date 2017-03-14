@@ -106,7 +106,7 @@
 
             <Rectangle Grid.Column="0"
                        Fill="{StaticResource LcarsAccentBrush}"
-                       Margin="0 2 0 3"
+                       Margin="0 2 0 2"
                        StrokeThickness="0"
                        VerticalAlignment="Stretch"
                        Width="70"/>
@@ -154,7 +154,8 @@
                                        RelativePanel.Above="DeleteAllPagesButton"
                                        Foreground="Red"
                                        Text="DANGEROUS STUFF"
-                                       Style="{StaticResource LcarsHeaderControlTextBlockStyle}"/>
+                                       Style="{StaticResource LcarsHeaderControlTextBlockStyle}"
+                                       Visibility="{x:Bind ViewModel.OneNotePartViewModel.IsConnected, Mode=OneWay}"/>
                             <Button x:Name="DeleteAllPagesButton" 
                                     RelativePanel.AlignBottomWithPanel="True"
                                     Background="{ThemeResource LcarsRedBrush}"
