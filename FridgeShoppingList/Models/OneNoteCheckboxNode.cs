@@ -67,6 +67,7 @@ namespace FridgeShoppingList.Models
 
             if(itemType == null)
             {
+                // TODO: This is a candidate for where we might add new types we don't already have
                 return Option.None<ShoppingListEntry>();
             }
 
