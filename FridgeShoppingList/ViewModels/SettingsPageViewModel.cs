@@ -11,22 +11,31 @@ using FridgeShoppingList.Models;
 using GalaSoft.MvvmLight.Command;
 using Windows.System;
 using FridgeShoppingList.Views;
+using DynamicData.Binding;
+using FridgeShoppingList.Services.SettingsServices;
+using System.Reactive.Linq;
+using DynamicData;
+using Windows.UI.Xaml.Controls;
 
 namespace FridgeShoppingList.ViewModels
 {
     public class SettingsPageViewModel : ViewModelBase
     {        
         private IOneNoteService _oneNote;
+        private SettingsService _settings;
 
         public OneNotePartViewModel OneNotePartViewModel { get; }
         public StatusPartViewModel StatusPartViewModel { get; private set; }
+        public ItemTypesPartViewModel ItemTypesPartViewModel { get; private set; }
 
         public RelayCommand ShutdownCommand => new RelayCommand(ShutdownDevice);
         public RelayCommand RestartCommand => new RelayCommand(RestartDevice);        
 
-        public SettingsPageViewModel(IOneNoteService oneNote)
+        public SettingsPageViewModel(IOneNoteService oneNote, SettingsService settings)
         {            
             _oneNote = oneNote;
+            _settings = settings;
+            ItemTypesPartViewModel = new ItemTypesPartViewModel(_settings);
             StatusPartViewModel = new StatusPartViewModel();
             OneNotePartViewModel = new OneNotePartViewModel(_oneNote);
         }
@@ -43,6 +52,7 @@ namespace FridgeShoppingList.ViewModels
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
+            ItemTypesPartViewModel.OnNavigatedToAsync(parameter, mode, state);
             OneNotePartViewModel.OnNavigatedToAsync(parameter, mode, state);
             StatusPartViewModel.OnNavigatedToAsync(parameter, mode, state);
             return base.OnNavigatedToAsync(parameter, mode, state);
@@ -50,10 +60,66 @@ namespace FridgeShoppingList.ViewModels
 
         public override Task OnNavigatedFromAsync(IDictionary<string, object> pageState, bool suspending)
         {
+            ItemTypesPartViewModel.OnNavigatedFromAsync(pageState, suspending);
             OneNotePartViewModel.OnNavigatedFromAsync(pageState, suspending);
             StatusPartViewModel.OnNavigatedFromAsync(pageState, suspending);
             return base.OnNavigatedFromAsync(pageState, suspending);
         }
+    }
+
+    public class ItemTypesPartViewModel : ViewModelBase
+    {
+        private readonly SettingsService _settings;
+
+        public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; set; } = new ObservableCollectionExtended<GroceryItemType>();
+
+        private bool _isSelecting = false;
+        public bool IsSelecting
+        {
+            get { return _isSelecting; }
+            set
+            {
+                Set(ref _isSelecting, value);
+                if (_isSelecting)
+                {
+                    SelectionMode = ListViewSelectionMode.Multiple;
+                }
+                else
+                {
+                    SelectionMode = ListViewSelectionMode.None;
+                }
+            }
+        }
+
+        private ListViewSelectionMode _selectionMode = ListViewSelectionMode.None;
+        public ListViewSelectionMode SelectionMode
+        {
+            get { return _selectionMode; }
+            set { Set(ref _selectionMode, value); }
+        }
+
+        public RelayCommand EnterSelectionCommand => new RelayCommand(EnterSelection);        
+
+        public RelayCommand LeaveSelectionCommand => new RelayCommand(LeaveSelection);        
+
+        public ItemTypesPartViewModel(SettingsService settings)
+        {
+            _settings = settings;
+            _settings.GroceryTypes
+                .ObserveOnDispatcher()
+                .Bind(SavedItemTypes)
+                .Subscribe();
+        }
+
+        private void EnterSelection()
+        {
+            IsSelecting = true;
+        }
+
+        private void LeaveSelection()
+        {
+            IsSelecting = false;
+        }        
     }
 
     public class OneNotePartViewModel : ViewModelBase

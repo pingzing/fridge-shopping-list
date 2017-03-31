@@ -233,7 +233,7 @@ namespace FridgeShoppingList.Services
             }
 
             // If we have nothing locally, updating the remote list should always be considered a success
-            if (nodesToSend.Count() == 0)
+            if (!nodesToSend.Any())
             {
                 return true;
             }

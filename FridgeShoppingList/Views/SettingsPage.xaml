@@ -12,6 +12,7 @@
       xmlns:vm="using:FridgeShoppingList.ViewModels"
       xmlns:ctls="using:FridgeShoppingList.Controls"
       xmlns:uctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:models="using:FridgeShoppingList.Models"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -113,16 +114,82 @@
 
                 <!--  content  -->
             <Pivot x:Name="MyPivot"
-                   Grid.Column="1"
-                   EntranceNavigationTransitionInfo.IsTargetElement="True"               
+                   Grid.Column="1"                             
                    HeaderFocusVisualPlacement="SelectedItemHeader"
                    HorizontalAlignment="Center">
 
                 <!--  settings  -->
+                <PivotItem DataContext="{Binding ItemTypesPartViewModel}" Header="Item Types">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <ToggleButton Background="{ThemeResource LcarsBlueGrayBrush}"                                           
+                                          Content="SELECT" 
+                                          Foreground="White">
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Checked">
+                                        <Core:InvokeCommandAction Command="{x:Bind ViewModel.ItemTypesPartViewModel.EnterSelectionCommand}"/>
+                                    </Core:EventTriggerBehavior>
+                                    <Core:EventTriggerBehavior EventName="Unchecked">
+                                        <Core:InvokeCommandAction Command="{x:Bind ViewModel.ItemTypesPartViewModel.LeaveSelectionCommand}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </ToggleButton>
+                            <Button Background="{ThemeResource LcarsRedBrush}"
+                                    Content="DELETE SELECTED"
+                                    Foreground="White"
+                                    Margin="10 0 0 0"
+                                    Style="{ThemeResource LcarsButtonStyle}"
+                                    Visibility="{x:Bind ViewModel.ItemTypesPartViewModel.IsSelecting, Mode=OneWay}"/>
+                        </StackPanel>
+                        <ListView x:Name="ItemTypesList" 
+                                  Grid.Row="1" 
+                                  SelectionMode="{x:Bind ViewModel.ItemTypesPartViewModel.SelectionMode, Mode=TwoWay}"                                 
+                                  ItemsSource="{x:Bind ViewModel.ItemTypesPartViewModel.SavedItemTypes, Mode=OneWay}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:GroceryItemType">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{x:Bind Name}" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="1" 
+                                                Background="{ThemeResource LcarsBlueGrayBrush}" 
+                                                Content="EDIT"
+                                                Foreground="White"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Style="{ThemeResource LcarsButtonStyle}"
+                                                Visibility="{Binding ElementName=ItemTypesList, Path=DataContext.IsSelecting, Converter={StaticResource BoolToVisibilityInvertedConverter}}"/>
+                                        <Button Grid.Column="2" 
+                                                Background="{ThemeResource LcarsRedBrush}"
+                                                Content="DELETE"
+                                                Foreground="White"                                                
+                                                HorizontalAlignment="Right"
+                                                Margin="10 0 0 0"
+                                                VerticalAlignment="Center"
+                                                Style="{ThemeResource LcarsButtonStyle}"
+                                                Visibility="{Binding ElementName=ItemTypesList, Path=DataContext.IsSelecting, Converter={StaticResource BoolToVisibilityInvertedConverter}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </PivotItem>
+                
                 <PivotItem DataContext="{Binding OneNotePartViewModel}" Header="OneNote">
-                    <ScrollViewer Margin="0,12,-12,0"
-                                      HorizontalContentAlignment="Left"
-                                      VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer HorizontalContentAlignment="Left"
+                                  VerticalScrollBarVisibility="Auto">
                         <RelativePanel HorizontalAlignment="Stretch">
                             <uctCtls:HeaderedTextBlock x:Name="StatusHeader" 
                                                            Header="OneNote Connection Status"                                                    
