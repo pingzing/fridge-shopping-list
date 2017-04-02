@@ -8,33 +8,50 @@
              xmlns:local="using:FridgeShoppingList.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <Storyboard x:Name="StarfleetRotateStoryboard" RepeatBehavior="Forever">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" Storyboard.TargetName="SplashImageControl">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="360">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuadraticEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="360"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
 
     <Grid Background="{ThemeResource ExtendedSplashBackgroundBrush}">
 
-        <Canvas x:Name="rootCanvas"
+        <Image x:Name="SplashImageControl" 
+               Source="ms-appx:///Assets/SplashScreen.png" 
+               Stretch="None"
+               ImageOpened="Image_Loaded">
+            <Image.Projection>
+                <PlaneProjection/>
+            </Image.Projection>
+        </Image>
+        
+        <!--<Canvas x:Name="rootCanvas"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-            <Canvas.Background>
-                <ImageBrush ImageSource="ms-appx:///Assets/SplashScreen.png" Stretch="Uniform" />
-            </Canvas.Background>
-            <Viewbox x:Name="splashImage">
-                <Image Source="ms-appx:///Assets/SplashScreen.png" ImageOpened="Image_Loaded" />
+            <Viewbox x:Name="splashImage" HorizontalAlignment="Stretch">
+                <Viewbox.Projection>
+                    <PlaneProjection/>
+                </Viewbox.Projection>
             </Viewbox>
-        </Canvas>
+        </Canvas>-->
 
-        <ProgressRing x:Name="progressRing"
-                      Width="50"
-                      Height="50"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Foreground="{ThemeResource ExtendedSplashForegroundBrush}"
-                      IsActive="True"
-                      RenderTransformOrigin="0.5,0.5">
-            <ProgressRing.RenderTransform>
-                <CompositeTransform x:Name="ProgressTransform" TranslateY="120" />
-            </ProgressRing.RenderTransform>
-        </ProgressRing>
-
+        <TextBlock x:Name="SplashLoginText"                            
+                   Margin="40, 0"
+                   HorizontalAlignment="Center"
+                   Text="I'm some text!"
+                   TextWrapping="WrapWholeWords"          
+                   RenderTransformOrigin="0.5,0.5">
+            <TextBlock.RenderTransform>
+                <CompositeTransform x:Name="TextTransform" TranslateY="120" />
+            </TextBlock.RenderTransform>
+        </TextBlock>
     </Grid>
 
 </UserControl>

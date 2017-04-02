@@ -25,12 +25,18 @@ namespace FridgeShoppingList
     [Bindable]
     sealed partial class App : BootStrapper
     {
+        private Splash _splashView;
+
         public ServiceRegistrar Registrar { get; set; }
 
         public App()
         {
             InitializeComponent();
-            SplashFactory = (e) => new Views.Splash(e);
+            SplashFactory = (e) =>
+            {
+                _splashView = new Splash(e);
+                return _splashView;
+            };
 
             Registrar = new ServiceRegistrar();            
 
@@ -55,12 +61,13 @@ namespace FridgeShoppingList
                 ModalBackground = new SolidColorBrush(Colors.Transparent)
             };            
 
-            return rootElement;
-        }
+            return rootElement;            
+        }        
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
-            // TODO: add your long-running task here
+            // TODO: add your long-running task here      
+            await _splashView.SplashInProgress;
             await NavigationService.NavigateAsync(typeof(Views.MainPage));            
         }
 
