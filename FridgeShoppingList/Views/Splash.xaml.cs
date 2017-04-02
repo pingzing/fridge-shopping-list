@@ -21,7 +21,8 @@ namespace FridgeShoppingList.Views
 
         private async Task BeginSplashProcess()
         {            
-            await Task.Delay(100000);
+            //Simulate some kind of fun login text here
+            await Task.Delay(10000);
         }
 
         private void Resize(SplashScreen splashScreen)
