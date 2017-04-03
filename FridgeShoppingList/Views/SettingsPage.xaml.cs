@@ -1,7 +1,9 @@
+using FridgeShoppingList.Models;
 using FridgeShoppingList.Services;
 using FridgeShoppingList.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Toolkit.Uwp.Helpers;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -24,6 +26,26 @@ namespace FridgeShoppingList.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-        }        
+        }
+
+        private void ItemTypesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var vmSelectedItems = ViewModel.ItemTypesPartViewModel.SelectedItems;
+            foreach(GroceryItemType itemType in e.RemovedItems.OfType<GroceryItemType>())
+            {
+                if (vmSelectedItems.Contains(itemType))
+                {
+                    vmSelectedItems.Remove(itemType);
+                }
+            }
+
+            foreach(GroceryItemType itemType in e.AddedItems.OfType<GroceryItemType>())
+            {
+                if (!vmSelectedItems.Contains(itemType))
+                {
+                    vmSelectedItems.Add(itemType);
+                }
+            }
+        }
     }
 }

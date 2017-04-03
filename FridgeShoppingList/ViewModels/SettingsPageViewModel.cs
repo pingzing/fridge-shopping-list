@@ -98,9 +98,21 @@ namespace FridgeShoppingList.ViewModels
             set { Set(ref _selectionMode, value); }
         }
 
-        public RelayCommand EnterSelectionCommand => new RelayCommand(EnterSelection);        
+        private ObservableCollectionExtended<GroceryItemType> _selectedItems = new ObservableCollectionExtended<GroceryItemType>();
+        public ObservableCollectionExtended<GroceryItemType> SelectedItems
+        {
+            get { return _selectedItems; }
+            set { Set(ref _selectedItems, value); }
+        }
 
-        public RelayCommand LeaveSelectionCommand => new RelayCommand(LeaveSelection);        
+        public RelayCommand EnterSelectionCommand => new RelayCommand(EnterSelectionMode);        
+        public RelayCommand LeaveSelectionCommand => new RelayCommand(LeaveSelectionMode);
+        public RelayCommand<GroceryItemType> EditItemTypeCommand 
+            => new RelayCommand<GroceryItemType>(EditItemType);
+        public RelayCommand<GroceryItemType> DeleteItemTypeCommand 
+            => new RelayCommand<GroceryItemType>(DeleteItemType);
+        public RelayCommand<IEnumerable<GroceryItemType>> DeleteMultipleItemTypesCommand
+            => new RelayCommand<IEnumerable<GroceryItemType>>(DeleteMultipleItemTypes);
 
         public ItemTypesPartViewModel(SettingsService settings)
         {
@@ -111,15 +123,33 @@ namespace FridgeShoppingList.ViewModels
                 .Subscribe();
         }
 
-        private void EnterSelection()
+        private void EnterSelectionMode()
         {
             IsSelecting = true;
         }
 
-        private void LeaveSelection()
+        private void LeaveSelectionMode()
         {
             IsSelecting = false;
-        }        
+        }
+
+        private void EditItemType(GroceryItemType itemType)
+        {
+            // TODO
+        }
+
+        private void DeleteItemType(GroceryItemType itemType)
+        {
+            _settings.RemoveFromGroceryTypes(itemType);
+        }
+
+        private void DeleteMultipleItemTypes(IEnumerable<GroceryItemType> itemTypes)
+        {            
+            foreach (var toDelete in itemTypes)
+            {
+                _settings.RemoveFromGroceryTypes(toDelete);
+            }            
+        }
     }
 
     public class OneNotePartViewModel : ViewModelBase

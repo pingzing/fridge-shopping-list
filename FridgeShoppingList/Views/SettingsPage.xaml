@@ -138,15 +138,21 @@
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>
                             </ToggleButton>
-                            <Button Background="{ThemeResource LcarsRedBrush}"
-                                    Content="DELETE SELECTED"
+                            <Button x:Name="DeleteButton" 
+                                    Background="{ThemeResource LcarsRedBrush}"
+                                    Command="{x:Bind ViewModel.ItemTypesPartViewModel.DeleteMultipleItemTypesCommand}"
+                                    CommandParameter="{x:Bind ViewModel.ItemTypesPartViewModel.SelectedItems, Mode=OneWay}"
+                                    Content="DELETE SELECTED"                                    
                                     Foreground="White"
+                                    IsEnabled="{x:Bind ViewModel.ItemTypesPartViewModel.SelectedItems.Count, Mode=OneWay, Converter={StaticResource EmptyNullToBoolConverter}}"
                                     Margin="10 0 0 0"
                                     Style="{ThemeResource LcarsButtonStyle}"
-                                    Visibility="{x:Bind ViewModel.ItemTypesPartViewModel.IsSelecting, Mode=OneWay}"/>
+                                    Visibility="{x:Bind ViewModel.ItemTypesPartViewModel.IsSelecting, Mode=OneWay}">
+                            </Button>
                         </StackPanel>
                         <ListView x:Name="ItemTypesList" 
                                   Grid.Row="1" 
+                                  SelectionChanged="ItemTypesList_SelectionChanged"
                                   SelectionMode="{x:Bind ViewModel.ItemTypesPartViewModel.SelectionMode, Mode=TwoWay}"                                 
                                   ItemsSource="{x:Bind ViewModel.ItemTypesPartViewModel.SavedItemTypes, Mode=OneWay}">
                             <ListView.ItemContainerStyle>
@@ -165,6 +171,8 @@
                                         <TextBlock Text="{x:Bind Name}" VerticalAlignment="Center"/>
                                         <Button Grid.Column="1" 
                                                 Background="{ThemeResource LcarsBlueGrayBrush}" 
+                                                Command="{Binding ElementName=ItemTypesList, Path=DataContext.EditItemTypeCommand, Mode=OneTime}"
+                                                CommandParameter="{x:Bind}"
                                                 Content="EDIT"
                                                 Foreground="White"
                                                 HorizontalAlignment="Right"
@@ -173,6 +181,8 @@
                                                 Visibility="{Binding ElementName=ItemTypesList, Path=DataContext.IsSelecting, Converter={StaticResource BoolToVisibilityInvertedConverter}}"/>
                                         <Button Grid.Column="2" 
                                                 Background="{ThemeResource LcarsRedBrush}"
+                                                Command="{Binding ElementName=ItemTypesList, Path=DataContext.DeleteItemTypeCommand, Mode=OneTime}"
+                                                CommandParameter="{x:Bind}"
                                                 Content="DELETE"
                                                 Foreground="White"                                                
                                                 HorizontalAlignment="Right"
