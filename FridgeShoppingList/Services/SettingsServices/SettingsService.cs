@@ -50,8 +50,7 @@ namespace FridgeShoppingList.Services.SettingsServices
 
         private SettingsService()
         {
-            _helper = new Template10.Services.SettingsService.SettingsHelper();
-            var converter = _helper.Container(Template10.Services.SettingsService.SettingsStrategies.Local).Converters.GetConverter(typeof(Guid));
+            _helper = new Template10.Services.SettingsService.SettingsHelper();            
 
             //Initialize GroceryItemTypes
             GroceryItemType[] savedGroceryTypes = _helper.Read(
