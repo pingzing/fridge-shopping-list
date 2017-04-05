@@ -16,13 +16,15 @@ using FridgeShoppingList.Services.SettingsServices;
 using System.Reactive.Linq;
 using DynamicData;
 using Windows.UI.Xaml.Controls;
+using FridgeShoppingList.ViewModels.ControlViewModels;
 
 namespace FridgeShoppingList.ViewModels
 {
     public class SettingsPageViewModel : ViewModelBase
     {        
-        private IOneNoteService _oneNote;
-        private SettingsService _settings;
+        private readonly IOneNoteService _oneNote;
+        private readonly IDialogService _dialogService;
+        private readonly SettingsService _settings;
 
         public OneNotePartViewModel OneNotePartViewModel { get; }
         public StatusPartViewModel StatusPartViewModel { get; private set; }
@@ -31,11 +33,12 @@ namespace FridgeShoppingList.ViewModels
         public RelayCommand ShutdownCommand => new RelayCommand(ShutdownDevice);
         public RelayCommand RestartCommand => new RelayCommand(RestartDevice);        
 
-        public SettingsPageViewModel(IOneNoteService oneNote, SettingsService settings)
+        public SettingsPageViewModel(IOneNoteService oneNote, IDialogService dialogService, SettingsService settings)
         {            
             _oneNote = oneNote;
             _settings = settings;
-            ItemTypesPartViewModel = new ItemTypesPartViewModel(_settings);
+            _dialogService = dialogService;
+            ItemTypesPartViewModel = new ItemTypesPartViewModel(_settings, _dialogService);
             StatusPartViewModel = new StatusPartViewModel();
             OneNotePartViewModel = new OneNotePartViewModel(_oneNote);
         }
@@ -70,6 +73,7 @@ namespace FridgeShoppingList.ViewModels
     public class ItemTypesPartViewModel : ViewModelBase
     {
         private readonly SettingsService _settings;
+        private readonly IDialogService _dialogService;
 
         public ObservableCollectionExtended<GroceryItemType> SavedItemTypes { get; set; } = new ObservableCollectionExtended<GroceryItemType>();
 
@@ -114,13 +118,15 @@ namespace FridgeShoppingList.ViewModels
         public RelayCommand<IEnumerable<GroceryItemType>> DeleteMultipleItemTypesCommand
             => new RelayCommand<IEnumerable<GroceryItemType>>(DeleteMultipleItemTypes);
 
-        public ItemTypesPartViewModel(SettingsService settings)
+        public ItemTypesPartViewModel(SettingsService settings, IDialogService dialogService)
         {
             _settings = settings;
             _settings.GroceryTypes
                 .ObserveOnDispatcher()
-                .Bind(SavedItemTypes)
+                .Bind(SavedItemTypes)                
                 .Subscribe();
+
+            _dialogService = dialogService;
         }
 
         private void EnterSelectionMode()
@@ -133,9 +139,13 @@ namespace FridgeShoppingList.ViewModels
             IsSelecting = false;
         }
 
-        private void EditItemType(GroceryItemType itemType)
+        private async void EditItemType(GroceryItemType itemType)
         {
-            // TODO
+            GroceryItemType result = await _dialogService.ShowModalDialogAsync<AddGroceryItemTypeViewModel, GroceryItemType>(itemType);
+            if (result != null)
+            {
+                _settings.AddOrEditGroceryType(result);
+            }
         }
 
         private void DeleteItemType(GroceryItemType itemType)

@@ -25,9 +25,25 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             }
         }
 
+        public AddGroceryItemTypeViewModel(GroceryItemType typeToEdit)
+        {
+            if (typeToEdit != null)
+            {
+                ItemName = typeToEdit.Name;
+                Result = typeToEdit;
+            }
+        }
+
         public void SetResultToCurrentState()
         {
-            Result = new GroceryItemType(ItemName);
+            if (Result == null)
+            {
+                Result = new GroceryItemType(ItemName);
+            }
+            else // We're editing, and not adding, in this case...
+            {
+                Result.Name = ItemName;                
+            }
         }
     }
 }

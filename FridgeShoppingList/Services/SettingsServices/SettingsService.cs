@@ -51,19 +51,23 @@ namespace FridgeShoppingList.Services.SettingsServices
         private SettingsService()
         {
             _helper = new Template10.Services.SettingsService.SettingsHelper();
+            var converter = _helper.Container(Template10.Services.SettingsService.SettingsStrategies.Local).Converters.GetConverter(typeof(Guid));
 
             //Initialize GroceryItemTypes
-            GroceryItemType[] savedGroceryTypes = _helper.Read(nameof(GroceryTypes), new GroceryItemType[]
-            {
-                new GroceryItemType("Milk, 1L"),
-                new GroceryItemType("Bread"),
-                new GroceryItemType("Cheese"),
-                new GroceryItemType("Ketchup"),
-                new GroceryItemType("Weiner schnitzel"),
-                new GroceryItemType("Juice"),
-                new GroceryItemType("Herb tomato pureé")
-            });
-            _groceryTypes.AddRange(savedGroceryTypes);
+            GroceryItemType[] savedGroceryTypes = _helper.Read(
+                key: nameof(GroceryTypes), 
+                otherwise: new GroceryItemType[]
+                {
+                    new GroceryItemType("Milk, 1L"),
+                    new GroceryItemType("Bread"),
+                    new GroceryItemType("Cheese"),
+                    new GroceryItemType("Ketchup"),
+                    new GroceryItemType("Weiner schnitzel"),
+                    new GroceryItemType("Juice"),
+                    new GroceryItemType("Herb tomato pureé")
+                }
+            );
+            _groceryTypes.AddRange(savedGroceryTypes);            
             GroceryTypes = _groceryTypes.Connect();
 
             //Initialize GroceryItems
@@ -95,9 +99,17 @@ namespace FridgeShoppingList.Services.SettingsServices
                 );
         }
 
-        public void AddToGroceryTypes(GroceryItemType newType)
+        public void AddOrEditGroceryType(GroceryItemType newType)
         {
-            _groceryTypes.Add(newType);
+            GroceryItemType existing = _groceryTypes.Items.FirstOrDefault(x => x.ItemTypeId == newType.ItemTypeId);
+            if (existing != null)
+            {
+                existing.Name = newType.Name;
+            }
+            else
+            {
+                _groceryTypes.Add(newType);
+            }
         }
 
         public void RemoveFromGroceryTypes(GroceryItemType typeToRemove)

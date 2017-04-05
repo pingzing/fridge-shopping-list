@@ -1,10 +1,24 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace FridgeShoppingList.Models
 {
-    public class GroceryItemType : IEquatable<GroceryItemType>
+    public class GroceryItemType : INotifyPropertyChanged, IEquatable<GroceryItemType>
     {
-        public string Name { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+                }
+            }
+        }
+
         public Guid ItemTypeId { get; set; }
 
         public GroceryItemType()
@@ -18,6 +32,8 @@ namespace FridgeShoppingList.Models
             Name = name;
             ItemTypeId = Guid.NewGuid();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public bool Equals(GroceryItemType other)
         {            

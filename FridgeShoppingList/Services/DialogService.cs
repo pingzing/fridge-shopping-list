@@ -19,8 +19,22 @@ namespace FridgeShoppingList.Services
         Task ShowDialog(string message);
         Task ShowDialog(string message, string title);
         Task<IUICommand> ShowDialog(MessageDialog dialog);
-        Task<ContentDialogResult> ShowDialog(ContentDialog dialog);        
+        Task<ContentDialogResult> ShowDialog(ContentDialog dialog);  
+        /// <summary>
+        /// Shows a modal dialog backed by the given ViewModel, and expects a return value of the given type.
+        /// </summary>
+        /// <typeparam name="TViewModel">The backing viewmodel that the dialog should use.</typeparam>
+        /// <typeparam name="TResult">The expected return value the dialog should return.</typeparam>
+        /// <returns>A TResult.</returns>
         Task<TResult> ShowModalDialogAsync<TViewModel, TResult>() where TViewModel : IResultDialogViewModel<TResult>;
+
+        /// <summary>
+        /// Shows a modal dialog backed by the given ViewModel, and expects a return value of the given type.
+        /// </summary>
+        /// <param name="args">The parameter to be passed to the ViewModel's constructor.</param>
+        /// <typeparam name="TViewModel">The backing viewmodel that the dialog should use.</typeparam>
+        /// <typeparam name="TResult">The expected return value the dialog should return.</typeparam>
+        /// <returns>A TResult.</returns>
         Task<TResult> ShowModalDialogAsync<TViewModel, TResult>(object args) where TViewModel : IResultDialogViewModel<TResult>;
     }
 
@@ -96,7 +110,7 @@ namespace FridgeShoppingList.Services
             }
             else if (typeof(TViewModel) == typeof(AddGroceryItemTypeViewModel))
             {
-                return (IResultDialogViewModel<TResult>)new AddGroceryItemTypeViewModel();
+                return (IResultDialogViewModel<TResult>)new AddGroceryItemTypeViewModel((GroceryItemType)args);
             }          
             else
             {

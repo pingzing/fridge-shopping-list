@@ -19,11 +19,122 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:2" Value="360"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
+        <Storyboard x:Name="GrowInBordersStoryboard">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="rectangle">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="rectangle1">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="path">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="path1">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="path2">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="path3">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="SwooshInHeaderTextStoryboard">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="HeaderText">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="HeaderTextBackground">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
     </UserControl.Resources>
 
     <Grid Background="{ThemeResource ExtendedSplashBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="TopBorder" Margin="0 20 0 0" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <CompositeTransform/>
+            </Grid.RenderTransform>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Path x:Name="path" Grid.Column="0"              
+                  Data="M0,0 
+                        A20,20 0 0 1 0,40 z"
+                  Fill="{ThemeResource LcarsAccentBrush}"              
+                  RenderTransformOrigin="0.5,0.5"
+                  VerticalAlignment="Center">
+                <Path.RenderTransform>
+                    <CompositeTransform ScaleX="-1"/>
+                </Path.RenderTransform>
+            </Path>
+            <Rectangle x:Name="rectangle" Grid.Column="1" 
+                       Fill="{ThemeResource LcarsAccentBrush}"
+                       Height="40"                   
+                       HorizontalAlignment="Stretch" 
+                       RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <CompositeTransform/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Border x:Name="HeaderTextBackground" 
+                    Grid.Column="1"
+                    Background="Black"
+                    HorizontalAlignment="Right"
+                    Margin="20 0"
+                    Padding="20 0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <CompositeTransform/>
+                </Border.RenderTransform>
+                <TextBlock x:Name="HeaderText" 
+                           Text="INITIALIZATION"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource LcarsHeaderTextBlockStyle}"/>
+            </Border>
+            <Path x:Name="path1" Grid.Column="2"              
+                  Data="M0,0 
+                        A20,20 0 0 1 0,40 z"
+                  Fill="{ThemeResource LcarsAccentBrush}"              
+                  VerticalAlignment="Center"/>
+        </Grid>
 
         <Image x:Name="SplashImageControl" 
+               Grid.Row="1"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
                Source="ms-appx:///Assets/SplashScreen.png" 
                Stretch="None"
                ImageOpened="Image_Loaded">
@@ -31,27 +142,50 @@
                 <PlaneProjection/>
             </Image.Projection>
         </Image>
-        
-        <!--<Canvas x:Name="rootCanvas"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
-            <Viewbox x:Name="splashImage" HorizontalAlignment="Stretch">
-                <Viewbox.Projection>
-                    <PlaneProjection/>
-                </Viewbox.Projection>
-            </Viewbox>
-        </Canvas>-->
 
-        <TextBlock x:Name="SplashLoginText"                            
+        <TextBlock x:Name="SplashLoginText"
+                   Grid.Row="2"
                    Margin="40, 0"
                    HorizontalAlignment="Center"
                    Text="I'm some text!"
-                   TextWrapping="WrapWholeWords"          
-                   RenderTransformOrigin="0.5,0.5">
-            <TextBlock.RenderTransform>
-                <CompositeTransform x:Name="TextTransform" TranslateY="120" />
-            </TextBlock.RenderTransform>
-        </TextBlock>
+                   TextWrapping="WrapWholeWords"/>
+
+        <Grid x:Name="BottomBorder" 
+              Grid.Row="3"
+              Margin="0 0 0 20" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <CompositeTransform/>
+            </Grid.RenderTransform>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Path x:Name="path2" Grid.Column="0"              
+                  Data="M0,0 
+                        A10,10 0 0 1 0,20 z"
+                  Fill="{ThemeResource LcarsAccentBrush}"              
+                  VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <CompositeTransform ScaleX="-1"/>
+                </Path.RenderTransform>
+            </Path>
+            <Rectangle x:Name="rectangle1" Grid.Column="1" 
+                       Fill="{ThemeResource LcarsAccentBrush}"
+                       Height="20"                   
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <CompositeTransform/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Path x:Name="path3" Grid.Column="2"              
+                  Data="M0,0 
+                        A10,10 0 0 1 0,20 z"
+                  Fill="{ThemeResource LcarsAccentBrush}"              
+                  VerticalAlignment="Bottom"/>
+        </Grid>
+
     </Grid>
 
 </UserControl>

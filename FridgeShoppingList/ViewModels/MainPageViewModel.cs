@@ -107,7 +107,7 @@ namespace FridgeShoppingList.ViewModels
             GroceryItemType result = await _dialogService.ShowModalDialogAsync<AddGroceryItemTypeViewModel, GroceryItemType>();
             if (result != null)
             {
-                _settings.AddToGroceryTypes(result);
+                _settings.AddOrEditGroceryType(result);
             }
         }       
 
