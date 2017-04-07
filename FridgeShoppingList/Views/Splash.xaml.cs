@@ -1,5 +1,6 @@
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -10,6 +11,17 @@ namespace FridgeShoppingList.Views
 {
     public sealed partial class Splash : UserControl
     {
+        private Random _rng = new Random();
+        private List<string> _loginPhrases = new List<string>
+        {
+            "Aligning dilithium crystals...",
+            "Reticulating splines...",
+            "Fluffing bio-neural gel packs...",
+            "Replicating tea, Earl Grey, hot...",
+            "Counterfeiting gold-pressed latinum...",
+            "Estimating good days on which to die...",
+        };
+
         public Task SplashInProgress { get; private set; }
 
         public Splash(SplashScreen splashScreen)
@@ -25,9 +37,20 @@ namespace FridgeShoppingList.Views
         }
 
         private async Task BeginSplashProcess()
-        {            
-            //Simulate some kind of fun login text here
-            await Task.Delay(10000);
+        {
+
+            await Task.Delay(2500);
+            int firstIndex = _rng.Next(_loginPhrases.Count - 1);
+            SplashLoginText.Text = _loginPhrases[firstIndex].ToUpperInvariant();
+            await Task.Delay(3000);
+
+            int secondIndex = -1;
+            do
+            {
+                secondIndex = _rng.Next(_loginPhrases.Count - 1);
+            } while (secondIndex == firstIndex);
+            SplashLoginText.Text = _loginPhrases[secondIndex].ToUpperInvariant();
+            await Task.Delay(2500);
         }
         
 

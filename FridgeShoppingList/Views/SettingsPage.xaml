@@ -168,7 +168,7 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{x:Bind Name}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" VerticalAlignment="Center"/>
                                         <Button Grid.Column="1" 
                                                 Background="{ThemeResource LcarsBlueGrayBrush}" 
                                                 Command="{Binding ElementName=ItemTypesList, Path=DataContext.EditItemTypeCommand, Mode=OneTime}"

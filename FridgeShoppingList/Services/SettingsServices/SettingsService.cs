@@ -112,8 +112,11 @@ namespace FridgeShoppingList.Services.SettingsServices
         }
 
         public void RemoveFromGroceryTypes(GroceryItemType typeToRemove)
-        {
-            _groceryTypes.Remove(typeToRemove);
+        {                       
+            _shoppingListItems.RemoveMany(_shoppingListItems.Items.Where(x => x.ItemType.ItemTypeId == typeToRemove.ItemTypeId));
+            _inventoryItems.RemoveMany(_inventoryItems.Items.Where(x => x.ItemType.ItemTypeId == typeToRemove.ItemTypeId));
+
+            _groceryTypes.Remove(typeToRemove);            
         }
 
         public void AddToInventoryItems(InventoryEntry item)
