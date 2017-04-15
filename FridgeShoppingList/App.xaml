@@ -25,6 +25,7 @@
             <ctConv:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter"/>
             <ctConv:CollectionVisibilityConverter x:Key="CollectionVisibilityInvertedConverter" EmptyValue="Visible" NotEmptyValue="Collapsed" />
             <ctConv:StringVisibilityConverter x:Key="StringToVisibilityConverter"/>
+            
 
         </ResourceDictionary>
     </Application.Resources>

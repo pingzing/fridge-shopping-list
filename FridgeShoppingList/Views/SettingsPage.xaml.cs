@@ -5,7 +5,9 @@ using Microsoft.Practices.ServiceLocation;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace FridgeShoppingList.Views
@@ -45,6 +47,20 @@ namespace FridgeShoppingList.Views
                 {
                     vmSelectedItems.Add(itemType);
                 }
+            }
+        }
+
+        private SolidColorBrush _mostlyTransparentWhiteBrush = new SolidColorBrush { Color = Colors.White, Opacity = 0.1 };
+        private SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
+        private void ItemTypesList_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (args.ItemIndex % 2 != 0)
+            {
+                args.ItemContainer.Background = _mostlyTransparentWhiteBrush;
+            }
+            else
+            {
+                args.ItemContainer.Background = _transparentBrush;
             }
         }
     }
