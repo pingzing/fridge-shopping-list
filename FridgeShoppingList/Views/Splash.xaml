@@ -147,7 +147,7 @@
                    Grid.Row="2"
                    Margin="40, 0"
                    HorizontalAlignment="Center"
-                   Text="I'm some text!"
+                   Style="{StaticResource LcarsHeaderTextBlockStyle}"                   
                    TextWrapping="WrapWholeWords"/>
 
         <Grid x:Name="BottomBorder" 
@@ -158,14 +158,15 @@
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="468*"/>
+                <ColumnDefinition Width="535*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Path x:Name="path2" Grid.Column="0"              
                   Data="M0,0 
                         A10,10 0 0 1 0,20 z"
                   Fill="{ThemeResource LcarsAccentBrush}"              
-                  VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+                  VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Margin="0.2,0" UseLayoutRounding="False">
                 <Path.RenderTransform>
                     <CompositeTransform ScaleX="-1"/>
                 </Path.RenderTransform>
@@ -174,16 +175,16 @@
                        Fill="{ThemeResource LcarsAccentBrush}"
                        Height="20"                   
                        HorizontalAlignment="Stretch"
-                       VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+                       VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="3" Margin="0.6,0,10,0">
                 <Rectangle.RenderTransform>
                     <CompositeTransform/>
                 </Rectangle.RenderTransform>
             </Rectangle>
-            <Path x:Name="path3" Grid.Column="2"              
+            <Path x:Name="path3" Grid.Column="3"              
                   Data="M0,0 
                         A10,10 0 0 1 0,20 z"
                   Fill="{ThemeResource LcarsAccentBrush}"              
-                  VerticalAlignment="Bottom"/>
+                  VerticalAlignment="Bottom" Margin="0.2,0" UseLayoutRounding="False"/>
         </Grid>
 
     </Grid>
