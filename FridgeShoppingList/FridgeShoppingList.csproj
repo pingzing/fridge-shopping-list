@@ -132,6 +132,7 @@
     <Compile Include="Converters\StringFormatConverter.cs" />
     <Compile Include="Converters\StringToUpperConverter.cs" />
     <Compile Include="Extensions\PasswordVaultExtensions.cs" />
+    <Compile Include="Extensions\VisualExtensions.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\WiFiAvailableNetworkComparer.cs" />
     <Compile Include="Models\DateTimeOffsetWrapper.cs" />

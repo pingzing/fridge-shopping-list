@@ -13,6 +13,7 @@
       xmlns:ctls="using:FridgeShoppingList.Controls"
       xmlns:uctCtls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:models="using:FridgeShoppingList.Models"
+      xmlns:ve="using:FridgeShoppingList.Extensions"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -147,8 +148,9 @@
                                     Foreground="Black"
                                     IsEnabled="{x:Bind ViewModel.ItemTypesPartViewModel.SelectedItems.Count, Mode=OneWay, Converter={StaticResource EmptyNullToBoolConverter}}"
                                     Margin="10 0 0 0"
-                                    Style="{ThemeResource LcarsButtonStyle}"
-                                    Visibility="{x:Bind ViewModel.ItemTypesPartViewModel.IsSelecting, Mode=OneWay}">
+                                    Style="{ThemeResource LcarsButtonStyle}"                                    
+                                    ve:VisualExtensions.AnimatedVisibility="{x:Bind ViewModel.ItemTypesPartViewModel.IsSelecting, Mode=OneWay}"
+                                    ve:VisualExtensions.AnimatedVisibilityType="Fade">
                             </Button>
                         </StackPanel>
                         <ListView x:Name="ItemTypesList" 
