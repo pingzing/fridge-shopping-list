@@ -5,6 +5,11 @@ namespace FridgeShoppingList.Models
 {
     public class GroceryItemType : INotifyPropertyChanged, IEquatable<GroceryItemType>
     {
+        private const uint NumOfSamplesToAverage = 4;
+
+        public uint AverageDaysTillExpiry { get; private set; }
+        public Guid ItemTypeId { get; set; }
+
         private string _name;
         public string Name
         {
@@ -17,9 +22,7 @@ namespace FridgeShoppingList.Models
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
                 }
             }
-        }
-
-        public Guid ItemTypeId { get; set; }
+        }        
 
         public GroceryItemType()
         {
@@ -32,6 +35,19 @@ namespace FridgeShoppingList.Models
             Name = name;
             ItemTypeId = Guid.NewGuid();
         }
+
+        /// <summary>
+        /// Update the average days an item takes to expire with a new sample.
+        /// </summary>
+        /// <param name="daysInTheFuture"></param>
+        public void UpdateAverageExpiryTime(params uint[] daysInTheFuture)
+        {
+            foreach (uint sample in daysInTheFuture)
+            {
+                AverageDaysTillExpiry -= AverageDaysTillExpiry / NumOfSamplesToAverage;
+                AverageDaysTillExpiry += sample / NumOfSamplesToAverage;
+            }
+        }        
 
         public event PropertyChangedEventHandler PropertyChanged;
 

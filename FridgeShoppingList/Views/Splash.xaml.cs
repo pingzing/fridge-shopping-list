@@ -38,7 +38,6 @@ namespace FridgeShoppingList.Views
 
         private async Task BeginSplashProcess()
         {
-
             await Task.Delay(2500);
             int firstIndex = _rng.Next(_loginPhrases.Count - 1);
             SplashLoginText.Text = _loginPhrases[firstIndex].ToUpperInvariant();

@@ -23,11 +23,7 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
         public InventoryEntry Result { get; set; }
 
         public ObservableCollectionExtended<GroceryItemType> ItemTypes { get; private set; } = new ObservableCollectionExtended<GroceryItemType>();
-        public ObservableCollectionExtended<DateTimeOffsetWrapper> ExpiryDates { get; private set; } 
-            = new ObservableCollectionExtended<DateTimeOffsetWrapper>()
-            {
-                new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Today }
-            };
+        public ObservableCollectionExtended<DateTimeOffsetWrapper> ExpiryDates { get; private set; }
 
         GroceryItemType _selectedItemType = default(GroceryItemType);
         public GroceryItemType SelectedItemType
@@ -36,6 +32,11 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             set
             {
                 Set(ref _selectedItemType, value);
+                var firstExpiryDate = ExpiryDates.First();
+                if (firstExpiryDate != null)
+                {
+                    firstExpiryDate.DateTimeOffset = DateTime.Today + TimeSpan.FromDays(value.AverageDaysTillExpiry);
+                }
                 RaisePropertyChanged(nameof(IsAddButtonEnabled));
             }
         }
@@ -63,20 +64,17 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
 
         public AddToInventoryViewModel(object args)
         {
-            _settings.GroceryTypes           
+            _settings.GroceryTypes
                 .Sort(SortExpressionComparer<GroceryItemType>.Ascending(x => x.Name))
-                .ObserveOnDispatcher()                
+                .ObserveOnDispatcher()
                 .Bind(ItemTypes)
                 .Subscribe();
 
-            DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
-            {
-            await Task.Delay(200);
-
+            GroceryItemType selectedItemType;
             ShoppingListEntry entry = args as ShoppingListEntry;
             if (entry == null)
             {
-                SelectedItemType = _settings.GroceryTypes
+                selectedItemType = _settings.GroceryTypes
                     .AsObservableList()
                     .Items
                     .OrderBy(x => x.Name)
@@ -84,15 +82,32 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
             }
             else
             {
-                SelectedItemType = _settings.GroceryTypes
+                selectedItemType = _settings.GroceryTypes
                     .AsObservableList()
                     .Items
                     .Where(x => x.ItemTypeId == entry.ItemType.ItemTypeId)
-                    .FirstOrDefault();
+                    .FirstOrDefault();                
+            }
+
+            ExpiryDates = new ObservableCollectionExtended<DateTimeOffsetWrapper>
+            {
+                new DateTimeOffsetWrapper { DateTimeOffset = DateTime.Now + TimeSpan.FromDays(selectedItemType.AverageDaysTillExpiry) }
+            };
+
+            DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+            {
+                await Task.Delay(200);
                 
-                    SelectedCountIndex = entry.Count < 12 ? (int)entry.Count - 1 : 11;
+                if (entry == null)
+                {
+                    SelectedItemType = selectedItemType;
                 }
-            });            
+                else
+                {
+                    SelectedItemType = selectedItemType;
+                    SelectedCountIndex = entry.Count < 12 ? (int)entry.Count - 1 : 11;
+                }                
+            });
         }
 
         public void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -110,18 +125,29 @@ namespace FridgeShoppingList.ViewModels.ControlViewModels
                 ExpiryDates.Clear();
                 ExpiryDates.AddRange(dateTimes);
             }
-        }        
+        }
 
         public void SetResultToCurrentState()
         {
             if (AreDatesLinked)
             {
-                Result = new InventoryEntry(SelectedItemType, 
-                    Enumerable.Repeat(ExpiryDates.First().DateTimeOffset.DateTime, SelectedCountIndex + 1));
+                var expiryDate = ExpiryDates.First();
+                Result = new InventoryEntry(SelectedItemType,
+                    Enumerable.Repeat(expiryDate.DateTimeOffset.DateTime, SelectedCountIndex + 1));
+
+                // Round up, so that fractional days have a little more weight
+                uint daysTillExpiry = (uint)Math.Ceiling((expiryDate.DateTimeOffset - DateTime.Now).TotalDays);
+                SelectedItemType.UpdateAverageExpiryTime(daysTillExpiry);
             }
             else
             {
-                Result = new InventoryEntry(SelectedItemType, ExpiryDates.Select(x => x.DateTimeOffset.DateTime));
+                var expiryDates = ExpiryDates.Select(x => x.DateTimeOffset.DateTime);
+                Result = new InventoryEntry(SelectedItemType, expiryDates);
+
+                uint[] daysTillExpiry = expiryDates
+                    .Select(x => (uint)Math.Ceiling((x - DateTime.Now).TotalDays))
+                    .ToArray();
+                SelectedItemType.UpdateAverageExpiryTime(daysTillExpiry);
             }
         }
     }

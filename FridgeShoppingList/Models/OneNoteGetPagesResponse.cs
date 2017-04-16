@@ -47,7 +47,6 @@ namespace FridgeShoppingList.Models
 
         [JsonProperty("parentSection")]
         public ParentSection ParentSection { get; set; }
-    
     }
 
     public class Links
@@ -82,5 +81,4 @@ namespace FridgeShoppingList.Models
         [JsonProperty("self")]
         public string Self { get; set; }
     }
-
 }

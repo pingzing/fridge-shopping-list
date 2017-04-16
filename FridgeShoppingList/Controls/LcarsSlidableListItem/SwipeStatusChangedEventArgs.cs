@@ -21,5 +21,4 @@ namespace FridgeShoppingList.Controls.LcarsSlidableListItem
         /// </summary>
         public SwipeStatus NewValue { get; internal set; }
     }
-
 }
