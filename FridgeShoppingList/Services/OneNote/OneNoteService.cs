@@ -100,6 +100,11 @@ namespace FridgeShoppingList.Services
                         System.Diagnostics.Debug.WriteLine("Authentication cancelled by user.");
                         return false;
                     }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Authentication failed for some reason!");
+                        return false;
+                    }
                 });
                 if (!success)
                 {
