@@ -9,7 +9,7 @@ platform:
 - x64
 - ARM
 build:
-  verbosity: minimal
+  verbosity: verbose
 clone_script:
 - ps: >-
     if(-not $env:appveyor_pull_request_number) {
