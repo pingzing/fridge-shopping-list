@@ -321,7 +321,7 @@
       <Name>OneDrive.Sdk.Authentication.UWP</Name>
     </ProjectReference>
     <ProjectReference Include="..\libs\onedrive-sdk-dotnet-msa-auth-adapter\src\OneDrive.Sdk.Authentication.WinStore\OneDrive.Sdk.Authentication.WinStore.csproj">
-      <Project>{a8c54259-542c-40ac-aeb6-eefc3aa79859}</Project>
+      <Project>{6a01fa6a-6e20-445f-8540-442a4dd1abb3}</Project>
       <Name>OneDrive.Sdk.Authentication.WinStore</Name>
     </ProjectReference>
     <ProjectReference Include="..\libs\TCD.Controls.Keyboard\TCD.Controls.Keyboard.csproj">
