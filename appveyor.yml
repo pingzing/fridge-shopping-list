@@ -6,6 +6,7 @@ platform:
 - x64
 - ARM
 build:
+  project: FridgeShoppingList.sln
   verbosity: detailed
 install:
   - git submodule update --init --recursive
