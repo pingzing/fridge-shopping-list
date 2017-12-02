@@ -5,8 +5,12 @@ platform:
 - x86
 - x64
 - ARM
+matrix:
+  fast_finish: true
+before_build:
+  - nuget restore
+install:
+  - git submodule update --init --recursive
 build:
   project: FridgeShoppingList.sln
   verbosity: detailed
-install:
-  - git submodule update --init --recursive
