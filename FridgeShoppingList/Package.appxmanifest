@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" IgnorableNamespaces="uap mp iot">
-  <Identity Name="10707NeilApps.FOODDIoTShoppingList" Publisher="CN=B458EF9C-1F3A-4DD2-AB1A-76FB5056CF30" Version="1.1.0.0" />
-  <mp:PhoneIdentity PhoneProductId="235282ab-5836-41ba-ae47-5c6edd0dcada" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="10707NeilApps.FOODDIoTShoppingList" Publisher="CN=B458EF9C-1F3A-4DD2-AB1A-76FB5056CF30" Version="1.2.4.0" />
+  <mp:PhoneIdentity PhoneProductId="63760883-eae5-40b5-a31b-f3e0ecf5a078" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>FOODD IoT Shopping List</DisplayName>
     <PublisherDisplayName>NeilApps</PublisherDisplayName>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="FridgeShoppingList.App">
-      <uap:VisualElements DisplayName="FridgeShoppingList.App" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Sample" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="FOODD" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="LCARS-themed FOODD IoT Shopping List" BackgroundColor="transparent">
         <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
           <uap:ShowNameOnTiles>
