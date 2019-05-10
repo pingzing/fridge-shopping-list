@@ -1,17 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FridgeShoppingList", "FridgeShoppingList\FridgeShoppingList.csproj", "{15026C5D-1465-4C59-90EA-DDCE205E02CD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCD.Controls.Keyboard", "libs\TCD.Controls.Keyboard\TCD.Controls.Keyboard.csproj", "{9E8B0D12-8145-4247-821C-4A603FA683F2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LocalLibs", "LocalLibs", "{1A3EB053-B23A-4614-90DC-D4366FAAF941}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDrive.Sdk.Authentication.UWP", "libs\onedrive-sdk-dotnet-msa-auth-adapter\src\OneDrive.Sdk.Authentication.UWP\OneDrive.Sdk.Authentication.UWP.csproj", "{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDrive.Sdk.Authentication.WinStore", "libs\onedrive-sdk-dotnet-msa-auth-adapter\src\OneDrive.Sdk.Authentication.WinStore\OneDrive.Sdk.Authentication.WinStore.csproj", "{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,62 +39,9 @@ Global
 		{15026C5D-1465-4C59-90EA-DDCE205E02CD}.Release|x86.ActiveCfg = Release|x86
 		{15026C5D-1465-4C59-90EA-DDCE205E02CD}.Release|x86.Build.0 = Release|x86
 		{15026C5D-1465-4C59-90EA-DDCE205E02CD}.Release|x86.Deploy.0 = Release|x86
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Debug|ARM.ActiveCfg = Debug|ARM
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Debug|ARM.Build.0 = Debug|ARM
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Debug|x64.ActiveCfg = Debug|x64
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Debug|x64.Build.0 = Debug|x64
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Debug|x86.ActiveCfg = Debug|x86
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Debug|x86.Build.0 = Debug|x86
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Release|ARM.ActiveCfg = Release|ARM
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Release|ARM.Build.0 = Release|ARM
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Release|x64.ActiveCfg = Release|x64
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Release|x64.Build.0 = Release|x64
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Release|x86.ActiveCfg = Release|x86
-		{9E8B0D12-8145-4247-821C-4A603FA683F2}.Release|x86.Build.0 = Release|x86
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Debug|ARM.ActiveCfg = Debug|ARM
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Debug|ARM.Build.0 = Debug|ARM
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Debug|x64.ActiveCfg = Debug|x64
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Debug|x64.Build.0 = Debug|x64
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Debug|x86.ActiveCfg = Debug|x86
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Debug|x86.Build.0 = Debug|x86
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Release|ARM.ActiveCfg = Release|ARM
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Release|ARM.Build.0 = Release|ARM
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Release|x64.ActiveCfg = Release|x64
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Release|x64.Build.0 = Release|x64
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Release|x86.ActiveCfg = Release|x86
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6}.Release|x86.Build.0 = Release|x86
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Debug|ARM.ActiveCfg = Debug|ARM
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Debug|ARM.Build.0 = Debug|ARM
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Debug|x64.ActiveCfg = Debug|x64
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Debug|x64.Build.0 = Debug|x64
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Debug|x86.ActiveCfg = Debug|x86
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Debug|x86.Build.0 = Debug|x86
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Release|ARM.ActiveCfg = Release|ARM
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Release|ARM.Build.0 = Release|ARM
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Release|x64.ActiveCfg = Release|x64
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Release|x64.Build.0 = Release|x64
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Release|x86.ActiveCfg = Release|x86
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{9E8B0D12-8145-4247-821C-4A603FA683F2} = {1A3EB053-B23A-4614-90DC-D4366FAAF941}
-		{07EE71E1-1BEC-409A-B497-3A9E3EF16EE6} = {1A3EB053-B23A-4614-90DC-D4366FAAF941}
-		{6A01FA6A-6E20-445F-8540-442A4DD1ABB3} = {1A3EB053-B23A-4614-90DC-D4366FAAF941}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABAFE5A8-51D1-4785-BB3D-9C0012E99D87}

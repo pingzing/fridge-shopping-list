@@ -543,9 +543,6 @@
                                 <Binding Path="ModalBackground" RelativeSource="{RelativeSource Mode=TemplatedParent}" />
                             </Grid.Background>
                             <ContentPresenter Content="{TemplateBinding ModalContent}" ContentTransitions="{TemplateBinding ModalTransitions}" />
-                            <osk:OnScreenKeyBoard x:Name="AppSoftwareKeyboard"
-                                                  Grid.Row="1"
-                                                  VerticalAlignment="Bottom"/>
                         </Grid>
                     </Grid>
                 </ControlTemplate>

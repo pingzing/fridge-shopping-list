@@ -5,8 +5,7 @@
     xmlns:local="using:FridgeShoppingList.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:lcarsDialog="using:FridgeShoppingList.Controls.LcarsModalDialog"
-    xmlns:osk="using:TCD.Controls.Keyboard"
+    xmlns:lcarsDialog="using:FridgeShoppingList.Controls.LcarsModalDialog"    
     mc:Ignorable="d"
     d:DesignHeight="180"
     d:DesignWidth="420"
@@ -21,8 +20,7 @@
     IsPrimaryButtonEnabled="{x:Bind ViewModel.IsConfirmButtonEnabled, Mode=OneWay}">
 
     <Grid>
-        <TextBox Text="{Binding ItemName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 osk:OnScreenKeyBoard.OpensKeyboard="True">
+        <TextBox Text="{Binding ItemName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBox.Header>
                 <TextBlock Text="ITEM NAME" 
                            Style="{StaticResource LcarsHeaderControlTextBlockStyle}"/>
