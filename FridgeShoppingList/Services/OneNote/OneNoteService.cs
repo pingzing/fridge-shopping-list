@@ -7,6 +7,7 @@ using Optional;
 using Optional.Unsafe;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace FridgeShoppingList.Services
     {
         private const string OneNoteBaseUrl = "https://www.onenote.com/api/v1.0/me/";
         private const string GetTokenUrl = "https://login.live.com/oauth20_token.srf";
-        private const string ShoppingListPageFilter = "tolower(title) eq 'shopping list'";
+        private const string ShoppingListPageFilter = "tolower(title) eq 'shopping list' and tolower(parentSection/displayName) eq 'foodd'";
         private const string OneDriveRedirectUri = "https://login.live.com/oauth20_desktop.srf";
         private static readonly string[] ControlAppPagesScopes = new string[] { "Notes.ReadWrite" };
         private const string AzureClientID = "84f0ce39-3578-4586-87ed-741a0d00f5ae";
@@ -115,14 +116,19 @@ namespace FridgeShoppingList.Services
         public async Task<Option<IEnumerable<OneNoteCheckboxNode>>> GetShoppingListPageContent()
         {
             if (!_initialized) { await Initialize(); }
-            Option<MSGraph.OnenotePage> page = await GetFooddPage();
+            Option<MSGraph.OnenotePage> pageResult = await GetFooddPage();
             // if this is None, go and create the page
-            if (!page.HasValue)
+            if (!pageResult.HasValue)
             {
                 // create the page
             }
 
-            page.ValueOrFailure().Content
+            var page = pageResult.ValueOrFailure();
+
+            using (var reader = new StreamReader(page.Content))
+            {
+                var stringVal = await reader.ReadToEndAsync();
+            }
 
             return Option.None<IEnumerable<OneNoteCheckboxNode>>();
         }
@@ -158,12 +164,22 @@ namespace FridgeShoppingList.Services
                 allPages.Add(pageOfPages);
             } while (pageOfPages?.NextPageRequest != null);
 
-            return allPages
-                // We SHOULD be able to do the parentSection/name filter in the query up above, but the filtering
-                // OData syntax doesn't seem to support subproperties anymore. So, do it in code.
+            var page = allPages
                 .SelectMany(x => x.CurrentPage)
-                .FirstOrDefault(x => x.ParentSection.DisplayName.ToLowerInvariant() == "foodd")
-                .SomeNotNull();
+                .FirstOrDefault();
+
+            // The pagesCollection doesn't return everything, but a call to an individual page with an ID will.
+            Stream pageContent = await _graphClient.Me.Onenote.Pages[page.Id]
+                .Content
+                .Request()
+                .GetAsync();
+            if (page == null || pageContent == null)
+            {
+                return Option.None<MSGraph.OnenotePage>();
+            }
+
+            page.Content = pageContent;
+            return Option.Some(page);
         }
     }
 }
