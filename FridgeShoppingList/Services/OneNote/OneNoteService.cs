@@ -6,9 +6,9 @@ using Microsoft.Identity.Client;
 using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json;
 using Optional;
-using Optional.Unsafe;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -25,7 +25,7 @@ namespace FridgeShoppingList.Services
         event EventHandler<bool> ConnectedStatusChanged;
         bool ConnectedStatus { get; }
         Task<Option<IEnumerable<OneNoteCheckboxNode>>> GetShoppingListPageContent();
-        Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> localList, DateTimeOffset lastLocalUpdate);
+        Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> localList);
         Task<Option<IEnumerable<DeletePageResult>>> DeleteShoppingListPages();
         Task Logout();
     }
@@ -34,14 +34,13 @@ namespace FridgeShoppingList.Services
     {
         private const string ShoppingListPageFilter = "tolower(title) eq 'shopping list' and tolower(parentSection/displayName) eq 'foodd'";
         private static readonly string[] ControlAppPagesScopes = new string[] { "Notes.ReadWrite" };
-        private const string AzureClientID = "84f0ce39-3578-4586-87ed-741a0d00f5ae";
+        private const string AzureClientID = "84f0ce39-3578-4586-87ed-741a0d00f5ae"; // TODO: Put this into an external file somewhere.
 
         private readonly IPublicClientApplication _authClient;
         private static MSGraph.GraphServiceClient _graphClient;
         private readonly SettingsService _settingsService;
 
         private AuthenticationResult _authToken;
-        private string _cachedPageId;
 
         private bool _connectedStatus;
         public bool ConnectedStatus
@@ -92,7 +91,7 @@ namespace FridgeShoppingList.Services
 
                 if (_authToken == null)
                 {
-                    // do sad things
+                    // TODO: Somehow do error things
                 }
 
                 _graphClient = new MSGraph.GraphServiceClient(new MSGraph.DelegateAuthenticationProvider(requestMessage =>
@@ -109,68 +108,77 @@ namespace FridgeShoppingList.Services
         public async Task<Option<IEnumerable<OneNoteCheckboxNode>>> GetShoppingListPageContent()
         {
             if (!_initialized) { await Initialize(); }
-            Option<MSGraph.OnenotePage> pageResult = await GetFooddPage();
-            if (!pageResult.HasValue)
+            MSGraph.OnenotePage page = await GetFooddPageAndContent();
+            if (page == null)
             {
-                // create the page, return none
+                //TODO: create the page before returning
+
+
                 return Option.None<IEnumerable<OneNoteCheckboxNode>>();
             }
 
-            var page = pageResult.ValueOrFailure();
-
-            using (page.Content)
+            var content = ParseOneNoteContent(page);
+            if (content == null)
             {
-                var htmlDoc = new HtmlDocument();
-                htmlDoc.Load(page.Content);
-                var checkboxNodes = htmlDoc.DocumentNode
-                    .SelectNodes("//p")
-                    .Select(x => new OneNoteCheckboxNode(x));
-                return Option.Some(checkboxNodes);
+                return Option.None<IEnumerable<OneNoteCheckboxNode>>();
             }
+
+            return Option.Some(content);
         }
 
-        public async Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> localList, DateTimeOffset lastLocalUpdate)
+        public async Task<bool> UpdateShoppingListContent(IEnumerable<OneNoteCheckboxNode> localList)
         {
             if (!_initialized) { await Initialize(); }
 
-            // First get latest updates from the server, and check modified time
-            var getPageResult = await GetFooddPage();
-            if (!getPageResult.HasValue)
+            // 1. Check to see if we need to update
+            MSGraph.OnenotePage latestServerPage = await GetFooddPageAndContent();
+            if (latestServerPage == null)
             {
                 return false;
             }
 
-            MSGraph.OnenotePage latestServerPage = getPageResult.ValueOrFailure();
-
-            if (latestServerPage.LastModifiedDateTime.HasValue 
+            var lastLocalUpdate = _settingsService.LastLocalUpdate;
+            if (latestServerPage.LastModifiedDateTime.HasValue
                 && latestServerPage.LastModifiedDateTime.Value > lastLocalUpdate)
             {
-                // No updates necessary, we're done!
+                // If the remote page is more recent, don't send up anything. Remote always wins.
                 return true;
             }
 
-            var request = _graphClient.Me.Onenote
-                .Pages[await GetFooddPageId()]
+            // 2. We need to update, so generate the list of ChangeObjects.
+            IEnumerable<OneNoteCheckboxNode> existingContent = ParseOneNoteContent(latestServerPage);
+            var listToSend = localList
+                .Select(local =>
+                {
+                    bool exists = existingContent.Any(remote => remote.GeneratedId == local.GeneratedId);
+                    return new OneNoteChangeObject
+                    {
+                        // TODO: Need to make it so that if we're appending, the Target is actually the parent <div>'s GeneratedID.
+                        Action = exists ? OneNoteChangeAction.Replace : OneNoteChangeAction.Append,
+                        HtmlContent = local.ToHtmlContent(),
+                        Position = OneNoteChangePosition.After,
+                        Target = exists ? local.GeneratedId : local.DataId,
+                    };
+                });
+
+            // 3. Prepare and send the change request.
+            HttpRequestMessage updateRequest = _graphClient.Me.Onenote
+                .Pages[latestServerPage.Id]
                 .Content
                 .Request()
                 .GetHttpRequestMessage();
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(localList.Select(x => 
-            {
-                return new OneNoteChangeObject
-                {
-                    // TODO: For each element we send up, check it against the server. If it exists, update it. If not, append it.
-                    Action = OneNoteChangeAction.Replace,
-                    Target = x.GeneratedId ?? OneNoteChangeTarget.DataId(x.DataId),
-                    HtmlContent = x.ToHtmlContent(),
-                    Position = OneNoteChangePosition.After
-                };
-            })), Encoding.UTF8, Constants.JsonApplicationMediaType);
-            request.Method = new HttpMethod("PATCH");            
-            var response = await _graphClient.HttpProvider.SendAsync(request);
+            updateRequest.Content = new StringContent(
+                JsonConvert.SerializeObject(listToSend),
+                Encoding.UTF8,
+                Constants.JsonApplicationMediaType
+            );
+            updateRequest.Method = new HttpMethod("PATCH");
+            var response = await _graphClient.HttpProvider.SendAsync(updateRequest);
 
             if (response.StatusCode != (System.Net.HttpStatusCode)204)
             {
+                Debug.WriteLine($"Failed to update remote OneNote content: HTTP {response.StatusCode}, {await response.Content.ReadAsStringAsync()} ");
                 return false;
             }
 
@@ -190,7 +198,19 @@ namespace FridgeShoppingList.Services
             ConnectedStatus = false;
         }
 
-        private async Task<Option<MSGraph.OnenotePage>> GetFooddPage()
+        private async Task<MSGraph.OnenotePage> GetFooddPageAndContent()
+        {
+            var page = await GetFooddPage();
+            if (page == null)
+            {
+                return null;
+            }
+
+            page = await GetFooddPageContent(page);
+            return page;
+        }
+
+        private async Task<MSGraph.OnenotePage> GetFooddPage()
         {
             var allPages = new List<MSGraph.IOnenotePagesCollectionPage>();
             MSGraph.IOnenotePagesCollectionPage pageOfPages = null;
@@ -206,9 +226,12 @@ namespace FridgeShoppingList.Services
             var page = allPages
                 .SelectMany(x => x.CurrentPage)
                 .FirstOrDefault();
+            
+            return page;
+        }
 
-            _cachedPageId = page.Id;
-
+        private async Task<MSGraph.OnenotePage> GetFooddPageContent(MSGraph.OnenotePage page)
+        {
             // The pagesCollection doesn't return everything, but a call to an individual page with an ID will.
             Stream pageContent = await _graphClient.Me.Onenote.Pages[page.Id]
                 .Content
@@ -216,37 +239,23 @@ namespace FridgeShoppingList.Services
                 .GetAsync();
             if (page == null || pageContent == null)
             {
-                return Option.None<MSGraph.OnenotePage>();
+                return null;
             }
 
             page.Content = pageContent;
-            return Option.Some(page);
+            return page;
         }
 
-        private async Task<string> GetFooddPageId()
+        private IEnumerable<OneNoteCheckboxNode> ParseOneNoteContent(MSGraph.OnenotePage page)
         {
-            if (_cachedPageId != null)
+            using (page.Content)
             {
-                return _cachedPageId;
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.Load(page.Content);
+                return htmlDoc.DocumentNode
+                    .SelectNodes("//p")
+                    .Select(x => new OneNoteCheckboxNode(x));
             }
-
-            var allPages = new List<MSGraph.IOnenotePagesCollectionPage>();
-            MSGraph.IOnenotePagesCollectionPage pageOfPages = null;
-            do
-            {
-                pageOfPages = await _graphClient.Me.Onenote.Pages
-                    .Request()
-                    .Filter(ShoppingListPageFilter)
-                    .GetAsync();
-                allPages.Add(pageOfPages);
-            } while (pageOfPages?.NextPageRequest != null);
-
-            var page = allPages
-                .SelectMany(x => x.CurrentPage)
-                .FirstOrDefault();
-
-            _cachedPageId = page.Id;
-            return page.Id;
         }
     }
 }

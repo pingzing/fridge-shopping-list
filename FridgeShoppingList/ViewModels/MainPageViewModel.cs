@@ -99,6 +99,7 @@ namespace FridgeShoppingList.ViewModels
             if (result != null)
             {
                 _settings.AddToInventoryItems(result);
+                _settings.LastLocalUpdate = DateTimeOffset.UtcNow;
             }
         }       
 
@@ -114,6 +115,7 @@ namespace FridgeShoppingList.ViewModels
         private void DeleteFromShoppingList(ShoppingListEntryViewModel obj)
         {
             _settings.RemoveFromShoppingListItems(obj.Entry);
+            _settings.LastLocalUpdate = DateTimeOffset.UtcNow;
         }
 
         private async void MoveFromShoppingToInventory(ShoppingListEntryViewModel entry)
@@ -123,6 +125,7 @@ namespace FridgeShoppingList.ViewModels
             {
                 _settings.RemoveFromShoppingListItems(entry.Entry);
                 _settings.AddToInventoryItems(result);
+                _settings.LastLocalUpdate = DateTimeOffset.UtcNow;
             }            
         }
 
@@ -134,21 +137,18 @@ namespace FridgeShoppingList.ViewModels
             bool success = await _oneNoteService.UpdateShoppingListContent(currentShoppingList.Select(x => x.AsOneNoteCheckboxNode()));
             if (success)
             {
-                await Task.Delay(3000); // Kind of a hack, but we're going to give the server a moment to update itself.
-                // Not truly a for-loop--just an easy way to match against a Some() value. Should only ever "loop" once.
-                foreach(IEnumerable<OneNoteCheckboxNode> someValue in (await _oneNoteService.GetShoppingListPageContent()))
+                await Task.Delay(3000); // Kind of a hack, but we're going to give the server a moment to update itself.                
+                (await _oneNoteService.GetShoppingListPageContent()).MatchSome(response =>
                 {
-                    // TODO: Handle getting item types that we don't have locally
-
-                    var newList = someValue
-                        .Where(x => !x.IsChecked)
-                        .Select(x => x.AsShoppingListEntry())
-                        .Select(x => x.ValueOr(alternative: null))
-                        .Where(x => x != null);
+                    var newList = response
+                       .Where(x => !x.IsChecked)
+                       .Select(x => x.AsShoppingListEntry())
+                       .Select(x => x.ValueOr(alternative: null))
+                       .Where(x => x != null);
 
                     _settings.ClearShoppingListItems();
                     _settings.AddToShoppingList(newList);
-                }
+                });
             }
 
             IsSyncInProgress = false;

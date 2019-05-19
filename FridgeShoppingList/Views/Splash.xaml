@@ -166,7 +166,7 @@
                   Data="M0,0 
                         A10,10 0 0 1 0,20 z"
                   Fill="{ThemeResource LcarsAccentBrush}"              
-                  VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Margin="0.2,0" UseLayoutRounding="False">
+                  VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False">
                 <Path.RenderTransform>
                     <CompositeTransform ScaleX="-1"/>
                 </Path.RenderTransform>
@@ -184,7 +184,7 @@
                   Data="M0,0 
                         A10,10 0 0 1 0,20 z"
                   Fill="{ThemeResource LcarsAccentBrush}"              
-                  VerticalAlignment="Bottom" Margin="0.2,0" UseLayoutRounding="False"/>
+                  VerticalAlignment="Bottom" UseLayoutRounding="False"/>
         </Grid>
 
     </Grid>

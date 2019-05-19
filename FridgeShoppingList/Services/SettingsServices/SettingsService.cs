@@ -1,13 +1,11 @@
 using FridgeShoppingList.Models;
 using System.Linq;
-using System.Reactive;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reactive.Linq;
 using Template10.Common;
 using Template10.Utils;
-using Windows.UI.Xaml;
 using DynamicData;
 
 namespace FridgeShoppingList.Services.SettingsServices
@@ -46,6 +44,12 @@ namespace FridgeShoppingList.Services.SettingsServices
         {
             get { return _helper.Read<string>(nameof(OneNotePageId), null); }
             set { _helper.Write(nameof(OneNotePageId), value); }
+        }
+
+        public DateTimeOffset LastLocalUpdate
+        {
+            get { return _helper.Read<DateTimeOffset>(nameof(LastLocalUpdate), new DateTimeOffset()); }
+            set { _helper.Write(nameof(LastLocalUpdate), value); }
         }
 
         private SettingsService()

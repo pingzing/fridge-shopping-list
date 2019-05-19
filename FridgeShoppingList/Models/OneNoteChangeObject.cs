@@ -25,11 +25,6 @@ namespace FridgeShoppingList.Models
             return $"#{idValue}";
         }
 
-        public static string GeneratedId(string generatedId)
-        {
-            return generatedId;
-        }
-
         public static string Body => "body";
         public static string Title => "title";
     }

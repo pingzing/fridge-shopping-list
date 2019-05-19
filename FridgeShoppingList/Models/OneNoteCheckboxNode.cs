@@ -59,10 +59,14 @@ namespace FridgeShoppingList.Models
             SettingsService settings = _settingsService.Value;
             IEnumerable<GroceryItemType> itemTypes = settings.GroceryTypes.AsObservableList().Items;
 
-            GroceryItemType itemType = itemTypes.FirstOrDefault(x => x.ItemTypeId.ToString() == this.DataId);
+            GroceryItemType itemType = itemTypes.FirstOrDefault(x => x.ItemTypeId.ToString() == DataId);
             if (itemType == null)
-            {                
-                itemType = itemTypes.FirstOrDefault(x => x.Name == this.Content);
+            {
+                // Matching based on ID failed, let's try to match on name.
+                string contentNoQuantity = Content.Substring(0, Content.LastIndexOf('x'));
+                itemType = itemTypes.FirstOrDefault(
+                    x => x.Name.ToLowerInvariant().Replace(" ", string.Empty)
+                    == contentNoQuantity.ToLowerInvariant().Replace(" ", string.Empty));
             }
 
             if(itemType == null)
@@ -71,8 +75,7 @@ namespace FridgeShoppingList.Models
                 return Option.None<ShoppingListEntry>();
             }
 
-            uint itemCount;
-            bool parseItemCountSuccess = UInt32.TryParse(this.Content.Substring(this.Content.LastIndexOf('x') + 1), out itemCount);
+            bool parseItemCountSuccess = uint.TryParse(Content.Substring(Content.LastIndexOf('x') + 1), out uint itemCount);
 
             return new ShoppingListEntry
             {
